@@ -1,0 +1,25 @@
+Installing Gwibber
+==================
+
+  Requirements
+  ------------
+
+    Please note that the version numbers listed below only reflect my test environment. Gwibber is known to work with those specific versions, but will probably work fine on most current desktop distributions that include Python GTK packages.
+
+    * python (2.5)
+    * python-dbus (0.80.2)
+    * python-gtk2 (2.10.4)
+    * python-gconf (2.18.0)
+    * python-notify (0.1.1)
+
+  Installation
+  ------------
+
+    Gwibber uses Python's distutils framework for installation. In order to install Gwibber, you will need root access. To install Gwibber, perform the following command as root:
+
+      $ python setup.py install
+
+  Run Gwibber
+  -----------
+
+    If you installed Gwibber using the setup.py script, you can launch the program by typing "gwibber" at the command line. If you want to run Gwibber without installing it, start the "run" script from within the Gwibber directory.

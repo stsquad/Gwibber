@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+
+"""
+
+Gwibber Client
+SegPhault (Ryan Paul) - 05/29/2007
+
+"""
+
+import sys, gtk
+from gwibber.client import GwibberClient
+
+GwibberClient("ui/gwibber.glade")
+gtk.main()
