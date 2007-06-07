@@ -15,7 +15,7 @@ GCONF_DIR = "/apps/gwibber/preferences"
 class GwibberClient:
   def __init__(self, ui_file):
     self.glade = gtk.glade.XML(ui_file)
-    
+       
     self.gconf = gconf.client_get_default()
     self.gconf.add_dir(GCONF_DIR, gconf.CLIENT_PRELOAD_NONE)
     self.container = self.glade.get_widget("container")
@@ -64,7 +64,7 @@ class GwibberClient:
   def submit_message(self, text):
     for s in ["twitter", "jaiku", "facebook"]:
       if self.gconf.get_bool(GCONF_DIR + "/%s_enabled" % s):
-        print sys.modules["src.service.%s" % s].Client(
+        print sys.modules["gwibber.service.%s" % s].Client(
           self.gconf.get_string(GCONF_DIR + "/%s_username" % s),
           self.gconf.get_string(GCONF_DIR + "/%s_password" % s)).update_status(text)
 
