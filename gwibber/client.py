@@ -8,7 +8,7 @@ SegPhault (Ryan Paul) - 05/26/2007
 """
 
 import sys, gtk, gtk.glade, gconf, gwui, gaw, dbus, pynotify, time
-from service import twitter, jaiku, facebook
+from service import twitter, jaiku, facebook, pidgin
 
 GCONF_DIR = "/apps/gwibber/preferences"
 
@@ -67,6 +67,9 @@ class GwibberClient:
         print sys.modules["gwibber.service.%s" % s].Client(
           self.gconf.get_string(GCONF_DIR + "/%s_username" % s),
           self.gconf.get_string(GCONF_DIR + "/%s_password" % s)).update_status(text)
+
+    if self.gconf.get_bool(GCONF_DIR + "/pidgin_enabled"):
+      pidgin.update_status(text)
 
   def on_toggle_window_visibility(self, widget):
     window = self.glade.get_widget("windowGwibberClient")
