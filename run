@@ -10,5 +10,7 @@ SegPhault (Ryan Paul) - 05/29/2007
 import sys, gtk
 from gwibber.client import GwibberClient
 
+gtk.icon_theme_add_builtin_icon("gwibber", 22,
+    gtk.gdk.pixbuf_new_from_file_at_size("ui/gwibber.svg", 24, 24))
 GwibberClient("ui/gwibber.glade")
 gtk.main()
