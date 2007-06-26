@@ -7,8 +7,21 @@ SegPhault (Ryan Paul) - 05/26/2007
 
 """
 
-import sys, gtk, gtk.glade, gconf, gwui, gaw, dbus, pynotify, time
+import sys, gtk, gtk.glade, gwui, gaw, dbus, time
 from service import twitter, jaiku, facebook, pidgin
+
+try:
+ import gconf
+except:
+  from gnome import gconf
+
+try:
+  import pynotify
+except:
+  class pynotify:
+    @classmethod
+    def init(self, app):
+      return False
 
 GCONF_DIR = "/apps/gwibber/preferences"
 
@@ -16,23 +29,18 @@ class GwibberClient:
   def __init__(self, ui_file):
     self.glade = gtk.glade.XML(ui_file)
        
-    self.gconf = gconf.client_get_default()
-    self.gconf.add_dir(GCONF_DIR, gconf.CLIENT_PRELOAD_NONE)
     self.container = self.glade.get_widget("container")
     self.statusbar = self.glade.get_widget("statusbar")
+    
+    self.setup_signals()
+    self.setup_gconf()
+    self.setup_updater()
+    self.sync_gconf_and_menu()
+    self.sync_timeline_widgets()
+    self.sync_gconf_and_prefs()
+    #self.setup_tray_icon()
 
-    # Set up the updater
-    self.updater = gwui.UpdateManager(twitter.Client(
-      self.gconf.get_string(GCONF_DIR + "/twitter_username"),
-      self.gconf.get_string(GCONF_DIR + "/twitter_password")))
-    self.updater.connect("twitter-update-finished", self.on_update)
-    self.updater.connect("twitter-update-failed", self.on_error)
-    self.updater.connect("twitter-update-change", self.on_change)
-    self.updater.set_interval(self.gconf.get_int(
-      GCONF_DIR + "/twitter_update_interval") * (1000 * 60))
-    self.updater.update()
-    self.container.show_all()
-
+  def setup_signals(self):
     self.glade.signal_autoconnect({
       "on_quit": gtk.main_quit,
       "on_refresh": lambda w: self.updater.update(),
@@ -43,11 +51,24 @@ class GwibberClient:
       "on_input_change": self.on_input_change,
       "on_timeline_change": self.on_timeline_change})
 
-    self.sync_gconf_and_menu()
-    self.sync_timeline_widgets()
-    self.sync_gconf_and_prefs()
+  def setup_gconf(self):
+    self.gconf = gconf.client_get_default()
+    self.gconf.add_dir(GCONF_DIR, gconf.CLIENT_PRELOAD_NONE)
     self.gconf.notify_add(GCONF_DIR + "/timeline_display", self.sync_timeline_widgets)
 
+  def setup_updater(self):
+    self.updater = gwui.UpdateManager(twitter.Client(
+      self.gconf.get_string(GCONF_DIR + "/twitter_username"),
+      self.gconf.get_string(GCONF_DIR + "/twitter_password")))
+    self.updater.connect("twitter-update-finished", self.on_update)
+    self.updater.connect("twitter-update-failed", self.on_error)
+    self.updater.connect("twitter-update-change", self.on_change)
+    self.updater.set_interval(self.gconf.get_int(
+      GCONF_DIR + "/twitter_update_interval") * (1000 * 60))
+    # self.updater.update()
+    self.container.show_all()
+
+  def setup_tray_icon(self):
     self.status = gtk.status_icon_new_from_icon_name("gwibber")
     self.status.connect("activate", self.on_toggle_window_visibility)
     self.status.connect("popup-menu", self.on_tray_popup, self.glade.get_widget("menu_tray"))
@@ -115,8 +136,8 @@ class GwibberClient:
     self.sync = True
     self.updater.timeline = self.gconf.get_string(GCONF_DIR + "/timeline_display")
     self.glade.get_widget("combo_timeline").set_active(
-        ["public", "friends", "user"].index(self.updater.timeline))
-
+      ["public", "friends", "user"].index(self.updater.timeline))
+    
     for x in self.glade.get_widget("menu_timeline").get_submenu().get_children():
       x.set_active(self.updater.timeline == x.get_name().split("_")[-1])
     self.sync = False
