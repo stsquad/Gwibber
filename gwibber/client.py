@@ -23,6 +23,13 @@ except:
     def init(self, app):
       return False
 
+try:
+  import sexy
+  SPELLCHECK_ENABLED = True
+except:
+  SPELLCHECK_ENABLED = False
+
+
 GCONF_DIR = "/apps/gwibber/preferences"
 
 class GwibberClient:
@@ -31,14 +38,26 @@ class GwibberClient:
        
     self.container = self.glade.get_widget("container")
     self.statusbar = self.glade.get_widget("statusbar")
-    
+
+    if SPELLCHECK_ENABLED:
+      input = sexy.SpellEntry()
+      input.set_max_length(self.glade.get_widget("input").get_max_length())
+      input.connect("activate", self.on_input_activate)
+      input.connect("changed", self.on_input_change)
+      input.show_all()
+      
+      inputbox = self.glade.get_widget("inputbox")
+      inputbox.remove(self.glade.get_widget("input"))
+      inputbox.pack_start(input)
+        
     self.setup_signals()
     self.setup_gconf()
     self.setup_updater()
     self.sync_gconf_and_menu()
     self.sync_timeline_widgets()
     self.sync_gconf_and_prefs()
-    #self.setup_tray_icon()
+    self.setup_tray_icon()
+    self.updater.update()
 
   def setup_signals(self):
     self.glade.signal_autoconnect({
@@ -65,7 +84,6 @@ class GwibberClient:
     self.updater.connect("twitter-update-change", self.on_change)
     self.updater.set_interval(self.gconf.get_int(
       GCONF_DIR + "/twitter_update_interval") * (1000 * 60))
-    # self.updater.update()
     self.container.show_all()
 
   def setup_tray_icon(self):
@@ -85,7 +103,7 @@ class GwibberClient:
   def submit_message(self, text):
     for s in ["twitter", "jaiku", "facebook"]:
       if self.gconf.get_bool(GCONF_DIR + "/%s_enabled" % s):
-        print sys.modules["gwibber.service.%s" % s].Client(
+        sys.modules["gwibber.service.%s" % s].Client(
           self.gconf.get_string(GCONF_DIR + "/%s_username" % s),
           self.gconf.get_string(GCONF_DIR + "/%s_password" % s)).update_status(text)
 
@@ -160,7 +178,6 @@ class GwibberClient:
     self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
 
   def on_change(self, updater, new_messages):
-    print new_messages
     if pynotify.init("Gwibber"):
       for user, message in new_messages:
         n = pynotify.Notification(user["name"], message["text"])
