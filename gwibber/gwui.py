@@ -8,10 +8,14 @@ SegPhault (Ryan Paul) - 05/26/2007
 """
 
 import gtk, pango, gobject
-import urllib2, base64, time, datetime, os
+import urllib2, base64, time, datetime, os, cgi
 from service import twitter
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
+
+def replace_entities(content):
+  # Why isn't there a real function for this in the Python standard libs?
+  return content.replace("&quot;",'"').replace("&amp;", "&").replace("&lt", "<").replace("&gt", ">")
 
 class UpdateManager(gobject.GObject):
   __gsignals__ = {
@@ -63,7 +67,7 @@ class StatusMessage(gtk.TextView):
 
     self.add_text(name, "name")
     self.add_text(" (%s)" % created_at, "time")
-    self.add_text("\n%s" % message, "text")
+    self.add_text("\n%s" % replace_entities(message), "text")
 
   def add_text(self, text, tag=None):
     if tag:
