@@ -36,7 +36,7 @@ except:
   SPELLCHECK_ENABLED = False
 
 
-GCONF_DIR = "/apps/gwibber2/preferences"
+GCONF_DIR = "/apps/gwibber/preferences"
 
 class GwibberClient:
   def __init__(self, ui_file):
