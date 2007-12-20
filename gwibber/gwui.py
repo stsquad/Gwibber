@@ -42,15 +42,16 @@ class UpdateManager(gobject.GObject):
         else: yield f
 
   def update(self):
-    self.emit("twitter-update-starting", self)
-    try:
-      self.data = tuple(self.twitter.get_timeline(self.timeline))
-      if self.data == self.last_update: self.emit("twitter-update-nochange", self.data)
-      else: self.emit("twitter-update-change", list(self.compare()))
-      self.last_update = self.data
-    except: self.emit("twitter-update-failed", self)
-    self.emit("twitter-update-finished", self.data)
-    return True
+    if self.twitter:
+      self.emit("twitter-update-starting", self)
+      try:
+        self.data = tuple(self.twitter.get_timeline(self.timeline))
+        if self.data == self.last_update: self.emit("twitter-update-nochange", self.data)
+        else: self.emit("twitter-update-change", list(self.compare()))
+        self.last_update = self.data
+      except: self.emit("twitter-update-failed", self)
+      self.emit("twitter-update-finished", self.data)
+      return True
 
 class StatusMessage(gtk.TextView):
   def __init__(self, name, message, created_at):

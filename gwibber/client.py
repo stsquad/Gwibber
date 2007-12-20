@@ -5,13 +5,19 @@
 Gwibber Client v0.01
 SegPhault (Ryan Paul) - 05/26/2007
 
+TODO:
+
+  setup default value for timeline_display
+
 """
 
 import sys, gtk, gtk.glade, gwui, gaw, dbus, time
 from service import twitter, jaiku, facebook, pidgin
 
+
+
 try:
- import gconf
+  import gconf
 except:
   from gnome import gconf
 
@@ -25,17 +31,17 @@ except:
 
 try:
   import sexy
-  SPELLCHECK_ENABLED = True
+  SPELLCHECK_ENABLED = False #True
 except:
   SPELLCHECK_ENABLED = False
 
 
-GCONF_DIR = "/apps/gwibber/preferences"
+GCONF_DIR = "/apps/gwibber2/preferences"
 
 class GwibberClient:
   def __init__(self, ui_file):
     self.glade = gtk.glade.XML(ui_file)
-       
+
     self.container = self.glade.get_widget("container")
     self.statusbar = self.glade.get_widget("statusbar")
 
@@ -49,7 +55,7 @@ class GwibberClient:
       inputbox = self.glade.get_widget("inputbox")
       inputbox.remove(self.glade.get_widget("input"))
       inputbox.pack_start(input)
-        
+
     self.setup_signals()
     self.setup_gconf()
     self.setup_updater()
@@ -74,11 +80,21 @@ class GwibberClient:
     self.gconf = gconf.client_get_default()
     self.gconf.add_dir(GCONF_DIR, gconf.CLIENT_PRELOAD_NONE)
     self.gconf.notify_add(GCONF_DIR + "/timeline_display", self.sync_timeline_widgets)
+    self.gconf.notify_add(GCONF_DIR + "/twitter_username", self.sync_twitter_login)
+    self.gconf.notify_add(GCONF_DIR + "/twitter_password", self.sync_twitter_login)
+
+  def sync_twitter_login(self, *args):
+    self.updater.twitter = twitter.Client(
+      self.gconf.get_string(GCONF_DIR + "/twitter_username"),
+      self.gconf.get_string(GCONF_DIR + "/twitter_password"))
 
   def setup_updater(self):
-    self.updater = gwui.UpdateManager(twitter.Client(
-      self.gconf.get_string(GCONF_DIR + "/twitter_username"),
-      self.gconf.get_string(GCONF_DIR + "/twitter_password")))
+    if self.gconf.get_string(GCONF_DIR + "/twitter_username"):
+      self.updater = gwui.UpdateManager(twitter.Client(
+        self.gconf.get_string(GCONF_DIR + "/twitter_username"),
+        self.gconf.get_string(GCONF_DIR + "/twitter_password")))
+    else:
+      self.updater = gwui.UpdateManager(None)
     self.updater.connect("twitter-update-finished", self.on_update)
     self.updater.connect("twitter-update-failed", self.on_error)
     self.updater.connect("twitter-update-change", self.on_change)
@@ -153,6 +169,9 @@ class GwibberClient:
   def sync_timeline_widgets(self, *args):
     self.sync = True
     self.updater.timeline = self.gconf.get_string(GCONF_DIR + "/timeline_display")
+    if not self.updater.timeline:
+      self.updater.timeline = "friends"
+      self.gconf.set_string(GCONF_DIR + "/timeline_display", "friends")
     self.glade.get_widget("combo_timeline").set_active(
       ["public", "friends", "user"].index(self.updater.timeline))
     
