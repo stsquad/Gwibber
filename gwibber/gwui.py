@@ -106,6 +106,7 @@ class StatusList(gtk.VBox):
 
     for user, status in data:
       hb = gtk.HBox(); hb.set_border_width(5); hb.set_spacing(10)
+      hb.set_tooltip_text(user["screen_name"])
       hb.pack_start(UserIcon(user), False, False)
       hb.pack_start(StatusMessage(user["name"], status["text"],
         twitter.parse_time(status["created_at"])))

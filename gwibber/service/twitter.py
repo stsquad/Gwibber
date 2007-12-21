@@ -51,3 +51,5 @@ class Client:
   def update_status(self, message):
     return self.connect("http://twitter.com/statuses/update.json",
         urllib.urlencode({"status":message}))
+
+
