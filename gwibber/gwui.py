@@ -72,14 +72,13 @@ class StatusMessage(gtk.TextView):
     l.connect("event", self.tag_event)
 
     self.add_text(name, "name")
-    self.add_text(" (%s)" % created_at, "time")
+    self.add_text(" (%s)\n" % created_at, "time")
 
     for item in LINK_PARSE.split(message + " "):
       if item.startswith("https://") or item.startswith("http://"):
         self.link_offsets[self.get_buffer().get_bounds()[1].get_offset()] = item
         self.add_text(item, "link")
-      else:
-        self.add_text(replace_entities(item))
+      else: self.add_text(replace_entities(item))
 
   def tag_event(self, tag, view, ev, iter):
     if ev.type == gtk.gdk.BUTTON_PRESS:
