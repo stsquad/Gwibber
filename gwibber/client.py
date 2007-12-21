@@ -14,7 +14,7 @@ TODO:
 import sys, gtk, gtk.glade, gwui, gaw, dbus, time
 from service import twitter, jaiku, facebook, pidgin
 
-
+MAX_MESSAGE_LENGTH = 140
 
 try:
   import gconf
@@ -31,7 +31,7 @@ except:
 
 try:
   import sexy
-  SPELLCHECK_ENABLED = False #True
+  SPELLCHECK_ENABLED = True
 except:
   SPELLCHECK_ENABLED = False
 
@@ -45,16 +45,16 @@ class GwibberClient:
     self.container = self.glade.get_widget("container")
     self.statusbar = self.glade.get_widget("statusbar")
 
-    if SPELLCHECK_ENABLED:
-      input = sexy.SpellEntry()
-      input.set_max_length(self.glade.get_widget("input").get_max_length())
-      input.connect("activate", self.on_input_activate)
-      input.connect("changed", self.on_input_change)
-      input.show_all()
-      
-      inputbox = self.glade.get_widget("inputbox")
-      inputbox.remove(self.glade.get_widget("input"))
-      inputbox.pack_start(input)
+    if SPELLCHECK_ENABLED: input = sexy.SpellEntry()
+    else: input = gtk.Entry()
+
+    input.set_max_length(MAX_MESSAGE_LENGTH)
+    input.connect("activate", self.on_input_activate)
+    input.connect("changed", self.on_input_change)
+    input.show_all()
+    
+    inputbox = self.glade.get_widget("inputbox")
+    inputbox.pack_start(input)
 
     self.setup_signals()
     self.setup_gconf()

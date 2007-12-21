@@ -363,13 +363,7 @@ User</property>
               <widget class="GtkHBox" id="inputbox">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkEntry" id="input">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="max_length">140</property>
-                    <signal name="changed" handler="on_input_change"/>
-                    <signal name="activate" handler="on_input_activate"/>
-                  </widget>
+                  <placeholder/>
                 </child>
               </widget>
               <packing>
@@ -461,30 +455,32 @@ You should have received a copy of the GNU General Public License along with Gwi
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">5</property>
                             <child>
-                              <widget class="GtkCheckButton" id="check_tweet_notify">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="label" translatable="yes">_Notify when Tweets are received</property>
-                                <property name="use_underline">True</property>
-                                <property name="draw_indicator">True</property>
-                              </widget>
-                              <packing>
-                                <property name="x_options"></property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
                               <widget class="GtkCheckButton" id="check_tray_enabled">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="label" translatable="yes">Display Tray _Icon</property>
                                 <property name="use_underline">True</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkCheckButton" id="check_tweet_notify">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="label" translatable="yes">_Notify when Tweets are received</property>
+                                <property name="use_underline">True</property>
+                                <property name="response_id">0</property>
+                                <property name="draw_indicator">True</property>
+                              </widget>
+                              <packing>
+                                <property name="x_options"></property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -508,9 +504,6 @@ You should have received a copy of the GNU General Public License along with Gwi
                   </packing>
                 </child>
               </widget>
-              <packing>
-                <property name="tab_expand">False</property>
-              </packing>
             </child>
             <child>
               <widget class="GtkLabel" id="label7">
@@ -519,7 +512,6 @@ You should have received a copy of the GNU General Public License along with Gwi
               </widget>
               <packing>
                 <property name="type">tab</property>
-                <property name="tab_expand">False</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
@@ -545,15 +537,27 @@ You should have received a copy of the GNU General Public License along with Gwi
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">5</property>
                             <child>
-                              <widget class="GtkLabel" id="label9">
+                              <widget class="GtkEntry" id="txt_twitter_password">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">_Username:</property>
-                                <property name="use_underline">True</property>
-                                <property name="mnemonic_widget">txt_twitter_username</property>
+                                <property name="can_focus">True</property>
+                                <property name="visibility">False</property>
                               </widget>
                               <packing>
-                                <property name="x_options">GTK_FILL</property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkEntry" id="txt_twitter_username">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -573,27 +577,15 @@ You should have received a copy of the GNU General Public License along with Gwi
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkEntry" id="txt_twitter_username">
+                              <widget class="GtkLabel" id="label9">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">_Username:</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">txt_twitter_username</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkEntry" id="txt_twitter_password">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="visibility">False</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -634,19 +626,6 @@ You should have received a copy of the GNU General Public License along with Gwi
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">5</property>
                             <child>
-                              <widget class="GtkLabel" id="label20">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Update _Interval (in minutes):</property>
-                                <property name="use_underline">True</property>
-                                <property name="mnemonic_widget">spin_twitter_update_interval</property>
-                              </widget>
-                              <packing>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
                               <widget class="GtkSpinButton" id="spin_twitter_update_interval">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -656,6 +635,19 @@ You should have received a copy of the GNU General Public License along with Gwi
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label20">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Update _Interval (in minutes):</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">spin_twitter_update_interval</property>
+                              </widget>
+                              <packing>
+                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -681,7 +673,6 @@ You should have received a copy of the GNU General Public License along with Gwi
               </widget>
               <packing>
                 <property name="position">1</property>
-                <property name="tab_expand">False</property>
               </packing>
             </child>
             <child>
@@ -692,7 +683,6 @@ You should have received a copy of the GNU General Public License along with Gwi
               <packing>
                 <property name="type">tab</property>
                 <property name="position">1</property>
-                <property name="tab_expand">False</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
@@ -718,15 +708,27 @@ You should have received a copy of the GNU General Public License along with Gwi
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">5</property>
                             <child>
-                              <widget class="GtkLabel" id="label29">
+                              <widget class="GtkEntry" id="txt_jaiku_password">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">_Username:</property>
-                                <property name="use_underline">True</property>
-                                <property name="mnemonic_widget">txt_jaiku_username</property>
+                                <property name="can_focus">True</property>
+                                <property name="visibility">False</property>
                               </widget>
                               <packing>
-                                <property name="x_options">GTK_FILL</property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkEntry" id="txt_jaiku_username">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -746,27 +748,15 @@ You should have received a copy of the GNU General Public License along with Gwi
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkEntry" id="txt_jaiku_username">
+                              <widget class="GtkLabel" id="label29">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">_Username:</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">txt_jaiku_username</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkEntry" id="txt_jaiku_password">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="visibility">False</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -806,19 +796,6 @@ You should have received a copy of the GNU General Public License along with Gwi
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">5</property>
                             <child>
-                              <widget class="GtkLabel" id="label32">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Update _interval (in minutes):</property>
-                                <property name="use_underline">True</property>
-                                <property name="mnemonic_widget">spin_twitter_update_interval</property>
-                              </widget>
-                              <packing>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
                               <widget class="GtkSpinButton" id="spinbutton1">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -828,6 +805,19 @@ You should have received a copy of the GNU General Public License along with Gwi
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label32">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Update _interval (in minutes):</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">spin_twitter_update_interval</property>
+                              </widget>
+                              <packing>
+                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -853,7 +843,6 @@ You should have received a copy of the GNU General Public License along with Gwi
               </widget>
               <packing>
                 <property name="position">2</property>
-                <property name="tab_expand">False</property>
               </packing>
             </child>
             <child>
@@ -864,7 +853,6 @@ You should have received a copy of the GNU General Public License along with Gwi
               <packing>
                 <property name="type">tab</property>
                 <property name="position">2</property>
-                <property name="tab_expand">False</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
@@ -890,15 +878,27 @@ You should have received a copy of the GNU General Public License along with Gwi
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">5</property>
                             <child>
-                              <widget class="GtkLabel" id="label13">
+                              <widget class="GtkEntry" id="txt_facebook_password">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">_Username:</property>
-                                <property name="use_underline">True</property>
-                                <property name="mnemonic_widget">txt_facebook_username</property>
+                                <property name="can_focus">True</property>
+                                <property name="visibility">False</property>
                               </widget>
                               <packing>
-                                <property name="x_options">GTK_FILL</property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkEntry" id="txt_facebook_username">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -918,27 +918,15 @@ You should have received a copy of the GNU General Public License along with Gwi
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkEntry" id="txt_facebook_username">
+                              <widget class="GtkLabel" id="label13">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">_Username:</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">txt_facebook_username</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkEntry" id="txt_facebook_password">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="visibility">False</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -964,7 +952,6 @@ You should have received a copy of the GNU General Public License along with Gwi
               </widget>
               <packing>
                 <property name="position">3</property>
-                <property name="tab_expand">False</property>
               </packing>
             </child>
             <child>
@@ -975,7 +962,6 @@ You should have received a copy of the GNU General Public License along with Gwi
               <packing>
                 <property name="type">tab</property>
                 <property name="position">3</property>
-                <property name="tab_expand">False</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
@@ -987,7 +973,6 @@ You should have received a copy of the GNU General Public License along with Gwi
               </widget>
               <packing>
                 <property name="position">4</property>
-                <property name="tab_expand">False</property>
               </packing>
             </child>
             <child>
@@ -999,7 +984,6 @@ You should have received a copy of the GNU General Public License along with Gwi
               <packing>
                 <property name="type">tab</property>
                 <property name="position">4</property>
-                <property name="tab_expand">False</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
