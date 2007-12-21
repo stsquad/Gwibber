@@ -8,10 +8,11 @@ SegPhault (Ryan Paul) - 05/26/2007
 """
 
 import gtk, pango, gobject
-import urllib2, base64, time, datetime, os, cgi
+import urllib2, base64, time, datetime, os, cgi, re, webbrowser
 from service import twitter
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
+LINK_PARSE = re.compile("(https?://[^ )]+)")
 
 def replace_entities(content):
   # Why isn't there a real function for this in the Python standard libs?
@@ -59,16 +60,31 @@ class StatusMessage(gtk.TextView):
     self.set_wrap_mode(gtk.WRAP_WORD)
     self.set_editable(False)
 
+    self.link_offsets = {}
+
     self.modify_base(gtk.STATE_NORMAL,
         gtk.Image().rc_get_style().bg[gtk.STATE_NORMAL])
 
     self.new_tag("name", weight=pango.WEIGHT_BOLD, scale=pango.SCALE_LARGE)
     self.new_tag("time", scale=pango.SCALE_SMALL)
     self.new_tag("text", pixels_above_lines=4)
+    l = self.new_tag("link", foreground="blue", underline=pango.UNDERLINE_SINGLE)
+    l.connect("event", self.tag_event)
 
     self.add_text(name, "name")
     self.add_text(" (%s)" % created_at, "time")
-    self.add_text("\n%s" % replace_entities(message), "text")
+
+    for item in LINK_PARSE.split(message + " "):
+      if item.startswith("https://") or item.startswith("http://"):
+        self.link_offsets[self.get_buffer().get_bounds()[1].get_offset()] = item
+        self.add_text(item, "link")
+      else:
+        self.add_text(replace_entities(item))
+
+  def tag_event(self, tag, view, ev, iter):
+    if ev.type == gtk.gdk.BUTTON_PRESS:
+      offset = iter.backward_search(" ", gtk.TEXT_SEARCH_TEXT_ONLY)[0].get_offset() + 1
+      webbrowser.open(self.link_offsets[offset])
 
   def add_text(self, text, tag=None):
     if tag:
@@ -80,6 +96,7 @@ class StatusMessage(gtk.TextView):
     tag = gtk.TextTag(name)
     for k, v in props.items(): tag.set_property(k, v)
     self.get_buffer().get_tag_table().add(tag)
+    return tag
 
 class UserIcon(gtk.Image):
   def __init__(self, user):
