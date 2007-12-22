@@ -7,7 +7,7 @@ SegPhault (Ryan Paul) - 05/26/2007
 
 """
 
-import gtk, pango, gobject
+import gtk, pango, gobject, gintegration
 import urllib2, base64, time, datetime, os, cgi, re, webbrowser
 from service import twitter
 
@@ -61,6 +61,8 @@ class StatusMessage(gtk.TextView):
     self.set_editable(False)
 
     self.link_offsets = {}
+    self.connect("populate-popup", self.on_populate_context_menu)
+    self.tname = name; self.tmessage = message; self.tcreated_at = created_at
 
     self.modify_base(gtk.STATE_NORMAL,
         gtk.Image().rc_get_style().bg[gtk.STATE_NORMAL])
@@ -72,7 +74,7 @@ class StatusMessage(gtk.TextView):
     l.connect("event", self.tag_event)
 
     self.add_text(name, "name")
-    self.add_text(" (%s)\n" % created_at, "time")
+    self.add_text(" (%s)\n" % twitter.parse_time(created_at), "time")
 
     for item in LINK_PARSE.split(message + " "):
       if item.startswith("https://") or item.startswith("http://"):
@@ -96,6 +98,25 @@ class StatusMessage(gtk.TextView):
     for k, v in props.items(): tag.set_property(k, v)
     self.get_buffer().get_tag_table().add(tag)
     return tag
+
+  def on_populate_context_menu(self, tv, menu):
+    if gintegration.service_is_running("org.gnome.Tomboy"):
+      mi = gtk.MenuItem("Copy to _Tomboy")
+      mi.connect("activate", lambda m: self.copy_to_tomboy())
+
+      menu.append(gtk.SeparatorMenuItem())
+      menu.append(mi)
+      menu.show_all()
+
+  def copy_to_tomboy(self):
+    bus = gintegration.dbus.SessionBus()
+    obj = bus.get_object("org.gnome.Tomboy", "/org/gnome/Tomboy/RemoteControl")
+    tomboy = gintegration.dbus.Interface(obj, "org.gnome.Tomboy.RemoteControl")
+
+    n = tomboy.CreateNamedNote("Tweet from %s at %s" % (self.tname, self.tcreated_at))
+    tomboy.SetNoteContents(n, "Tweet from %s at %s\n\n%s" % (
+      self.tname, self.tcreated_at, self.tmessage))
+    tomboy.DisplayNote(n)
 
 class UserIcon(gtk.Image):
   def __init__(self, user):
@@ -124,8 +145,8 @@ class StatusList(gtk.VBox):
       hb = gtk.HBox(); hb.set_border_width(5); hb.set_spacing(10)
       hb.set_tooltip_text(user["screen_name"])
       hb.pack_start(UserIcon(user), False, False)
-      hb.pack_start(StatusMessage(user["name"], status["text"],
-        twitter.parse_time(status["created_at"])))
+      hb.pack_start(StatusMessage(user["name"], status["text"], status["created_at"]))
 
-      frame = gtk.Frame(); frame.add(hb)
+      frame = gtk.Frame(); ev = gtk.EventBox(); ev.add(hb); frame.add(ev)
+      # ev.modify_bg(gtk.STATE_NORMAL, gtk.TextView().rc_get_style().base[gtk.STATE_NORMAL])
       self.pack_start(frame, False, False)
