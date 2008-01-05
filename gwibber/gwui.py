@@ -18,6 +18,27 @@ def replace_entities(content):
   # Why isn't there a real function for this in the Python standard libs?
   return content.replace("&quot;",'"').replace("&amp;", "&").replace("&lt", "<").replace("&gt", ">")
 
+def draw_round_rect(c, r, x, y, w, h):
+  c.move_to(x+r,y)
+  c.line_to(x+w-r,y);   c.curve_to(x+w,y,x+w,y,x+w,y+r)
+  c.line_to(x+w,y+h-r); c.curve_to(x+w,y+h,x+w,y+h,x+w-r,y+h)
+  c.line_to(x+r,y+h);   c.curve_to(x,y+h,x,y+h,x,y+h-r)
+  c.line_to(x,y+r);     c.curve_to(x,y,x,y,x+r,y)
+  c.close_path()
+
+class RoundRect(gtk.Frame):
+  def do_expose_event(self, event):
+    self.set_shadow_type(gtk.SHADOW_NONE)
+    
+    c = self.window.cairo_create()
+    c.set_source_color(gtk.TextView().rc_get_style().base[gtk.STATE_ACTIVE])
+    draw_round_rect(c, 35, *self.allocation)
+    c.fill()
+    
+    gtk.Frame.do_expose_event(self, event)
+    
+gobject.type_register(RoundRect)
+
 class UpdateManager(gobject.GObject):
   __gsignals__ = {
     "twitter-update-starting": (gobject.SIGNAL_RUN_FIRST, None, (object,)),
@@ -59,13 +80,17 @@ class StatusMessage(gtk.TextView):
     gtk.TextView.__init__(self)
     self.set_wrap_mode(gtk.WRAP_WORD)
     self.set_editable(False)
+    self.set_cursor_visible(False)
+    self.set_accepts_tab(False)
 
     self.link_offsets = {}
     self.connect("populate-popup", self.on_populate_context_menu)
     self.tname = name; self.tmessage = message; self.tcreated_at = created_at
 
-    self.modify_base(gtk.STATE_NORMAL,
-        gtk.Image().rc_get_style().bg[gtk.STATE_NORMAL])
+    #self.modify_base(gtk.STATE_NORMAL,
+    #    gtk.Image().rc_get_style().bg[gtk.STATE_NORMAL])
+    self.modify_base(gtk.STATE_NORMAL, gtk.TextView().rc_get_style().base[gtk.STATE_ACTIVE])
+    self.modify_text(gtk.STATE_NORMAL, gtk.TextView().rc_get_style().text[gtk.STATE_ACTIVE])
 
     self.new_tag("name", weight=pango.WEIGHT_BOLD, scale=pango.SCALE_LARGE)
     self.new_tag("time", scale=pango.SCALE_SMALL)
@@ -136,6 +161,17 @@ class UserIcon(gtk.Image):
 
     return img_path
 
+  def do_expose_event(self, event):
+    x, y, w, h = self.allocation
+    
+    i = self.get_pixbuf()
+    c = self.window.cairo_create()
+    c.set_source_pixbuf(i, 0, 0)
+    draw_round_rect(c, 25, x, y, i.get_width() - 5, i.get_height() - 5)
+    c.fill()
+
+gobject.type_register(UserIcon)
+
 class StatusList(gtk.VBox):
   def __init__(self, data):
     gtk.VBox.__init__(self)
@@ -147,6 +183,7 @@ class StatusList(gtk.VBox):
       hb.pack_start(UserIcon(user), False, False)
       hb.pack_start(StatusMessage(user["name"], status["text"], status["created_at"]))
 
-      frame = gtk.Frame(); ev = gtk.EventBox(); ev.add(hb); frame.add(ev)
-      # ev.modify_bg(gtk.STATE_NORMAL, gtk.TextView().rc_get_style().base[gtk.STATE_NORMAL])
+      frame = RoundRect(); frame.set_border_width(2)
+      ev = gtk.EventBox(); ev.add(hb); frame.add(ev)
+      ev.modify_bg(gtk.STATE_NORMAL, gtk.TextView().rc_get_style().base[gtk.STATE_ACTIVE])
       self.pack_start(frame, False, False)

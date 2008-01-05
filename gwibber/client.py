@@ -82,6 +82,11 @@ class GwibberClient:
     self.gconf.notify_add(GCONF_DIR + "/timeline_display", self.sync_timeline_widgets)
     self.gconf.notify_add(GCONF_DIR + "/twitter_username", self.sync_twitter_login)
     self.gconf.notify_add(GCONF_DIR + "/twitter_password", self.sync_twitter_login)
+    self.gconf.add_dir("/desktop/gnome/interface", gconf.CLIENT_PRELOAD_NONE)
+    self.gconf.notify_add("/desktop/gnome/interface/gtk_theme", self.on_theme_change)
+
+  def on_theme_change(self, *a):
+    self.updater.update()
 
   def sync_twitter_login(self, *args):
     self.updater.twitter = twitter.Client(
@@ -188,11 +193,12 @@ class GwibberClient:
           self.gconf.set_string(GCONF_DIR + "/timeline_display", widget.get_name().split("_")[-1])
 
   def on_update(self, updater, data):
+    ev = gtk.EventBox()
+    ev.modify_bg(gtk.STATE_NORMAL, gtk.TextView().rc_get_style().base[gtk.STATE_NORMAL])
     status = gwui.StatusList(data)
-    status.show_all()
-    if self.container.get_child():
-      self.container.remove(self.container.get_child())
-    self.container.add_with_viewport(status)
+    ev.add(status); ev.show_all()
+    if self.container.get_child(): self.container.remove(self.container.get_child())
+    self.container.add_with_viewport(ev)
     self.statusbar.pop(0)
     self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
 
