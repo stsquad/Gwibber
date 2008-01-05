@@ -32,7 +32,7 @@ class RoundRect(gtk.Frame):
     
     c = self.window.cairo_create()
     c.set_source_color(gtk.TextView().rc_get_style().base[gtk.STATE_ACTIVE])
-    draw_round_rect(c, 35, *self.allocation)
+    draw_round_rect(c, 20, *self.allocation)
     c.fill()
     
     gtk.Frame.do_expose_event(self, event)
@@ -167,7 +167,7 @@ class UserIcon(gtk.Image):
     i = self.get_pixbuf()
     c = self.window.cairo_create()
     c.set_source_pixbuf(i, 0, 0)
-    draw_round_rect(c, 25, x, y, i.get_width() - 5, i.get_height() - 5)
+    draw_round_rect(c, 20, x, y, i.get_width() - 5, i.get_height() - 5)
     c.fill()
 
 gobject.type_register(UserIcon)
