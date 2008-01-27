@@ -203,7 +203,7 @@ class GwibberClient:
     self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
 
   def on_change(self, updater, new_messages):
-    if pynotify.init("Gwibber"):
+    if pynotify.init("Gwibber") and self.gconf.get_bool(GCONF_DIR + "/tweet_notify"):
       for user, message in new_messages:
         n = pynotify.Notification(user["name"], message["text"])
         n.set_icon_from_pixbuf(gwui.UserIcon(user).get_pixbuf())
