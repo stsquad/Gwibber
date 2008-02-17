@@ -2,214 +2,384 @@
 
 """
 
-Gwibber Client v0.01
-SegPhault (Ryan Paul) - 05/26/2007
-
-TODO:
-
-  setup default value for timeline_display
+Gwibber Client v1.0
+SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import sys, gtk, gtk.glade, gwui, gaw, dbus, time
-from service import twitter, jaiku, facebook, pidgin
+import sys, time, operator, os, threading, datetime
+import gtk, gtk.glade, gobject, gaw, dbus
+import twitter, jaiku, facebook, digg
+import gwui, config, gintegration, webbrowser
+
+gtk.gdk.threads_init()
 
 MAX_MESSAGE_LENGTH = 140
 
-try:
-  import gconf
-except:
-  from gnome import gconf
+CONFIGURABLE_UI_ELEMENTS = ["editor", "statusbar", "messages"]
+CONFIGURABLE_UI_SETTINGS = ["background_color", "background_image"]
+IMAGE_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
+VERSION_NUMBER = 0.7
 
-try:
-  import pynotify
-except:
-  class pynotify:
-    @classmethod
-    def init(self, app):
-      return False
+DEFAULT_PREFERENCES = {
+  "version": VERSION_NUMBER,
+  "link_color": "darkblue",
+  "foreground_color": "black",
+  "background_color": "white",
+  "background_image": "",
+  "message_drawing_transparency": 100,
+  "message_drawing_gradients": False,
+  "message_drawing_radius": 15,
+}
 
-try:
-  import sexy
-  SPELLCHECK_ENABLED = True
-except:
-  SPELLCHECK_ENABLED = False
+#PROTOCOLS = {"jaiku": jaiku, "digg": digg, "twitter": twitter, "facebook": facebook}
+PROTOCOLS = {"twitter": twitter, "jaiku": jaiku}
 
+class GwibberClient(gtk.Window):
+  def __init__(self, ui_dir="ui"):
+    gtk.Window.__init__(self)
+    self.set_title("Gwibber")
+    self.resize(300, 300)
+    config.GCONF.add_dir(config.GCONF_PREFERENCES_DIR, config.gconf.CLIENT_PRELOAD_NONE)
+    self.preferences = config.Preferences()
+    self.ui_dir = ui_dir
+    self.accounts = config.Accounts()
+    self.last_update = None 
+    layout = gtk.VBox()
 
-GCONF_DIR = "/apps/gwibber/preferences"
+    self.connect("destroy", gtk.main_quit)
 
-class GwibberClient:
-  def __init__(self, ui_file):
-    self.glade = gtk.glade.XML(ui_file)
+    if not self.preferences["version"]:
+      for key, value in DEFAULT_PREFERENCES.items():
+        self.preferences[key] = value
+      
 
-    self.container = self.glade.get_widget("container")
-    self.statusbar = self.glade.get_widget("statusbar")
-
-    if SPELLCHECK_ENABLED: input = sexy.SpellEntry()
-    else: input = gtk.Entry()
-
-    input.set_max_length(MAX_MESSAGE_LENGTH)
-    input.connect("activate", self.on_input_activate)
-    input.connect("changed", self.on_input_change)
-    input.show_all()
+    self.content = gtk.VBox(spacing=5)
+    self.content.set_border_width(5)
     
-    inputbox = self.glade.get_widget("inputbox")
-    inputbox.pack_start(input)
+    self.background = gtk.EventBox()
+    self.background.add(self.content)
 
-    self.setup_signals()
-    self.setup_gconf()
-    self.setup_updater()
-    self.sync_gconf_and_menu()
-    self.sync_timeline_widgets()
-    self.sync_gconf_and_prefs()
-    self.setup_tray_icon()
-    self.updater.update()
+    self.messages = gtk.ScrolledWindow()
+    self.messages.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+    self.messages.add_with_viewport(self.background)
 
-  def setup_signals(self):
-    self.glade.signal_autoconnect({
-      "on_quit": gtk.main_quit,
-      "on_refresh": lambda w: self.updater.update(),
-      "on_hide_dialog": lambda w,a: w.hide(),
-      "on_preferences": lambda w: self.glade.get_widget("windowPreferences").run(),
-      "on_about": lambda w: self.glade.get_widget("windowAbout").run(),
-      "on_input_activate": self.on_input_activate,
-      "on_input_change": self.on_input_change,
-      "on_timeline_change": self.on_timeline_change})
+    if gintegration.SPELLCHECK_ENABLED:
+      self.input = gintegration.sexy.SpellEntry()
+    else: self.input = gtk.Entry()
+    self.input.connect("populate-popup", self.on_input_context_menu)
+    self.input.connect("activate", self.on_input_activate)
 
-  def setup_gconf(self):
-    self.gconf = gconf.client_get_default()
-    self.gconf.add_dir(GCONF_DIR, gconf.CLIENT_PRELOAD_NONE)
-    self.gconf.notify_add(GCONF_DIR + "/timeline_display", self.sync_timeline_widgets)
-    self.gconf.notify_add(GCONF_DIR + "/twitter_username", self.sync_twitter_login)
-    self.gconf.notify_add(GCONF_DIR + "/twitter_password", self.sync_twitter_login)
-    self.gconf.add_dir("/desktop/gnome/interface", gconf.CLIENT_PRELOAD_NONE)
-    self.gconf.notify_add("/desktop/gnome/interface/gtk_theme", self.on_theme_change)
+    self.editor = gtk.HBox()
+    self.editor.pack_start(self.input)
+    
+    vb = gtk.VBox(spacing=5)
+    vb.pack_start(self.messages, True, True)
+    vb.pack_start(self.editor, False, False)
+    vb.set_border_width(5)
+    
+    self.statusbar = gtk.Statusbar()
 
-  def on_theme_change(self, *a):
-    self.updater.update()
+    layout.pack_start(self.setup_menus(), False)
+    layout.pack_start(vb, True, True)
+    layout.pack_start(self.statusbar, False)
+    self.add(layout)
 
-  def sync_twitter_login(self, *args):
-    self.updater.twitter = twitter.Client(
-      self.gconf.get_string(GCONF_DIR + "/twitter_username"),
-      self.gconf.get_string(GCONF_DIR + "/twitter_password"))
+    for i in CONFIGURABLE_UI_ELEMENTS:
+      config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
+        lambda *a: self.apply_ui_element_settings())
 
-  def setup_updater(self):
-    if self.gconf.get_string(GCONF_DIR + "/twitter_username"):
-      self.updater = gwui.UpdateManager(twitter.Client(
-        self.gconf.get_string(GCONF_DIR + "/twitter_username"),
-        self.gconf.get_string(GCONF_DIR + "/twitter_password")))
+    for i in CONFIGURABLE_UI_SETTINGS:
+      config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/%s" % i,
+        lambda *a: self.apply_ui_drawing_settings())
+    
+    self.show_all()
+    self.apply_ui_element_settings()
+    self.apply_ui_drawing_settings()
+
+  def apply_ui_drawing_settings(self):
+    bgcolor = self.preferences["background_color"]
+    bgimage = self.preferences["background_image"]
+
+    style = self.background.get_style().copy()
+
+    if bgimage and os.path.exists(bgimage):
+      pb = gtk.gdk.pixbuf_new_from_file(bgimage)
+      pm, mask = pb.render_pixmap_and_mask(255);
+      style.bg_pixmap[gtk.STATE_NORMAL] = pm
     else:
-      self.updater = gwui.UpdateManager(None)
-    self.updater.connect("twitter-update-finished", self.on_update)
-    self.updater.connect("twitter-update-failed", self.on_error)
-    self.updater.connect("twitter-update-change", self.on_change)
-    self.updater.set_interval(self.gconf.get_int(
-      GCONF_DIR + "/twitter_update_interval") * (1000 * 60))
-    self.container.show_all()
+      style.bg_pixmap[gtk.STATE_NORMAL] = None
+      if bgcolor:
+        style.bg[gtk.STATE_NORMAL] = gtk.gdk.color_parse(bgcolor)
 
-  def setup_tray_icon(self):
-    self.status = gtk.status_icon_new_from_icon_name("gwibber")
-    self.status.connect("activate", self.on_toggle_window_visibility)
-    self.status.connect("popup-menu", self.on_tray_popup, self.glade.get_widget("menu_tray"))
-    self.gconf.notify_add(GCONF_DIR + "/tray_enabled", self.on_toggle_tray_visibility)
+    self.background.set_style(style)
 
-  def on_tray_popup(self, widget, button, time, menu):
-    if button == 3:
-      menu.show_all()
-      menu.popup(None, None, None, 3, time)
+  def apply_ui_element_settings(self):
+    for i in CONFIGURABLE_UI_ELEMENTS:
+      if hasattr(self, i):
+        getattr(self, i).set_property("visible",
+          self.preferences["show_%s" % i])
 
-  def on_toggle_tray_visibility(self, client, id, entry, data):
-    self.status.set_visible(entry.value.get_bool())
- 
-  def submit_message(self, text):
-    for s in ["twitter", "jaiku", "facebook"]:
-      if self.gconf.get_bool(GCONF_DIR + "/%s_enabled" % s):
-        sys.modules["gwibber.service.%s" % s].Client(
-          self.gconf.get_string(GCONF_DIR + "/%s_username" % s),
-          self.gconf.get_string(GCONF_DIR + "/%s_password" % s)).update_status(text)
+  def on_message_context_menu(self, e, w, message):
+    menu = gtk.Menu()
+    if gintegration.service_is_running("org.gnome.Tomboy"):
+      mi = gtk.MenuItem("_Reply")
+      mi.connect("activate", lambda m: self.reply(message))
+      menu.append(mi)
 
-    if self.gconf.get_bool(GCONF_DIR + "/pidgin_enabled"):
-      pidgin.update_status(text)
+      mi = gtk.MenuItem("Copy to _Tomboy")
+      mi.connect("activate", lambda m: self.copy_to_tomboy(message))
+      menu.append(mi)
+    menu.show_all()
+    menu.attach_to_widget(w, None)
+    menu.popup(None, None, None, 3, 0)
 
-  def on_toggle_window_visibility(self, widget):
-    window = self.glade.get_widget("windowGwibberClient")
-    if window.get_property("visible"): window.hide()
-    else: window.show_all()
-
-  def on_input_activate(self, widget):
-    if widget.get_text().strip():
-      self.submit_message(widget.get_text())
-      widget.set_text("")
-
-  def on_input_change(self, widget):
-    self.statusbar.pop(1)
-    if len(widget.get_text()) > 0:
-      self.statusbar.push(1, 
-        "Characters remaining: %s" % (widget.get_max_length() - len(widget.get_text())))
-
-  def sync_gconf_and_menu(self):
-    for x in ["statusbar", "toolbar", "inputbox"]:
-      gaw.data_toggle_button(self.glade.get_widget("menu_toggle_%s" % x), GCONF_DIR + "/show_%s" % x,
-        self.glade.get_widget("menu_toggle_%s" % x).set_active(self.gconf.get_bool(GCONF_DIR + "/show_%s" % x)))
-      self.glade.get_widget(x).set_property("visible", self.gconf.get_bool(GCONF_DIR + "/show_%s" % x))
-      self.gconf.notify_add(GCONF_DIR + "/show_%s" % x, self.on_gconf_toggle_widget)
+  def copy_to_tomboy(self, message):
+    gintegration.create_tomboy_note("%s message from %s at %s\n\n%s" % (
+      message.account["protocol"].capitalize(),
+      message.sender, message.time, message.text))
   
-  def on_gconf_toggle_widget(self, client, id, entry, data):
-    self.glade.get_widget(entry.get_key().split("_")[-1]).set_property("visible", entry.value.get_bool())
+  def reply(self, message):
+    self.input.set_text("@%s: " % message.sender_nick)
+    for acct in self.accounts:
+      if acct["username"] != message.account["username"] and \
+        acct["protocol"] != message.account["protocol"]:
+        acct["send_enabled"] = False
 
-  def sync_gconf_and_prefs(self):
-    settings = [
-      "txt_twitter_username", "txt_twitter_password", "toggle_twitter_enabled", "menu_twitter_enabled", "popupmenu_twitter_enabled",
-      "txt_jaiku_username", "txt_jaiku_password", "toggle_jaiku_enabled", "menu_jaiku_enabled", "popupmenu_jaiku_enabled",
-      "txt_facebook_username", "txt_facebook_password", "toggle_facebook_enabled", "menu_facebook_enabled", "popupmenu_facebook_enabled",
-      "check_tweet_notify", "menu_tweet_notify", "popupmenu_tweet_notify", "spin_twitter_update_interval",
-      "toggle_pidgin_enabled", "menu_pidgin_enabled", "popupmenu_pidgin_enabled", "menu_tray_enabled", "check_tray_enabled"]
+  def on_link_clicked(self, e, w, message, link):
+    webbrowser.open(link)
+
+  def on_input_context_menu(self, obj, menu):
+    menu.append(gtk.SeparatorMenuItem())
+    for acct in self.accounts:
+      if acct["protocol"] in PROTOCOLS.keys():
+        if PROTOCOLS[acct["protocol"]].Client(acct).can_send():
+          mi = gtk.CheckMenuItem("%s (%s)" % (acct["username"], acct["protocol"]))
+          gaw.data_toggle_button(mi, "%s/%s/send_enabled" %(acct.path, acct.id))
+          menu.append(mi)
+
+    menu.show_all()
+
+  def setup_menus(self):
+    menuGwibber = gtk.Menu()
+    menuView = gtk.Menu()
+    menuAccounts = gtk.Menu()
+
+    menuGwibberRefresh = gtk.ImageMenuItem(gtk.STOCK_REFRESH)
+    menuGwibberRefresh.connect("activate", self.on_refresh)
+    menuGwibber.append(menuGwibberRefresh)
+
+    menuGwibberPreferences = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
+    menuGwibberPreferences.connect("activate", self.on_preferences)
+    menuGwibber.append(menuGwibberPreferences)
+
+    menuGwibberQuit = gtk.ImageMenuItem(gtk.STOCK_QUIT)
+    menuGwibberQuit.connect("activate", self.on_quit)
+    menuGwibber.append(menuGwibberQuit)
+
+    for i in CONFIGURABLE_UI_ELEMENTS:
+      mi = gtk.CheckMenuItem("_%s" % i.capitalize())
+      gaw.data_toggle_button(mi, config.GCONF_PREFERENCES_DIR + "/show_%s" % i)
+      menuView.append(mi)
+
+    menuGwibberItem = gtk.MenuItem("_Gwibber")
+    menuGwibberItem.set_submenu(menuGwibber)
+
+    menuViewItem = gtk.MenuItem("_View")
+    menuViewItem.set_submenu(menuView)
+
+    menuAccountsItem = gtk.MenuItem("_Accounts")
+    menuAccountsItem.set_submenu(menuAccounts)
+    menuAccountsItem.connect("select", self.on_accounts_menu)
+
+    self.throbber = gtk.Image()
+    menuSpinner = gtk.ImageMenuItem("")
+    menuSpinner.set_right_justified(True)
+    menuSpinner.set_sensitive(False)
+    menuSpinner.set_image(self.throbber)
     
-    for w in settings:
-      gfn = {"txt": gaw.data_entry, "check": gaw.data_toggle_button, "popupmenu": gaw.data_toggle_button,
-             "spin": gaw.data_spin_button, "toggle": gaw.data_toggle_button,
-             "menu": gaw.data_toggle_button}[w.split("_")[0]]
-      gfn(self.glade.get_widget(w), GCONF_DIR + "/%s" % "_".join(w.split("_")[1:]))
+    menubar = gtk.MenuBar()
+    menubar.append(menuGwibberItem)
+    menubar.append(menuViewItem)
+    menubar.append(menuAccountsItem)
+    menubar.append(menuSpinner)
+    return menubar
 
-  def sync_timeline_widgets(self, *args):
-    self.sync = True
-    self.updater.timeline = self.gconf.get_string(GCONF_DIR + "/timeline_display")
-    if not self.updater.timeline:
-      self.updater.timeline = "friends"
-      self.gconf.set_string(GCONF_DIR + "/timeline_display", "friends")
-    self.glade.get_widget("combo_timeline").set_active(
-      ["public", "friends", "user"].index(self.updater.timeline))
-    
-    for x in self.glade.get_widget("menu_timeline").get_submenu().get_children():
-      x.set_active(self.updater.timeline == x.get_name().split("_")[-1])
-    self.sync = False
+  def on_quit(self, mi):
+    gtk.main_quit()
 
-  def on_timeline_change(self, widget):
-    if not self.sync:
-      if isinstance(widget, gtk.ComboBox):
-        self.gconf.set_string(GCONF_DIR + "/timeline_display", widget.get_active_text().lower())
-      else:
-        if widget.get_active():
-          self.gconf.set_string(GCONF_DIR + "/timeline_display", widget.get_name().split("_")[-1])
+  def on_refresh(self, mi):
+    self.update()
 
-  def on_update(self, updater, data):
-    ev = gtk.EventBox()
-    ev.modify_bg(gtk.STATE_NORMAL, gtk.TextView().rc_get_style().base[gtk.STATE_NORMAL])
-    status = gwui.StatusList(data)
-    ev.add(status); ev.show_all()
-    if self.container.get_child(): self.container.remove(self.container.get_child())
-    self.container.add_with_viewport(ev)
-    self.statusbar.pop(0)
-    self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
+  def on_preferences(self, mi):
+    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
+    dialog = glade.get_widget("pref_dialog")
 
-  def on_change(self, updater, new_messages):
-    if pynotify.init("Gwibber") and self.gconf.get_bool(GCONF_DIR + "/tweet_notify"):
-      for user, message in new_messages:
-        n = pynotify.Notification(user["name"], message["text"])
-        n.set_icon_from_pixbuf(gwui.UserIcon(user).get_pixbuf())
-        n.show()
-    else: print "Notification failed."
+    for widget in \
+      ["foreground_color",
+       "link_color",
+       "message_drawing_radius",
+       "message_drawing_transparency",
+       "message_drawing_gradients",
+       "background_color"]:
+        self.preferences.bind(glade.get_widget(widget), widget)
+
+    def setbgimg(*a):
+      self.preferences["background_image"] = glade.get_widget("background_image").get_filename() or ""
+    glade.get_widget("background_image").set_filename(self.preferences["background_image"])
+    glade.get_widget("background_image").connect("selection-changed", setbgimg)
+
+    glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
+    dialog.show_all()
+
   
-  def on_error(self, *a):
-    import sys
-    print sys.exc_info()
+  def on_accounts_menu(self, amenu):
+    amenu.emit_stop_by_name("select")
+    menu = amenu.get_submenu()
+    for c in menu: menu.remove(c)
+    
+    menuAccountsManage = gtk.MenuItem("_Manage")
+    menu.append(menuAccountsManage)
+   
+    menuAccountsCreate = gtk.MenuItem("_Create")
+    menu.append(menuAccountsCreate)
+    mac = gtk.Menu()
+
+    for p in PROTOCOLS.keys():
+      mi = gtk.MenuItem("%s" % p.capitalize())
+      mi.connect("activate", self.on_account_create, p)
+      mac.append(mi)
+
+    menuAccountsCreate.set_submenu(mac)
+    menu.append(gtk.SeparatorMenuItem())
+    
+    for acct in self.accounts:
+      if acct["protocol"] in PROTOCOLS.keys():
+        sm = gtk.Menu()
+        
+        for i in ["receive", "send"]:
+          if getattr(PROTOCOLS[acct["protocol"]].Client(acct), "can_%s" % i)():
+            mi = gtk.CheckMenuItem("_%s Messages" % i.capitalize())
+            gaw.data_toggle_button(mi, "%s/%s/%s_enabled" %(acct.path, acct.id, i))
+            sm.append(mi)
+        
+        sm.append(gtk.SeparatorMenuItem())
+        
+        mi = gtk.ImageMenuItem(gtk.STOCK_PROPERTIES)
+        mi.connect("activate", self.on_account_properties, acct)
+        sm.append(mi)
+
+        mi = gtk.MenuItem("%s (%s)" % (acct["username"] or "None", acct["protocol"]))
+        mi.set_submenu(sm)
+        menu.append(mi)
+    menu.show_all()
+    amenu.set_submenu(menu)
+
+  def on_account_properties(self, w, acct):
+    c = PROTOCOLS[acct["protocol"]].ConfigPanel(acct, self.preferences)
+    
+    w = gtk.Window()
+    w.set_title("Manage Acccount")
+    w.set_resizable(False)
+    w.set_border_width(10)
+    
+    buttons = gtk.HButtonBox()
+    bc = gtk.Button(stock=gtk.STOCK_CLOSE)
+    bd = gtk.Button(stock=gtk.STOCK_DELETE)
+    bc.connect("clicked", lambda a: w.destroy())
+    bd.connect("clicked", lambda a: self.on_account_delete(acct, w))
+    buttons.pack_start(bd)
+    buttons.pack_start(bc)
+
+    vb = gtk.VBox(spacing=5)
+    vb.pack_start(c.build_ui())
+    vb.pack_start(gtk.HSeparator())
+    vb.pack_start(buttons)
+    
+    w.add(vb)
+    w.show_all()
+
+  def on_account_create(self, w, protocol):
+    a = self.accounts.new_account()
+    a["protocol"] = protocol
+    self.on_account_properties(w, a)
+
+  def on_account_delete(self, acct, dialog = None):
+    d = gtk.MessageDialog(dialog, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,
+      gtk.BUTTONS_YES_NO, "Are you sure you want to delete this account?")
+    
+    if d.run() == gtk.RESPONSE_YES:
+      if dialog: dialog.destroy()
+      self.accounts.delete_account(acct)
+    
+    d.destroy()
+
+  def generate_message_list(self):
+    for acct in self.accounts:
+      if acct["protocol"] in PROTOCOLS.keys():
+        client = PROTOCOLS[acct["protocol"]].Client(acct)
+        if client.receive_enabled():
+          for message in client.get_messages():
+            yield message
+
+  def draw_messages(self):
+    for i in self.content: self.content.remove(i)
+
+    for message in self.data:
+      m = PROTOCOLS[message.account["protocol"]].StatusMessage(message, self.preferences)
+      if hasattr(m, "messagetext"):
+        m.messagetext.connect("link-clicked", self.on_link_clicked)
+        m.messagetext.connect("right-clicked", self.on_message_context_menu)
+      self.content.pack_start(m)
+
+    self.content.show_all()      
+
+  def on_input_activate(self, e):
+    if self.input.get_text().strip():
+      for acct in self.accounts:
+        if acct["protocol"] in PROTOCOLS.keys():
+          c = PROTOCOLS[acct["protocol"]].Client(acct)
+          if c.can_send():
+            c.transmit_status(self.input.get_text().strip())
+      self.input.set_text("")
+
+  def update(self):
+    self.throbber.set_from_animation(gtk.gdk.PixbufAnimation("%s/progress.gif" % self.ui_dir))
+    while gtk.events_pending(): gtk.main_iteration()
+
+    def process():
+      try:
+        self.data = list(self.generate_message_list())
+        self.data.sort(key=operator.attrgetter("time"), reverse=True)
+
+        gtk.gdk.threads_enter()
+
+        if self.last_update:
+          for m in self.data:
+            if m.time > self.last_update and gintegration.notify.init("Gwibber"):
+              gintegration.notify.Notification(m.sender, m.text,
+                gwui.image_cache(m.image, IMAGE_CACHE_DIR)).show()
+
+        if self.last_update:
+          for count, m in enumerate(self.content):
+            if len(self.data) < count or m.message.text != self.data[count].text:
+              self.draw_messages()
+              break
+        else: self.draw_messages()
+        
+        self.statusbar.pop(0)
+        self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
+        self.last_update = datetime.datetime.utcnow()
+        
+        gtk.gdk.threads_leave()
+      finally: gobject.idle_add(self.throbber.clear)
+    
+    t = threading.Thread(target=process)
+    t.setDaemon(True)
+    t.start()
+    
+if __name__ == '__main__':
+  w = GwibberClient()
+  w.connect("destroy", gtk.main_quit)
+  gtk.main()
+

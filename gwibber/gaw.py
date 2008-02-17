@@ -25,7 +25,7 @@ insensitive when the GConf key is insensitive.
 It also implements a representation of a gconf key (GConfValue) that handles
 the repetitive hassles of a maintaining its integrity. 
 """
-import gconf, gobject
+import gconf, gobject, gtk
 
 class Spec (object):
     def __init__ (self, name, gconf_type, py_type, default):
@@ -67,7 +67,13 @@ def data_file_chooser (button, key, use_directory = False, use_uri = True, defau
         getter = button.get_current_folder_uri
         setter = button.set_current_folder_uri
         
-    return Data (button, getter, setter, "selection-changed", GConfValue (key, Spec.STRING, default = default, client = client))
+    return Data (button, getter, setter, "selection-changed", GConfValue (key, Spec.STRING, default, client))
+
+def data_range (range, key, data_spec = Spec.INT, default = 0, client = None):
+    return Data (range, range.get_value, range.set_value, "value-changed", GConfValue (key, data_spec, default, client))
+
+def data_color (btn, key, data_spec = Spec.STRING, default = "black", client = None):
+    return Data (btn, lambda: btn.get_color().to_string(), lambda x: btn.set_color(gtk.gdk.color_parse(x)), "color-set", GConfValue (key, data_spec, default, client))
 
 def data_entry (entry, key, data_spec = Spec.STRING, default = None, client = None):
     return Data (entry, entry.get_text, entry.set_text, "changed", GConfValue (key, data_spec, default, client))

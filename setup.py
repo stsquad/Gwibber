@@ -6,7 +6,7 @@ from distutils.core import setup
 from glob import glob
 
 setup(name="gwibber",
-	version="0.2",
+	version="0.7",
 	author="Ryan Paul",
 	author_email="segphault@arstechnica.com",
   url="http://cixar.com/~segphault",

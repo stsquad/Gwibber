@@ -7,183 +7,195 @@ SegPhault (Ryan Paul) - 05/26/2007
 
 """
 
-import gtk, pango, gobject, gintegration
-import urllib2, base64, time, datetime, os, cgi, re, webbrowser
-from service import twitter
+import gtk, pango, gobject, gintegration, glitter, config
+import urllib2, base64, time, datetime, os, re
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
-LINK_PARSE = re.compile("(https?://[^ )]+)")
+LINK_PARSE = re.compile("(https?://[^ )\n]+)")
 
-def replace_entities(content):
-  # Why isn't there a real function for this in the Python standard libs?
-  return content.replace("&quot;",'"').replace("&amp;", "&").replace("&lt", "<").replace("&gt", ">")
+def generate_time_string(t):
+  d = datetime.datetime(*time.gmtime()[0:6]) - t
 
-def draw_round_rect(c, r, x, y, w, h):
-  c.move_to(x+r,y)
-  c.line_to(x+w-r,y);   c.curve_to(x+w,y,x+w,y,x+w,y+r)
-  c.line_to(x+w,y+h-r); c.curve_to(x+w,y+h,x+w,y+h,x+w-r,y+h)
-  c.line_to(x+r,y+h);   c.curve_to(x,y+h,x,y+h,x,y+h-r)
-  c.line_to(x,y+r);     c.curve_to(x,y,x,y,x+r,y)
-  c.close_path()
+  if d.seconds < 60: return "%d seconds ago" % d.seconds
+  elif d.seconds < (60 * 60):  return "%d minutes ago" % (d.seconds / 60)
+  elif d.seconds < (60 * 60 * 2): return "1 hour ago"
+  elif d.days < 1: return "%d hours ago" % (d.seconds / 60 / 60)
+  elif d.days == 1: return "1 day ago"
+  elif d.days > 0: return "%d days ago" % d.days
+  else: return "BUG: %s" % str(d)
 
-class RoundRect(gtk.Frame):
-  def do_expose_event(self, event):
-    self.set_shadow_type(gtk.SHADOW_NONE)
-    
-    c = self.window.cairo_create()
-    c.set_source_color(gtk.TextView().rc_get_style().base[gtk.STATE_ACTIVE])
-    draw_round_rect(c, 20, *self.allocation)
-    c.fill()
-    
-    gtk.Frame.do_expose_event(self, event)
-    
-gobject.type_register(RoundRect)
+def apply_pango_link_style(t, col):
+  return LINK_PARSE.sub("<u><span foreground='%s'>\\1</span></u>" % col, t)
 
-class UpdateManager(gobject.GObject):
+def image_cache(url, cache_dir):
+  if not os.path.exists(cache_dir): os.makedirs(cache_dir)
+  img_path = os.path.join(cache_dir, base64.encodestring(url)[:-1])
+
+  if not os.path.exists(img_path):
+    output = open(img_path, "w+")
+    output.write(urllib2.urlopen(url).read())
+    output.close()
+
+  return img_path
+
+class StatusMessageText(glitter.WrapLabel):
   __gsignals__ = {
-    "twitter-update-starting": (gobject.SIGNAL_RUN_FIRST, None, (object,)),
-    "twitter-update-finished": (gobject.SIGNAL_RUN_FIRST, None, (object,)),
-    "twitter-update-nochange": (gobject.SIGNAL_RUN_FIRST, None, (object,)),
-    "twitter-update-failed": (gobject.SIGNAL_RUN_FIRST, None, (object,)),
-    "twitter-update-change": (gobject.SIGNAL_RUN_FIRST, None, (object,)),
+      # <- widget, message, link string
+      "link-clicked": (gobject.SIGNAL_RUN_FIRST, None, (object, object, object)),
+      # <- widget, message
+      "right-clicked": (gobject.SIGNAL_RUN_FIRST, None, (object, object))
   }
-  def __init__(self, twit, interval=DEFAULT_UPDATE_INTERVAL, timeline=twitter.FRIENDS_TIMELINE):
-    self.__gobject_init__()
-    self.twitter, self.last_update, self.timeline = twit, None, timeline
-    self.set_interval(interval)
+  def __init__(self, message = None, preferences = None):
+    glitter.WrapLabel.__init__(self)
+    self.preferences = preferences
+    if message: self.populate_data(message)
+    self.connect("button-press-event", self.on_button_press)
 
-  def set_interval(self, interval):
-    self.refresh_interval = interval
-    if hasattr(self, "timeout"): gobject.source_remove(self.timeout)
-    self.timeout = gobject.timeout_add(self.refresh_interval, self.update)
+  def populate_data(self, message):
+    self.message = message
+    if hasattr(message, "pango_markup"):
+      self.pango_layout.set_markup(message.pango_markup)
+    else:
+      self.pango_layout.set_markup(
+        """<span foreground="%s"><big><b>%s</b></big><small> (%s)</small>\n%s</span>""" % (
+        self.preferences["foreground_color"],
+        message.sender, generate_time_string(message.time),
+        apply_pango_link_style(message.text, self.preferences["link_color"])))
 
-  def compare(self):
-    if self.last_update and self.data:
-      for f in self.data:
-        if f == self.last_update[0]: break
-        else: yield f
+  def on_button_press(self, w, e):
+    if e.button == 1:
+      pos = self.pango_layout.xy_to_index(int(e.x * pango.SCALE), int(e.y * pango.SCALE))
 
-  def update(self):
-    if self.twitter:
-      self.emit("twitter-update-starting", self)
-      try:
-        self.data = tuple(self.twitter.get_timeline(self.timeline))
-        if self.data == self.last_update: self.emit("twitter-update-nochange", self.data)
-        else: self.emit("twitter-update-change", list(self.compare()))
-        self.last_update = self.data
-      except: self.emit("twitter-update-failed", self)
-      self.emit("twitter-update-finished", self.data)
-      return True
+      for match in LINK_PARSE.finditer(self.pango_layout.get_text()):
+        if pos[0] in range(*match.span()):
+          self.emit("link-clicked", self, self.message, self.pango_layout.get_text()[match.start():match.end()])
+    elif e.button == 3: self.emit("right-clicked", self, self.message)
 
-class StatusMessage(gtk.TextView):
-  def __init__(self, name, message, created_at):
-    gtk.TextView.__init__(self)
-    self.set_wrap_mode(gtk.WRAP_WORD)
-    self.set_editable(False)
-    self.set_cursor_visible(False)
-    self.set_accepts_tab(False)
+gobject.type_register(StatusMessageText)
 
-    self.link_offsets = {}
-    self.connect("populate-popup", self.on_populate_context_menu)
-    self.tname = name; self.tmessage = message; self.tcreated_at = created_at
+MESSAGE_DRAWING_SETTINGS = ["message_drawing_gradients", "message_drawing_radius", "message_drawing_transparency", "foreground_color", "link_color"]
 
-    #self.modify_base(gtk.STATE_NORMAL,
-    #    gtk.Image().rc_get_style().bg[gtk.STATE_NORMAL])
-    self.modify_base(gtk.STATE_NORMAL, gtk.TextView().rc_get_style().base[gtk.STATE_ACTIVE])
-    self.modify_text(gtk.STATE_NORMAL, gtk.TextView().rc_get_style().text[gtk.STATE_ACTIVE])
-
-    self.new_tag("name", weight=pango.WEIGHT_BOLD, scale=pango.SCALE_LARGE)
-    self.new_tag("time", scale=pango.SCALE_SMALL)
-    self.new_tag("text", pixels_above_lines=4)
-    l = self.new_tag("link", foreground="blue", underline=pango.UNDERLINE_SINGLE)
-    l.connect("event", self.tag_event)
-
-    self.add_text(name, "name")
-    self.add_text(" (%s)\n" % twitter.parse_time(created_at), "time")
-
-    for item in LINK_PARSE.split(message + " "):
-      if item.startswith("https://") or item.startswith("http://"):
-        self.link_offsets[self.get_buffer().get_bounds()[1].get_offset()] = item
-        self.add_text(item, "link")
-      else: self.add_text(replace_entities(item))
-
-  def tag_event(self, tag, view, ev, iter):
-    if ev.type == gtk.gdk.BUTTON_PRESS:
-      offset = iter.backward_search(" ", gtk.TEXT_SEARCH_TEXT_ONLY)[0].get_offset() + 1
-      webbrowser.open(self.link_offsets[offset])
-
-  def add_text(self, text, tag=None):
-    if tag:
-      self.get_buffer().insert_with_tags_by_name(
-          self.get_buffer().get_bounds()[1], text, tag)
-    else: self.get_buffer().insert(self.get_buffer().get_bounds()[1], text)
+class StatusMessage(glitter.Frame):
+  def __init__(self, message, preferences):
+    glitter.Frame.__init__(self)
+    self.message = message
+    self.set_border_width(5)
+    self.apply_visual_settings(preferences)
     
-  def new_tag(self, name, **props):
-    tag = gtk.TextTag(name)
-    for k, v in props.items(): tag.set_property(k, v)
-    self.get_buffer().get_tag_table().add(tag)
-    return tag
+    b = gtk.HBox(spacing=10)
+    self.messagetext = StatusMessageText(message, preferences)
 
-  def on_populate_context_menu(self, tv, menu):
-    if gintegration.service_is_running("org.gnome.Tomboy"):
-      mi = gtk.MenuItem("Copy to _Tomboy")
-      mi.connect("activate", lambda m: self.copy_to_tomboy())
+    b.set_border_width(5)
+    b.set_tooltip_text(message.sender_nick)
 
-      menu.append(gtk.SeparatorMenuItem())
-      menu.append(mi)
-      menu.show_all()
+    imgs = gtk.VBox(spacing=5)
 
-  def copy_to_tomboy(self):
-    bus = gintegration.dbus.SessionBus()
-    obj = bus.get_object("org.gnome.Tomboy", "/org/gnome/Tomboy/RemoteControl")
-    tomboy = gintegration.dbus.Interface(obj, "org.gnome.Tomboy.RemoteControl")
+    if hasattr(message, "image"):
+      self.usericon = UserIcon(message)
+      imgs.pack_start(self.usericon, False, False)
 
-    n = tomboy.CreateNamedNote("Tweet from %s at %s" % (self.tname, self.tcreated_at))
-    tomboy.SetNoteContents(n, "Tweet from %s at %s\n\n%s" % (
-      self.tname, self.tcreated_at, self.tmessage))
-    tomboy.DisplayNote(n)
+    self.set_bgcolor(message.account[message.bgcolor])
+    message.account.notify(message.bgcolor, lambda *a: self.apply_visual_settings(preferences))
 
-class UserIcon(gtk.Image):
-  def __init__(self, user):
-    gtk.Image.__init__(self)
-    self.set_from_file(self.user_image_path(user))
+    for i in MESSAGE_DRAWING_SETTINGS:
+      config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/%s" % i,
+        lambda *a: self.apply_visual_settings(preferences))
+
+    if hasattr(message, "icon"):
+      i = gtk.Image()
+      i.set_from_file(UserIcon.user_image_path(message, message.icon))
+      imgs.pack_start(i, False, False)
+
+    b.pack_start(imgs, False, False)
+    b.pack_start(self.messagetext)
+    self.add(b)
+
+  def apply_visual_settings(self, preferences):
+    self.set_bgcolor(self.message.account[self.message.bgcolor])
+    self.transparency = float(preferences["message_drawing_transparency"]) / 100.0
+    self.rounded = preferences["message_drawing_radius"]
+    self.show_gradient = preferences["message_drawing_gradients"]
+    self.gradient_position = 2.5
+    if hasattr(self, "messagetext"): self.messagetext.populate_data(self.message)
+    if hasattr(self, "usericon"):
+      radius = preferences["message_drawing_radius"]
+      self.usericon.radius = radius < 40 and radius or 40
+      self.usericon.queue_draw()
+    self.queue_draw()
+
+class UserIcon(glitter.RoundImage):
+  def __init__(self, message):
+    glitter.RoundImage.__init__(self)
+    self.set_from_file(self.user_image_path(message))
 
   @classmethod
-  def user_image_path(self, user, cache_dir="%s/.gwibber/imgcache" % os.path.expanduser("~")):
-    timestamp = user["profile_image_url"].split("/")[-1].split("?")[-1]
-    if not os.path.exists(cache_dir): os.makedirs(cache_dir)
-    img_path = os.path.join(cache_dir, "%s-%s" % (user["id"], timestamp))
-
-    if not os.path.exists(img_path):
-      output = open(img_path, "w+")
-      output.write(urllib2.urlopen(user["profile_image_url"]).read())
-      output.close()
-
-    return img_path
-
-  def do_expose_event(self, event):
-    x, y, w, h = self.allocation
-    
-    i = self.get_pixbuf()
-    c = self.window.cairo_create()
-    c.set_source_pixbuf(i, 0, 0)
-    draw_round_rect(c, 20, x, y, i.get_width() - 5, i.get_height() - 5)
-    c.fill()
-
+  def user_image_path(self, message, url=None, cache_dir="%s/.gwibber/imgcache" % os.path.expanduser("~")):
+    if url: return image_cache(url, cache_dir)
+    else: return image_cache(message.image, cache_dir)
+  
 gobject.type_register(UserIcon)
 
-class StatusList(gtk.VBox):
-  def __init__(self, data):
-    gtk.VBox.__init__(self)
-    self.set_spacing(5); self.set_border_width(5)
+def props(w, **args):
+  for k,v in args.items(): w.set_property(k,v)
+  return w
 
-    for user, status in data:
-      hb = gtk.HBox(); hb.set_border_width(5); hb.set_spacing(10)
-      hb.set_tooltip_text(user["screen_name"])
-      hb.pack_start(UserIcon(user), False, False)
-      hb.pack_start(StatusMessage(user["name"], status["text"], status["created_at"]))
+class ConfigFrame(gtk.Frame):
+  def __init__(self, caption=""):
+    gtk.Frame.__init__(self)
+    self.set_shadow_type(gtk.SHADOW_NONE)
+    self.set_property("label-xalign", 0)
+    self.label = gtk.Label()
+    self.label.set_markup("<b>%s</b>" % caption)
+    self.set_label_widget(self.label)
+    self.alignment = gtk.Alignment(0.50, 0.50, 1, 1)
+    self.alignment.set_padding(5, 0, 12, 0)
+    gtk.Frame.add(self, self.alignment)
 
-      frame = RoundRect(); frame.set_border_width(2)
-      ev = gtk.EventBox(); ev.add(hb); frame.add(ev)
-      ev.modify_bg(gtk.STATE_NORMAL, gtk.TextView().rc_get_style().base[gtk.STATE_ACTIVE])
-      self.pack_start(frame, False, False)
+  def add(self, w): self.alignment.add(w)
+
+class ConfigPanel(gtk.VBox):
+  def __init__(self, acct, prefs):
+    self.account = acct
+    self.preferences = prefs
+
+  def build_ui(self):
+    ui = gtk.VBox(spacing=15)
+    ui.pack_start(self.ui_account_info())
+    ui.pack_start(self.ui_account_status())
+    ui.pack_start(self.ui_appearance())
+    return self.customize_ui(ui)
+
+  def customize_ui(self, ui):
+    return ui
+
+  def ui_account_info(self):
+    f = ConfigFrame("Account Information")
+    t = gtk.Table()
+    t.set_col_spacings(5)
+    t.set_row_spacings(5)
+
+    p = gtk.Entry()
+    p.set_visibility(False)
+    self.account.bind(p, "password")
+
+    t.attach(gtk.Label("Username:"), 0, 1, 0, 1, gtk.SHRINK)
+    t.attach(self.account.bind(gtk.Entry(), "username"), 1, 2, 0, 1)
+    t.attach(gtk.Label("Password:"), 0, 1, 1, 2, gtk.SHRINK)
+    t.attach(p, 1, 2, 1, 2)
+    f.add(t)
+    return f
+
+  def ui_account_status(self):
+    f = ConfigFrame("Account Status")
+    vb = gtk.VBox(spacing=5)
+    vb.pack_start(self.account.bind(gtk.CheckButton("Receive Messages"), "receive_enabled"))
+    vb.pack_start(self.account.bind(gtk.CheckButton("Send Messages"), "send_enabled"))
+    f.add(vb)
+    return f
+
+  def ui_appearance(self):
+    f = ConfigFrame("Appearance")
+    vb = gtk.VBox(spacing=5)
+    vb.pack_start(self.account.bind(gtk.ColorButton(), "message_color", default = "#8e8eb1b1dcdc"))
+    f.add(vb)
+    return f

@@ -10,5 +10,5 @@ SegPhault (Ryan Paul) - 05/29/2007
 import sys, gtk
 from gwibber.client import GwibberClient
 
-GwibberClient("/usr/share/gwibber/ui/gwibber.glade")
+GwibberClient("/usr/share/gwibber/ui/")
 gtk.main()
