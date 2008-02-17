@@ -28,8 +28,9 @@ DEFAULT_PREFERENCES = {
   "background_color": "white",
   "background_image": "",
   "message_drawing_transparency": 100,
-  "message_drawing_gradients": False,
+  "message_drawing_gradients": True,
   "message_drawing_radius": 15,
+  "show_notifications": True,
 }
 
 #PROTOCOLS = {"jaiku": jaiku, "digg": digg, "twitter": twitter, "facebook": facebook}
@@ -49,10 +50,8 @@ class GwibberClient(gtk.Window):
 
     self.connect("destroy", gtk.main_quit)
 
-    if not self.preferences["version"]:
-      for key, value in DEFAULT_PREFERENCES.items():
-        self.preferences[key] = value
-      
+    for key, value in DEFAULT_PREFERENCES.items():
+      if not self.preferences[key]: self.preferences[key] = value
 
     self.content = gtk.VBox(spacing=5)
     self.content.set_border_width(5)
@@ -221,6 +220,7 @@ class GwibberClient(gtk.Window):
        "message_drawing_radius",
        "message_drawing_transparency",
        "message_drawing_gradients",
+       "show_notifications",
        "background_color"]:
         self.preferences.bind(glade.get_widget(widget), widget)
 
@@ -354,7 +354,7 @@ class GwibberClient(gtk.Window):
 
         gtk.gdk.threads_enter()
 
-        if self.last_update:
+        if self.last_update and self.preferences["show_notifications"]:
           for m in self.data:
             if m.time > self.last_update and gintegration.notify.init("Gwibber"):
               gintegration.notify.Notification(m.sender, m.text,
