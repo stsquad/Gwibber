@@ -6,5 +6,5 @@ Type=Application
 Comment=Status management client for GNOME
 Exec=gwibber
 Icon=gwibber.svg
-Categories=Internet
+Categories=Network
 GenericName[en_US]=

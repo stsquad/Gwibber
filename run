@@ -7,10 +7,12 @@ SegPhault (Ryan Paul) - 05/29/2007
 
 """
 
-import sys, gtk
+import sys, gtk, os
 from gwibber.client import GwibberClient
 
+ui_dir = os.path.abspath(sys.path[0])
+
 gtk.icon_theme_add_builtin_icon("gwibber", 22,
-    gtk.gdk.pixbuf_new_from_file_at_size("ui/gwibber.svg", 24, 24))
-GwibberClient()
+    gtk.gdk.pixbuf_new_from_file_at_size("%s/ui/gwibber.svg" % ui_dir, 24, 24))
+GwibberClient("%s/ui" % ui_dir)
 gtk.main()
