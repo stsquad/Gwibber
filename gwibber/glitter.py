@@ -51,9 +51,10 @@ class Frame(gtk.Frame):
 gobject.type_register(Frame)
 
 class WrapLabel(gtk.Frame):
-  def __init__(self, markup = None, text = None):
+  def __init__(self, markup = None, text = None, shadow = None):
     gtk.Frame.__init__(self)
     self.set_shadow_type(gtk.SHADOW_NONE)
+    self.shadow = shadow
 
     self.pango_layout = self.create_pango_layout(text or "")
     if markup: self.pango_layout.set_markup(markup)
@@ -71,6 +72,14 @@ class WrapLabel(gtk.Frame):
     
     gc = self.window.new_gc()
     self.pango_layout.set_width(w * pango.SCALE)
+    
+    if self.shadow:
+      shadow = self.pango_layout.copy()
+      attrs = shadow.get_attributes()
+      attrs.change(pango.AttrForeground(self.shadow.red, self.shadow.green, self.shadow.blue, 0, -1))
+      shadow.set_attributes(attrs)
+      self.window.draw_layout(gc, x + 1, y + 1, shadow)
+
     self.window.draw_layout(gc, x, y, self.pango_layout)
 
 gobject.type_register(WrapLabel)

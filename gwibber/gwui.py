@@ -73,7 +73,7 @@ class StatusMessageText(glitter.WrapLabel):
 
 gobject.type_register(StatusMessageText)
 
-MESSAGE_DRAWING_SETTINGS = ["message_drawing_gradients", "message_drawing_radius", "message_drawing_transparency", "foreground_color", "link_color"]
+MESSAGE_DRAWING_SETTINGS = ["message_drawing_gradients", "message_drawing_radius", "message_drawing_transparency", "foreground_color", "link_color", "message_text_shadow", "text_shadow_color"]
 
 class StatusMessage(glitter.Frame):
   def __init__(self, message, preferences):
@@ -84,6 +84,8 @@ class StatusMessage(glitter.Frame):
     
     b = gtk.HBox(spacing=10)
     self.messagetext = StatusMessageText(message, preferences)
+    if preferences["message_text_shadow"]:
+      self.messagetext.shadow = gtk.gdk.color_parse(preferences["text_shadow_color"])
 
     b.set_border_width(5)
     b.set_tooltip_text(message.sender_nick)
@@ -116,7 +118,11 @@ class StatusMessage(glitter.Frame):
     self.rounded = preferences["message_drawing_radius"]
     self.show_gradient = preferences["message_drawing_gradients"]
     self.gradient_position = 2.5
-    if hasattr(self, "messagetext"): self.messagetext.populate_data(self.message)
+    if hasattr(self, "messagetext"):
+      self.messagetext.populate_data(self.message)
+      if preferences["message_text_shadow"]:
+        self.messagetext.shadow = gtk.gdk.color_parse(preferences["text_shadow_color"])
+      else: self.messagetext.shadow = None
     if hasattr(self, "usericon"):
       radius = preferences["message_drawing_radius"]
       self.usericon.radius = radius < 40 and radius or 40

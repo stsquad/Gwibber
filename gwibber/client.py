@@ -26,12 +26,15 @@ DEFAULT_PREFERENCES = {
   "link_color": "darkblue",
   "foreground_color": "black",
   "background_color": "white",
+  "text_shadow_color": "black",
   "background_image": "",
   "message_drawing_transparency": 100,
   "message_drawing_gradients": True,
   "message_drawing_radius": 15,
+  "message_text_shadow": False,
   "show_notifications": True,
   "refresh_interval": 2,
+
 }
 
 #PROTOCOLS = {"jaiku": jaiku, "digg": digg, "twitter": twitter, "facebook": facebook}
@@ -230,6 +233,8 @@ class GwibberClient(gtk.Window):
        "message_drawing_gradients",
        "show_notifications",
        "refresh_interval",
+       "message_text_shadow",
+       "text_shadow_color",
        "background_color"]:
         self.preferences.bind(glade.get_widget(widget), widget)
 
