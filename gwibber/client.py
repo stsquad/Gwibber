@@ -31,6 +31,7 @@ DEFAULT_PREFERENCES = {
   "message_drawing_gradients": True,
   "message_drawing_radius": 15,
   "show_notifications": True,
+  "refresh_interval": 2,
 }
 
 #PROTOCOLS = {"jaiku": jaiku, "digg": digg, "twitter": twitter, "facebook": facebook}
@@ -52,6 +53,9 @@ class GwibberClient(gtk.Window):
 
     for key, value in DEFAULT_PREFERENCES.items():
       if not self.preferences[key]: self.preferences[key] = value
+
+    self.timer = gobject.timeout_add(60000 * self.preferences["refresh_interval"], self.update)
+    self.preferences.notify("refresh_interval", self.on_refresh_interval_changed)
 
     self.content = gtk.VBox(spacing=5)
     self.content.set_border_width(5)
@@ -118,6 +122,10 @@ class GwibberClient(gtk.Window):
       if hasattr(self, i):
         getattr(self, i).set_property("visible",
           self.preferences["show_%s" % i])
+
+  def on_refresh_interval_changed(self, *a):
+    gobject.source_remove(self.timer)
+    self.timer = gobject.timeout_add(60000 * self.preferences["refresh_interval"], self.update)
 
   def on_message_context_menu(self, e, w, message):
     menu = gtk.Menu()
@@ -221,6 +229,7 @@ class GwibberClient(gtk.Window):
        "message_drawing_transparency",
        "message_drawing_gradients",
        "show_notifications",
+       "refresh_interval",
        "background_color"]:
         self.preferences.bind(glade.get_widget(widget), widget)
 
@@ -345,7 +354,7 @@ class GwibberClient(gtk.Window):
 
   def update(self):
     self.throbber.set_from_animation(gtk.gdk.PixbufAnimation("%s/progress.gif" % self.ui_dir))
-    while gtk.events_pending(): gtk.main_iteration()
+    #while gtk.events_pending(): gtk.main_iteration()
 
     def process():
       try:
@@ -377,6 +386,8 @@ class GwibberClient(gtk.Window):
     t = threading.Thread(target=process)
     t.setDaemon(True)
     t.start()
+
+    return True
     
 if __name__ == '__main__':
   w = GwibberClient()

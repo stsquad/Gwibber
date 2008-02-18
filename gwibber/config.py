@@ -40,6 +40,7 @@ class Wrapper:
       gtk.CheckButton: gaw.data_toggle_button,
       gtk.ColorButton: gaw.data_color,
       gtk.FileChooserButton: gaw.data_file_chooser,
+      gtk.SpinButton: gaw.data_spin_button,
       gtk.HScale: gaw.data_range}
     methods[type(widget)](widget, "%s/%s" % (self.path, key), **args)
     return widget
