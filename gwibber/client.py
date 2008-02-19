@@ -34,7 +34,6 @@ DEFAULT_PREFERENCES = {
   "message_text_shadow": False,
   "show_notifications": True,
   "refresh_interval": 2,
-
 }
 
 #PROTOCOLS = {"jaiku": jaiku, "digg": digg, "twitter": twitter, "facebook": facebook}
@@ -174,6 +173,7 @@ class GwibberClient(gtk.Window):
     menuGwibber = gtk.Menu()
     menuView = gtk.Menu()
     menuAccounts = gtk.Menu()
+    menuHelp = gtk.Menu()
 
     menuGwibberRefresh = gtk.ImageMenuItem(gtk.STOCK_REFRESH)
     menuGwibberRefresh.connect("activate", self.on_refresh)
@@ -186,6 +186,10 @@ class GwibberClient(gtk.Window):
     menuGwibberQuit = gtk.ImageMenuItem(gtk.STOCK_QUIT)
     menuGwibberQuit.connect("activate", self.on_quit)
     menuGwibber.append(menuGwibberQuit)
+
+    menuGwibberAbout = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
+    menuGwibberAbout.connect("activate", self.on_about)
+    menuHelp.append(menuGwibberAbout)
 
     for i in CONFIGURABLE_UI_ELEMENTS:
       mi = gtk.CheckMenuItem("_%s" % i.capitalize())
@@ -202,6 +206,9 @@ class GwibberClient(gtk.Window):
     menuAccountsItem.set_submenu(menuAccounts)
     menuAccountsItem.connect("select", self.on_accounts_menu)
 
+    menuHelpItem = gtk.MenuItem("_Help")
+    menuHelpItem.set_submenu(menuHelp)
+
     self.throbber = gtk.Image()
     menuSpinner = gtk.ImageMenuItem("")
     menuSpinner.set_right_justified(True)
@@ -212,6 +219,7 @@ class GwibberClient(gtk.Window):
     menubar.append(menuGwibberItem)
     menubar.append(menuViewItem)
     menubar.append(menuAccountsItem)
+    menubar.append(menuHelpItem)
     menubar.append(menuSpinner)
     return menubar
 
@@ -220,6 +228,14 @@ class GwibberClient(gtk.Window):
 
   def on_refresh(self, mi):
     self.update()
+
+  def on_about(self, mi):
+    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
+    dialog = glade.get_widget("about_dialog")
+    dialog.set_version(str(VERSION_NUMBER))
+    dialog.connect("response", lambda *a: dialog.hide())
+
+    dialog.show_all()
 
   def on_preferences(self, mi):
     glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
