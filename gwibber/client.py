@@ -256,8 +256,12 @@ class GwibberClient(gtk.Window):
 
     def setbgimg(*a):
       self.preferences["background_image"] = glade.get_widget("background_image").get_filename() or ""
+    
     glade.get_widget("background_image").set_filename(self.preferences["background_image"])
     glade.get_widget("background_image").connect("selection-changed", setbgimg)
+    glade.get_widget("background_image_clear").connect("clicked",
+      lambda *a: glade.get_widget("background_image").set_uri(""))
+
 
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
     dialog.show_all()
