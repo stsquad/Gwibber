@@ -74,6 +74,8 @@ class GwibberClient(gtk.Window):
     else: self.input = gtk.Entry()
     self.input.connect("populate-popup", self.on_input_context_menu)
     self.input.connect("activate", self.on_input_activate)
+    self.input.connect("changed", self.on_input_change)
+    self.input.set_max_length(140)
 
     self.editor = gtk.HBox()
     self.editor.pack_start(self.input)
@@ -168,6 +170,12 @@ class GwibberClient(gtk.Window):
           menu.append(mi)
 
     menu.show_all()
+
+  def on_input_change(self, widget):
+    self.statusbar.pop(1)
+    if len(widget.get_text()) > 0:
+      self.statusbar.push(1,
+        "Characters remaining: %s" % (widget.get_max_length() - len(widget.get_text())))
 
   def setup_menus(self):
     menuGwibber = gtk.Menu()
