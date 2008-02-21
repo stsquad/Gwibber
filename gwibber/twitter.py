@@ -8,7 +8,7 @@ SegPhault (Ryan Paul) - 12/22/2007
 """
 
 import urllib2, urllib, base64, simplejson, gtk
-import time, datetime, gwui, config, gaw
+import time, datetime, gwui, config
 
 from gwui import StatusMessage, ConfigPanel
 

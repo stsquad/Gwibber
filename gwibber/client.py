@@ -8,7 +8,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 """
 
 import sys, time, operator, os, threading, datetime
-import gtk, gtk.glade, gobject, gaw, dbus
+import gtk, gtk.glade, gobject, dbus
 import twitter, jaiku, facebook, digg
 import gwui, config, gintegration, webbrowser
 
@@ -56,7 +56,7 @@ class GwibberClient(gtk.Window):
     for key, value in DEFAULT_PREFERENCES.items():
       if not self.preferences[key]: self.preferences[key] = value
 
-    self.timer = gobject.timeout_add(60000 * self.preferences["refresh_interval"], self.update)
+    self.timer = gobject.timeout_add(60000 * int(self.preferences["refresh_interval"]), self.update)
     self.preferences.notify("refresh_interval", self.on_refresh_interval_changed)
 
     self.content = gtk.VBox(spacing=5)
@@ -130,7 +130,7 @@ class GwibberClient(gtk.Window):
 
   def on_refresh_interval_changed(self, *a):
     gobject.source_remove(self.timer)
-    self.timer = gobject.timeout_add(60000 * self.preferences["refresh_interval"], self.update)
+    self.timer = gobject.timeout_add(60000 * int(self.preferences["refresh_interval"]), self.update)
 
   def on_message_context_menu(self, e, w, message):
     menu = gtk.Menu()
@@ -167,7 +167,7 @@ class GwibberClient(gtk.Window):
       if acct["protocol"] in PROTOCOLS.keys():
         if PROTOCOLS[acct["protocol"]].Client(acct).can_send():
           mi = gtk.CheckMenuItem("%s (%s)" % (acct["username"], acct["protocol"]))
-          gaw.data_toggle_button(mi, "%s/%s/send_enabled" %(acct.path, acct.id))
+          acct.bind(mi, "send_enabled")
           menu.append(mi)
 
     menu.show_all()
@@ -202,7 +202,7 @@ class GwibberClient(gtk.Window):
 
     for i in CONFIGURABLE_UI_ELEMENTS:
       mi = gtk.CheckMenuItem("_%s" % i.capitalize())
-      gaw.data_toggle_button(mi, config.GCONF_PREFERENCES_DIR + "/show_%s" % i)
+      self.preferences.bind(mi, "show_%s" % i)
       menuView.append(mi)
 
     menuGwibberItem = gtk.MenuItem("_Gwibber")
@@ -303,7 +303,7 @@ class GwibberClient(gtk.Window):
         for i in ["receive", "send"]:
           if getattr(PROTOCOLS[acct["protocol"]].Client(acct), "can_%s" % i)():
             mi = gtk.CheckMenuItem("_%s Messages" % i.capitalize())
-            gaw.data_toggle_button(mi, "%s/%s/%s_enabled" %(acct.path, acct.id, i))
+            acct.bind(mi, "%s_enabled" % i)
             sm.append(mi)
         
         sm.append(gtk.SeparatorMenuItem())
