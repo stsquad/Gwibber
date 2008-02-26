@@ -382,7 +382,7 @@ class GwibberClient(gtk.Window):
       for acct in self.accounts:
         if acct["protocol"] in PROTOCOLS.keys():
           c = PROTOCOLS[acct["protocol"]].Client(acct)
-          if c.can_send():
+          if c.can_send() and c.send_enabled():
             c.transmit_status(self.input.get_text().strip())
       self.input.set_text("")
 
