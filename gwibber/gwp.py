@@ -386,8 +386,8 @@ create_persistency_link.append_handler(gtk.CheckMenuItem, _persistency_link_togg
 
 #create_persistency_link.append_handler_full(RadioButtonPersistencyLink.cmp_func, RadioButtonPersistencyLink)
 
-def _persistency_link_color_button(button, key, *args, **kwargs):
-  return PersistencyLink(button, lambda: button.get_color().to_string(), lambda x: button.set_color(gtk.gdk.color_parse(x)), "color-set", GConfValue(key, Spec.STRING, *args, **kwargs))
+def _persistency_link_color_button(button, key, default="black", *args, **kwargs):
+  return PersistencyLink(button, lambda: button.get_color().to_string(), lambda x: button.set_color(gtk.gdk.color_parse(x)), "color-set", GConfValue(key, Spec.STRING, default=default, *args, **kwargs))
 
 create_persistency_link.append_handler(gtk.ColorButton, _persistency_link_color_button)
 
