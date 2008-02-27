@@ -134,11 +134,11 @@ class GwibberClient(gtk.Window):
 
   def on_message_context_menu(self, e, w, message):
     menu = gtk.Menu()
-    if gintegration.service_is_running("org.gnome.Tomboy"):
-      mi = gtk.MenuItem("_Reply")
-      mi.connect("activate", lambda m: self.reply(message))
-      menu.append(mi)
+    mi = gtk.MenuItem("_Reply")
+    mi.connect("activate", lambda m: self.reply(message))
+    menu.append(mi)
 
+    if gintegration.service_is_running("org.gnome.Tomboy"):
       mi = gtk.MenuItem("Copy to _Tomboy")
       mi.connect("activate", lambda m: self.copy_to_tomboy(message))
       menu.append(mi)
