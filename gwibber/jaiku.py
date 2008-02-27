@@ -27,6 +27,7 @@ class Message:
     self.text = data["title"].replace('"', "&quot;").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     self.image = data["user"]["avatar"]
     self.bgcolor = "message_color"
+    self.url = data["url"]
     if data.has_key("icon") and data["icon"] != "": self.icon = data["icon"]
 
   def is_new(self):

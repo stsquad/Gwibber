@@ -138,10 +138,16 @@ class GwibberClient(gtk.Window):
     mi.connect("activate", lambda m: self.reply(message))
     menu.append(mi)
 
+    if hasattr(message, "url"):
+      mi = gtk.MenuItem("Open in browser")
+      mi.connect("activate", lambda m: webbrowser.open(message.url))
+      menu.append(mi)
+
     if gintegration.service_is_running("org.gnome.Tomboy"):
       mi = gtk.MenuItem("Copy to _Tomboy")
       mi.connect("activate", lambda m: self.copy_to_tomboy(message))
       menu.append(mi)
+
     menu.show_all()
     menu.attach_to_widget(w, None)
     menu.popup(None, None, None, 3, 0)
