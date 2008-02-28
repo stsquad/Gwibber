@@ -54,7 +54,7 @@ class GwibberClient(gtk.Window):
     self.connect("destroy", gtk.main_quit)
 
     for key, value in DEFAULT_PREFERENCES.items():
-      if not self.preferences[key]: self.preferences[key] = value
+      if self.preferences[key] == None: self.preferences[key] = value
 
     self.timer = gobject.timeout_add(60000 * int(self.preferences["refresh_interval"]), self.update)
     self.preferences.notify("refresh_interval", self.on_refresh_interval_changed)
@@ -166,6 +166,9 @@ class GwibberClient(gtk.Window):
 
   def on_link_clicked(self, e, w, message, link):
     webbrowser.open(link)
+
+  def on_profile_image_clicked(self, e, w, message):
+    webbrowser.open(message.profile_url)
 
   def on_input_context_menu(self, obj, menu):
     menu.append(gtk.SeparatorMenuItem())
@@ -379,6 +382,8 @@ class GwibberClient(gtk.Window):
       if hasattr(m, "messagetext"):
         m.messagetext.connect("link-clicked", self.on_link_clicked)
         m.messagetext.connect("right-clicked", self.on_message_context_menu)
+      if hasattr(m, "icon_frame") and hasattr(message, "profile_url"):
+        m.icon_frame.connect("button-release-event", self.on_profile_image_clicked, message)
       self.content.pack_start(m)
 
     self.content.show_all()      

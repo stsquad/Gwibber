@@ -28,6 +28,7 @@ class Message:
     self.image = data["user"]["avatar"]
     self.bgcolor = "message_color"
     self.url = data["url"]
+    self.profile_url = "http://%s.jaiku.com" % data["user"]["nick"]
     if data.has_key("icon") and data["icon"] != "": self.icon = data["icon"]
 
   def is_new(self):

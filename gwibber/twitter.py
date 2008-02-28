@@ -28,6 +28,7 @@ class Message:
     self.image = data["user"]["profile_image_url"]
     self.bgcolor = "message_color"
     self.url = "http://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
+    self.profile_url = "http://twitter.com/%s" % data["user"]["screen_name"]
 
   def is_new(self):
     return self.time > datetime.datetime(

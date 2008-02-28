@@ -94,7 +94,10 @@ class StatusMessage(glitter.Frame):
 
     if hasattr(message, "image"):
       self.usericon = UserIcon(message)
-      imgs.pack_start(self.usericon, False, False)
+      self.icon_frame = gtk.EventBox()
+      self.icon_frame.add(self.usericon)
+      self.icon_frame.set_visible_window(False)
+      imgs.pack_start(self.icon_frame, False, False)
 
     self.set_bgcolor(message.account[message.bgcolor])
     message.account.notify(message.bgcolor, lambda *a: self.apply_visual_settings(preferences))
