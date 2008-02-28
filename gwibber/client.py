@@ -258,6 +258,7 @@ class GwibberClient(gtk.Window):
   def on_preferences(self, mi):
     glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
     dialog = glade.get_widget("pref_dialog")
+    dialog.show_all()
 
     for widget in \
       ["foreground_color",
@@ -282,7 +283,6 @@ class GwibberClient(gtk.Window):
 
 
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
-    dialog.show_all()
 
   
   def on_accounts_menu(self, amenu):
