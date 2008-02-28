@@ -158,7 +158,9 @@ class GwibberClient(gtk.Window):
       message.sender, message.time, message.text))
   
   def reply(self, message):
+    self.input.grab_focus()
     self.input.set_text("@%s: " % message.sender_nick)
+    self.input.set_position(-1)
     for acct in self.accounts:
       if acct["username"] != message.account["username"] and \
         acct["protocol"] != message.account["protocol"]:
