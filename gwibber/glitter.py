@@ -60,9 +60,9 @@ class WrapLabel(gtk.Frame):
     if markup: self.pango_layout.set_markup(markup)
     self.pango_layout.set_wrap(pango.WRAP_WORD_CHAR)
     
-    ev = gtk.EventBox()
-    ev.set_visible_window(False)
-    self.add(ev)
+    self.ev = gtk.EventBox()
+    self.ev.set_visible_window(False)
+    self.add(self.ev)
 
   def do_expose_event(self, event):
     gtk.Frame.do_expose_event(self, event)

@@ -50,6 +50,25 @@ class StatusMessageText(glitter.WrapLabel):
     self.preferences = preferences
     if message: self.populate_data(message)
     self.connect("button-press-event", self.on_button_press)
+    self.ev.set_events(gtk.gdk.POINTER_MOTION_MASK)
+    self.ev.connect("motion-notify-event", self.on_mouse_notify)
+  
+  def on_mouse_notify(self, w, e, data = None):
+    x,y = self.ev.get_pointer()
+    pos = self.pango_layout.xy_to_index(int(x * pango.SCALE), int(y * pango.SCALE))
+    _,extents = self.pango_layout.get_extents()
+    right_edge = extents[0] + extents[2]
+    for match in LINK_PARSE.finditer(self.pango_layout.get_text()):
+      lx,ly,lw,lh = self.pango_layout.index_to_pos(match.span()[0])  # start of the link text
+      tx,ty,tw,th = self.pango_layout.index_to_pos(match.span()[1])  # end of the link text
+      x *= pango.SCALE
+      y *= pango.SCALE
+      # try to account for wrapped link text here
+      if pos[0] in range(*match.span()) and x < right_edge and \
+        (y < ty or y > ty and x < tx + tw): 
+          self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.HAND2))
+      else:
+        self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.LEFT_PTR))
 
   def populate_data(self, message):
     self.message = message
