@@ -37,7 +37,7 @@ DEFAULT_PREFERENCES = {
 }
 
 #PROTOCOLS = {"jaiku": jaiku, "digg": digg, "twitter": twitter, "facebook": facebook}
-PROTOCOLS = {"twitter": twitter, "jaiku": jaiku}
+PROTOCOLS = {"twitter": twitter, "jaiku": jaiku, "digg": digg}
 
 class GwibberClient(gtk.Window):
   def __init__(self, ui_dir="ui"):

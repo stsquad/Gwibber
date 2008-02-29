@@ -73,7 +73,8 @@ class StatusMessageText(glitter.WrapLabel):
   def populate_data(self, message):
     self.message = message
     if hasattr(message, "pango_markup"):
-      self.pango_layout.set_markup(message.pango_markup)
+      self.pango_layout.set_markup("""<span foreground="%s">%s</span>""" % (
+          self.preferences["foreground_color"], apply_pango_link_style(message.pango_markup, self.preferences["link_color"])))
     else:
       self.pango_layout.set_markup(
         """<span foreground="%s"><big><b>%s</b></big><small> (%s)</small>\n%s</span>""" % (
