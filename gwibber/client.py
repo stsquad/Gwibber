@@ -103,7 +103,7 @@ class GwibberClient(gtk.Window):
     self.show_all()
     self.apply_ui_element_settings()
     self.apply_ui_drawing_settings()
-    #self.update()
+    self.update()
 
   def apply_ui_drawing_settings(self):
     bgcolor = self.preferences["background_color"]
