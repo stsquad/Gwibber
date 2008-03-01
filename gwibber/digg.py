@@ -12,7 +12,6 @@ from gwui import StatusMessage
 
 LINK_PARSE =  re.compile("<a[^>]+href=\"(https?://[^\"]+)\">[^<]+</a>")
 
-
 def parse_time(t):
   return datetime.datetime.strptime(t,"%a, %d %b %Y %H:%M:%S %Z")
 

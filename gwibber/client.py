@@ -36,8 +36,8 @@ DEFAULT_PREFERENCES = {
   "refresh_interval": 2,
 }
 
-#PROTOCOLS = {"jaiku": jaiku, "digg": digg, "twitter": twitter, "facebook": facebook}
-PROTOCOLS = {"twitter": twitter, "jaiku": jaiku, "digg": digg}
+PROTOCOLS = {"jaiku": jaiku, "digg": digg, "twitter": twitter, "facebook": facebook}
+#PROTOCOLS = {"twitter": twitter, "jaiku": jaiku, "digg": digg}
 
 class GwibberClient(gtk.Window):
   def __init__(self, ui_dir="ui"):
@@ -103,7 +103,7 @@ class GwibberClient(gtk.Window):
     self.show_all()
     self.apply_ui_element_settings()
     self.apply_ui_drawing_settings()
-    self.update()
+    #self.update()
 
   def apply_ui_drawing_settings(self):
     bgcolor = self.preferences["background_color"]
