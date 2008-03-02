@@ -8,7 +8,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 """
 
 import sys, time, operator, os, threading, datetime
-import gtk, gtk.glade, gobject, dbus
+import gtk, gtk.glade, gobject, dbus, table
 import twitter, jaiku, facebook, digg, flickr
 import gwui, config, gintegration, webbrowser
 
@@ -288,9 +288,7 @@ class GwibberClient(gtk.Window):
     glade.get_widget("background_image_clear").connect("clicked",
       lambda *a: glade.get_widget("background_image").set_uri(""))
 
-
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
-
   
   def on_accounts_menu(self, amenu):
     amenu.emit_stop_by_name("select")
@@ -298,6 +296,7 @@ class GwibberClient(gtk.Window):
     for c in menu: menu.remove(c)
     
     menuAccountsManage = gtk.MenuItem("_Manage")
+    menuAccountsManage.connect("activate", self.on_accounts_manage)
     menu.append(menuAccountsManage)
    
     menuAccountsCreate = gtk.MenuItem("_Create")
@@ -372,6 +371,86 @@ class GwibberClient(gtk.Window):
       self.accounts.delete_account(acct)
     
     d.destroy()
+
+  def on_accounts_manage(self, mi):
+    manager = gtk.Window()
+    manager.set_title("Manage Accounts")
+    manager.set_border_width(10)
+    manager.connect("destroy", gtk.main_quit)
+    manager.resize(390,240)
+
+    def can_toggle(a, key):
+      c = PROTOCOLS[a["protocol"]].Client(a)
+      if getattr(c, "can_%s" % key)(): return True
+
+    def toggle_table_checkbox(cr, i, key, table):
+      a = table.tree_store.get_obj(i)
+      a[key] = (a[key] and [False] or [True])[0]
+
+    col_receive = gtk.CellRendererToggle()
+    col_send = gtk.CellRendererToggle()
+
+    data = table.generate([
+      ["username", lambda a: a["username"]],
+      ["Receive", (col_receive, {
+        "active": lambda a: a["receive_enabled"],
+        "visible": lambda a: can_toggle(a, "receive")})],
+      ["Send", (col_send, {
+        "active": lambda a: a["send_enabled"],
+        "visible": lambda a: can_toggle(a, "send")})],
+      ["protocol", lambda a: a["protocol"].capitalize()],
+    ])
+
+    col_receive.connect("toggled", toggle_table_checkbox, "receive_enabled", data)
+    col_send.connect("toggled", toggle_table_checkbox, "send_enabled", data)
+
+    for a in self.accounts: data += a
+    
+    scroll = gtk.ScrolledWindow()
+    scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+    scroll.add_with_viewport(data)
+
+    buttons = gtk.HButtonBox()
+    buttons.set_layout(gtk.BUTTONBOX_END)
+
+    def on_click_button(w, stock):
+      if stock == gtk.STOCK_CLOSE:
+        manager.destroy()
+      elif stock == gtk.STOCK_NEW:
+        mac = gtk.Menu()
+        for p in PROTOCOLS.keys():
+          mi = gtk.MenuItem("%s" % p.capitalize())
+          mi.connect("activate", self.on_account_create, p)
+          mac.append(mi)
+        mac.show_all()
+        mac.popup(None, None, None, 1, 0)
+      elif stock == gtk.STOCK_PROPERTIES:
+        if isinstance(data.get_selected(), config.Account):
+          self.on_account_properties(w, data.get_selected())
+      elif stock == gtk.STOCK_DELETE:
+        if isinstance(data.get_selected(), config.Account):
+          self.on_account_delete(data.get_selected())
+
+    def on_account_change(gc, v, entry, t):
+      t.queue_draw()
+      if len([a for a in self.accounts]) != len(t.tree_store):
+        t.tree_store.clear()
+        for a in self.accounts: t+= a
+    
+    config.GCONF.notify_add("/apps/gwibber/accounts", on_account_change, data)
+
+    for stock in [gtk.STOCK_NEW, gtk.STOCK_PROPERTIES, gtk.STOCK_DELETE, gtk.STOCK_CLOSE]:
+      b = gtk.Button(stock=stock)
+      b.connect("clicked", on_click_button, stock)
+      buttons.pack_start(b)
+
+    vb = gtk.VBox(spacing=5)
+    vb.pack_start(scroll)
+    vb.pack_start(buttons, False, False)
+
+    manager.add(vb)
+    manager.show_all()
+    gtk.main()
 
   def generate_message_list(self):
     for acct in self.accounts:
