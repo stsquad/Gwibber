@@ -9,7 +9,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 import sys, time, operator, os, threading, datetime
 import gtk, gtk.glade, gobject, dbus
-import twitter, jaiku, facebook, digg
+import twitter, jaiku, facebook, digg, flickr
 import gwui, config, gintegration, webbrowser
 
 gtk.gdk.threads_init()
@@ -36,8 +36,13 @@ DEFAULT_PREFERENCES = {
   "refresh_interval": 2,
 }
 
-PROTOCOLS = {"jaiku": jaiku, "digg": digg, "twitter": twitter, "facebook": facebook}
-#PROTOCOLS = {"twitter": twitter, "jaiku": jaiku, "digg": digg}
+PROTOCOLS = {
+  "jaiku": jaiku,
+  "digg": digg,
+  "twitter": twitter,
+  "facebook": facebook,
+  "flickr": flickr  
+}
 
 class GwibberClient(gtk.Window):
   def __init__(self, ui_dir="ui"):

@@ -132,8 +132,13 @@ class StatusMessage(glitter.Frame):
       imgs.pack_start(i, False, False)
 
     b.pack_start(imgs, False, False)
-    b.pack_start(self.messagetext)
+    b.pack_start(self.populate_content_block())
     self.add(b)
+
+  def populate_content_block(self):
+    vb = gtk.VBox()
+    vb.pack_start(self.messagetext)
+    return vb
 
   def apply_visual_settings(self, preferences):
     self.set_bgcolor(self.message.account[self.message.bgcolor])
