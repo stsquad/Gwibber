@@ -391,7 +391,7 @@ class GwibberClient(gtk.Window):
     col_send = gtk.CellRendererToggle()
 
     data = table.generate([
-      ["username", lambda a: a["username"]],
+      ["username", lambda a: a["username"] or "None"],
       ["Receive", (col_receive, {
         "active": lambda a: a["receive_enabled"],
         "visible": lambda a: can_toggle(a, "receive")})],
@@ -409,6 +409,7 @@ class GwibberClient(gtk.Window):
     scroll = gtk.ScrolledWindow()
     scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
     scroll.add_with_viewport(data)
+    data.set_property("rules-hint", True)
 
     buttons = gtk.HButtonBox()
     buttons.set_layout(gtk.BUTTONBOX_END)
@@ -416,6 +417,7 @@ class GwibberClient(gtk.Window):
     def on_click_button(w, stock):
       if stock == gtk.STOCK_CLOSE:
         manager.destroy()
+
       elif stock == gtk.STOCK_NEW:
         mac = gtk.Menu()
         for p in PROTOCOLS.keys():
@@ -424,9 +426,11 @@ class GwibberClient(gtk.Window):
           mac.append(mi)
         mac.show_all()
         mac.popup(None, None, None, 1, 0)
+
       elif stock == gtk.STOCK_PROPERTIES:
         if isinstance(data.get_selected(), config.Account):
           self.on_account_properties(w, data.get_selected())
+
       elif stock == gtk.STOCK_DELETE:
         if isinstance(data.get_selected(), config.Account):
           self.on_account_delete(data.get_selected())
