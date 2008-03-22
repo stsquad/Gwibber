@@ -9,7 +9,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 import sys, time, operator, os, threading, datetime
 import gtk, gtk.glade, gobject, dbus, table
-import twitter, jaiku, facebook, digg, flickr
+import twitter, jaiku, facebook, digg, flickr, pownce
 import gwui, config, gintegration, webbrowser
 
 gtk.gdk.threads_init()
@@ -41,7 +41,8 @@ PROTOCOLS = {
   "digg": digg,
   "twitter": twitter,
   "facebook": facebook,
-  "flickr": flickr  
+  "flickr": flickr,
+  "pownce": pownce,
 }
 
 class GwibberClient(gtk.Window):
@@ -53,8 +54,16 @@ class GwibberClient(gtk.Window):
     self.preferences = config.Preferences()
     self.ui_dir = ui_dir
     self.accounts = config.Accounts()
-    self.last_update = None 
+    self.last_update = None
     layout = gtk.VBox()
+    
+    self.errors = table.generate([
+      ["date", lambda t: t.time.strftime("%Y-%m-%d")],
+      ["time", lambda t: t.time.strftime("%I:%M:%S %p")],
+      ["username"],
+      ["protocol"],
+      ["message"]
+    ])
 
     self.connect("destroy", gtk.main_quit)
 
@@ -221,6 +230,11 @@ class GwibberClient(gtk.Window):
       self.preferences.bind(mi, "show_%s" % i)
       menuView.append(mi)
 
+    mi = gtk.MenuItem("_Errors")
+    mi.connect("activate", self.on_errors_show)
+    menuView.append(gtk.SeparatorMenuItem())
+    menuView.append(mi)
+
     menuGwibberItem = gtk.MenuItem("_Gwibber")
     menuGwibberItem.set_submenu(menuGwibber)
 
@@ -261,6 +275,40 @@ class GwibberClient(gtk.Window):
     dialog.connect("response", lambda *a: dialog.hide())
 
     dialog.show_all()
+  
+  def on_errors_show(self, mi):
+    errorwin = gtk.Window()
+    errorwin.set_title("Errors")
+    errorwin.set_border_width(10)
+    errorwin.resize(390,240)
+
+    errors = table.View(self.errors.tree_style,
+      self.errors.tree_store, self.errors.tree_filter)
+
+    scroll = gtk.ScrolledWindow()
+    scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+    scroll.add_with_viewport(errors)
+
+    buttons = gtk.HButtonBox()
+    buttons.set_layout(gtk.BUTTONBOX_END)
+
+    def on_click_button(w, stock):
+      if stock == gtk.STOCK_CLOSE:
+        errorwin.destroy()
+      elif stock == gtk.STOCK_CLEAR:
+        self.errors.tree_store.clear()
+
+    for stock in [gtk.STOCK_CLEAR, gtk.STOCK_CLOSE]:
+      b = gtk.Button(stock=stock)
+      b.connect("clicked", on_click_button, stock)
+      buttons.pack_start(b)
+    
+    vb = gtk.VBox(spacing=5)
+    vb.pack_start(scroll)
+    vb.pack_start(buttons, False, False)
+
+    errorwin.add(vb)
+    errorwin.show_all()
 
   def on_preferences(self, mi):
     glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
@@ -376,7 +424,6 @@ class GwibberClient(gtk.Window):
     manager = gtk.Window()
     manager.set_title("Manage Accounts")
     manager.set_border_width(10)
-    manager.connect("destroy", gtk.main_quit)
     manager.resize(390,240)
 
     def can_toggle(a, key):
@@ -454,15 +501,22 @@ class GwibberClient(gtk.Window):
 
     manager.add(vb)
     manager.show_all()
-    gtk.main()
 
   def generate_message_list(self):
     for acct in self.accounts:
       if acct["protocol"] in PROTOCOLS.keys():
-        client = PROTOCOLS[acct["protocol"]].Client(acct)
-        if client.receive_enabled():
-          for message in client.get_messages():
-            yield message
+        try:
+          client = PROTOCOLS[acct["protocol"]].Client(acct)
+          if client.receive_enabled():
+            for message in client.get_messages():
+              yield message
+        except:
+          self.errors += {
+            "time": datetime.datetime.utcnow(),
+            "username": acct["username"],
+            "protocol": acct["protocol"],
+            "message": "Failed to retrieve messages",
+          }
 
   def draw_messages(self):
     for i in self.content: self.content.remove(i)
@@ -476,15 +530,23 @@ class GwibberClient(gtk.Window):
         m.icon_frame.connect("button-release-event", self.on_profile_image_clicked, message)
       self.content.pack_start(m)
 
-    self.content.show_all()      
+    self.content.show_all() 
 
   def on_input_activate(self, e):
     if self.input.get_text().strip():
       for acct in self.accounts:
         if acct["protocol"] in PROTOCOLS.keys():
-          c = PROTOCOLS[acct["protocol"]].Client(acct)
-          if c.can_send() and c.send_enabled():
-            c.transmit_status(self.input.get_text().strip())
+          try:
+            c = PROTOCOLS[acct["protocol"]].Client(acct)
+            if c.can_send() and c.send_enabled():
+              c.transmit_status(self.input.get_text().strip())
+          except:
+            self.errors += {
+              "time": datetime.datetime.utcnow(),
+              "username": acct["username"],
+              "protocol": acct["protocol"],
+              "message": "Failed to send message",
+            }
       self.input.set_text("")
 
   def update(self):
