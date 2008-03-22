@@ -58,7 +58,10 @@ class Client:
   def can_send(self): return True
   def can_receive(self): return True
 
-  def send_enabled(self): return True
+  def send_enabled(self):
+    return self.account["send_enabled"] and \
+      self.account["session_key"] != None and \
+      self.account["secret_key"] != None
 
   def receive_enabled(self):
     return self.account["receive_enabled"] and \
