@@ -7,7 +7,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import sys, time, operator, os, threading, datetime
+import sys, time, operator, os, threading, datetime, traceback
 import gtk, gtk.glade, gobject, dbus, table
 import twitter, jaiku, facebook, digg, flickr, pownce
 import gwui, config, gintegration, webbrowser
@@ -16,7 +16,7 @@ gtk.gdk.threads_init()
 
 MAX_MESSAGE_LENGTH = 140
 
-CONFIGURABLE_UI_ELEMENTS = ["editor", "statusbar", "messages"]
+CONFIGURABLE_UI_ELEMENTS = ["editor", "statusbar", "messages", "tray_icon"]
 CONFIGURABLE_UI_SETTINGS = ["background_color", "background_image"]
 IMAGE_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
 VERSION_NUMBER = 0.7
@@ -62,7 +62,8 @@ class GwibberClient(gtk.Window):
       ["time", lambda t: t.time.strftime("%I:%M:%S %p")],
       ["username"],
       ["protocol"],
-      ["message"]
+      ["message", (gtk.CellRendererText(), {
+        "markup": lambda t: t.message})]
     ])
 
     self.connect("destroy", gtk.main_quit)
@@ -78,6 +79,9 @@ class GwibberClient(gtk.Window):
     
     self.background = gtk.EventBox()
     self.background.add(self.content)
+
+    self.tray_icon = gtk.status_icon_new_from_icon_name("gwibber")
+    self.tray_icon.connect("activate", self.on_toggle_window_visibility)
 
     self.messages = gtk.ScrolledWindow()
     self.messages.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -118,6 +122,10 @@ class GwibberClient(gtk.Window):
     self.apply_ui_element_settings()
     self.apply_ui_drawing_settings()
     self.update()
+
+  def on_toggle_window_visibility(self, w):
+    if self.get_property("visible"): self.hide()
+    else: self.show_all()
 
   def apply_ui_drawing_settings(self):
     bgcolor = self.preferences["background_color"]
@@ -172,14 +180,60 @@ class GwibberClient(gtk.Window):
       message.sender, message.time, message.text))
   
   def reply(self, message):
-    self.input.grab_focus()
-    self.input.set_text("@%s: " % message.sender_nick)
-    self.input.set_position(-1)
-    for acct in self.accounts:
-      if acct["username"] != message.account["username"] and \
-        acct["protocol"] != message.account["protocol"]:
-        acct["send_enabled"] = False
+    acct = message.account
 
+    if acct["protocol"] == "twitter":
+      self.input.grab_focus()
+      self.input.set_text("@%s: " % message.sender_nick)
+      self.input.set_position(-1)
+      for acct in self.accounts:
+        if acct["protocol"] != "twitter" or  \
+          acct["protocol"] != "twitter" and \
+          acct["username"] != message.account["username"]:
+            acct["send_enabled"] = False
+      return
+
+    if acct["protocol"] in PROTOCOLS.keys():
+      client = PROTOCOLS[acct["protocol"]].Client(acct)
+
+      if hasattr(client, "can_reply"):
+        reply = gtk.Window()
+        reply.set_title("Reply")
+        reply.set_border_width(5)
+        reply.resize(390, 240)
+        
+        content = gtk.VBox(spacing=5)
+        content.set_border_width(5)
+
+        for msg in client.get_replies(message):
+          m = PROTOCOLS[msg.account["protocol"]].StatusMessage(msg, self.preferences)
+          content.pack_start(m, False, False)
+
+        def on_reply_send(e):
+          if e.get_text().strip():
+            c = PROTOCOLS[acct["protocol"]].Client(acct)
+            if c.can_send():
+              c.transmit_reply(message, e.get_text().strip())
+              e.set_text("")
+        
+        background = gtk.EventBox()
+        background.set_style(self.background.get_style())
+        background.add(content) 
+
+        scroll = gtk.ScrolledWindow()
+        scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scroll.add_with_viewport(background)
+
+        input = gtk.Entry()
+        input.connect("activate", on_reply_send)
+
+        vb = gtk.VBox(spacing=5)
+        vb.pack_start(scroll)
+        vb.pack_start(input, False, False)
+
+        reply.add(vb)
+        reply.show_all()
+    
   def on_link_clicked(self, e, w, message, link):
     webbrowser.open(link)
 
@@ -226,7 +280,7 @@ class GwibberClient(gtk.Window):
     menuHelp.append(menuGwibberAbout)
 
     for i in CONFIGURABLE_UI_ELEMENTS:
-      mi = gtk.CheckMenuItem("_%s" % i.capitalize())
+      mi = gtk.CheckMenuItem("_%s" % " ".join(i.split("_")).capitalize())
       self.preferences.bind(mi, "show_%s" % i)
       menuView.append(mi)
 
@@ -280,10 +334,26 @@ class GwibberClient(gtk.Window):
     errorwin = gtk.Window()
     errorwin.set_title("Errors")
     errorwin.set_border_width(10)
-    errorwin.resize(390,240)
+    errorwin.resize(600, 300)
+
+    def on_row_activate(tree, path, col):
+      w = gtk.Window()
+      w.set_title("Debug Output")
+      w.resize(800, 800)
+      
+      text = gtk.TextView()
+      text.get_buffer().set_text(tree.get_selected().error)
+
+      scroll = gtk.ScrolledWindow()
+      scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+      scroll.add_with_viewport(text)
+
+      w.add(scroll)
+      w.show_all()
 
     errors = table.View(self.errors.tree_style,
       self.errors.tree_store, self.errors.tree_filter)
+    errors.connect("row-activated", on_row_activate)
 
     scroll = gtk.ScrolledWindow()
     scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -511,11 +581,13 @@ class GwibberClient(gtk.Window):
             for message in client.get_messages():
               yield message
         except:
+          err = traceback.format_exc()
           self.errors += {
             "time": datetime.datetime.utcnow(),
             "username": acct["username"],
             "protocol": acct["protocol"],
-            "message": "Failed to retrieve messages",
+            "message": "Failed to retrieve messages\n<i><span foreground='red'>%s</span></i>" % err.split("\n")[-2],
+            "error": err,
           }
 
   def draw_messages(self):
@@ -563,11 +635,15 @@ class GwibberClient(gtk.Window):
         if self.last_update and self.preferences["show_notifications"]:
           for m in self.data:
             if m.time > self.last_update and gintegration.notify.init("Gwibber"):
-              gintegration.notify.Notification(m.sender, m.text,
-                gwui.image_cache(m.image, IMAGE_CACHE_DIR)).show()
+              if hasattr(m, "image"):
+                gintegration.notify.Notification(m.sender, m.text,
+                  gwui.image_cache(m.image, IMAGE_CACHE_DIR)).show()
+              else:
+                gintegration.notify.Notification(m.sender, m.text)
 
         if self.last_update:
           for count, m in enumerate(self.content):
+            print self.data
             if len(self.data) < count or m.message.text != self.data[count].text:
               self.draw_messages()
               break
@@ -578,6 +654,9 @@ class GwibberClient(gtk.Window):
         self.last_update = datetime.datetime.utcnow()
         
         gtk.gdk.threads_leave()
+      except:
+        print sys.exc_info()
+        gtk.gdk.threads._leave()
       finally: gobject.idle_add(self.throbber.clear)
     
     t = threading.Thread(target=process)
