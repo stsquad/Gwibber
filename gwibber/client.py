@@ -643,7 +643,6 @@ class GwibberClient(gtk.Window):
 
         if self.last_update:
           for count, m in enumerate(self.content):
-            print self.data
             if len(self.data) < count or m.message.text != self.data[count].text:
               self.draw_messages()
               break
@@ -654,9 +653,6 @@ class GwibberClient(gtk.Window):
         self.last_update = datetime.datetime.utcnow()
         
         gtk.gdk.threads_leave()
-      except:
-        print sys.exc_info()
-        gtk.gdk.threads._leave()
       finally: gobject.idle_add(self.throbber.clear)
     
     t = threading.Thread(target=process)

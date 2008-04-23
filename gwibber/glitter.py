@@ -104,8 +104,28 @@ class RoundImage(gtk.Image):
 
 gobject.type_register(RoundImage)
 
+class CompositedWindow(gtk.Window):
+  def __init__(self, *a):
+    gtk.Window.__init__(self, *a)
+    
+    self.connect("expose-event", self.on_expose)
+    self.connect("screen-changed", self.screen_changed)
+    self.set_app_paintable(True)
+    self.screen_changed(self)
+
+  def screen_changed(self, w, old_screen=None):
+    screen = w.get_screen()
+    cma = screen.get_rgba_colormap()
+    w.set_colormap(cma)
+
+  def on_expose(self, w, e):
+    cr = w.window.cairo_create()
+    cr.set_source_rgba(1.0, 1.0, 1.0, 0.0)
+    cr.set_operator(cairo.OPERATOR_SOURCE)
+    cr.paint()
+
 if __name__ == "__main__":
-  w = gtk.Window()
+  w = CompositedWindow()
   w.connect("destroy", gtk.main_quit)
   f = Frame(bgcolor="red", transparency=0.8)
   l = WrapLabel(markup="<b>This is a test</b>")
