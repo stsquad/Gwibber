@@ -8,7 +8,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 """
 
 import sys, time, operator, os, threading, datetime, traceback
-import gtk, gtk.glade, gobject, dbus, table
+import gtk, gtk.glade, gobject, dbus, table, webkit
 import twitter, jaiku, facebook, digg, flickr, pownce
 import gwui, config, gintegration, webbrowser
 
@@ -74,18 +74,17 @@ class GwibberClient(gtk.Window):
     self.timer = gobject.timeout_add(60000 * int(self.preferences["refresh_interval"]), self.update)
     self.preferences.notify("refresh_interval", self.on_refresh_interval_changed)
 
-    self.content = gtk.VBox(spacing=5)
+    self.content = webkit.WebView()
     self.content.set_border_width(5)
+    self.content.open("file://%s/default.html" % ui_dir)
+    self.content.connect("navigation-requested", self.on_link_clicked)
     
-    self.background = gtk.EventBox()
-    self.background.add(self.content)
-
     self.tray_icon = gtk.status_icon_new_from_icon_name("gwibber")
     self.tray_icon.connect("activate", self.on_toggle_window_visibility)
 
     self.messages = gtk.ScrolledWindow()
     self.messages.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-    self.messages.add_with_viewport(self.background)
+    self.messages.add(self.content)
 
     if gintegration.SPELLCHECK_ENABLED:
       self.input = gintegration.sexy.SpellEntry()
@@ -121,7 +120,7 @@ class GwibberClient(gtk.Window):
     self.show_all()
     self.apply_ui_element_settings()
     self.apply_ui_drawing_settings()
-    self.update()
+    #self.update()
 
   def on_toggle_window_visibility(self, w):
     if self.get_property("visible"): self.hide()
@@ -131,6 +130,7 @@ class GwibberClient(gtk.Window):
     bgcolor = self.preferences["background_color"]
     bgimage = self.preferences["background_image"]
 
+    """
     style = self.background.get_style().copy()
 
     if bgimage and os.path.exists(bgimage):
@@ -143,6 +143,7 @@ class GwibberClient(gtk.Window):
         style.bg[gtk.STATE_NORMAL] = gtk.gdk.color_parse(bgcolor)
 
     self.background.set_style(style)
+    """
 
   def apply_ui_element_settings(self):
     for i in CONFIGURABLE_UI_ELEMENTS:
@@ -234,8 +235,9 @@ class GwibberClient(gtk.Window):
         reply.add(vb)
         reply.show_all()
     
-  def on_link_clicked(self, e, w, message, link):
-    webbrowser.open(link)
+  def on_link_clicked(self, view, frame, req):
+    webbrowser.open(req.get_uri())
+    return True
 
   def on_profile_image_clicked(self, e, w, message):
     webbrowser.open(message.profile_url)
@@ -590,19 +592,38 @@ class GwibberClient(gtk.Window):
             "error": err,
           }
 
+  def generate_message_html(self, message):
+    color = gtk.gdk.color_parse(message.account[message.bgcolor])
+    message.bgstyle = "rgba(%s,%s,%s,0.4)" % (color.red/255, color.green/255, color.blue/255)
+    message.time = gwui.generate_time_string(message.time)
+
+    if hasattr(message, "html_content"):
+      return message.html_content
+    
+    if not hasattr(message, "html_string"):
+      message.html_string = '<span class="text">%s</span>' % \
+        gwui.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
+
+    return repr("""
+      <div class="message" style="background-color: %(bgstyle)s;">
+        <a href="%(profile_url)s">
+          <div class="imgbox" style="background-image: url(%(image)s);"></div>
+        </a>
+        <p class="content">
+          <span class="title">%(sender)s</span>
+          <span class="time"> (<a href="%(url)s">%(time)s</a>)</span><br />
+          </a>
+          <span class="text">%(html_string)s</span>
+        </p>
+        <a class="reply" href="gwibber:reply#message1">Reply</a>
+      </div>
+      """ % message.__dict__)
+
   def draw_messages(self):
-    for i in self.content: self.content.remove(i)
-
+    self.content.execute_script("clearMessages()")
     for message in self.data:
-      m = PROTOCOLS[message.account["protocol"]].StatusMessage(message, self.preferences)
-      if hasattr(m, "messagetext"):
-        m.messagetext.connect("link-clicked", self.on_link_clicked)
-        m.messagetext.connect("right-clicked", self.on_message_context_menu)
-      if hasattr(m, "icon_frame") and hasattr(message, "profile_url"):
-        m.icon_frame.connect("button-release-event", self.on_profile_image_clicked, message)
-      self.content.pack_start(m)
-
-    self.content.show_all() 
+      self.content.execute_script("addMessage(%s)" %
+        self.generate_message_html(message)[1:])
 
   def on_input_activate(self, e):
     if self.input.get_text().strip():
@@ -641,12 +662,16 @@ class GwibberClient(gtk.Window):
               else:
                 gintegration.notify.Notification(m.sender, m.text)
 
+        """
         if self.last_update:
           for count, m in enumerate(self.content):
             if len(self.data) < count or m.message.text != self.data[count].text:
               self.draw_messages()
               break
         else: self.draw_messages()
+        """
+
+        self.draw_messages()
         
         self.statusbar.pop(0)
         self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))

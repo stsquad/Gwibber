@@ -24,8 +24,8 @@ def generate_time_string(t):
   elif d.days > 0: return "%d days ago" % d.days
   else: return "BUG: %s" % str(d)
 
-def apply_pango_link_style(t, col):
-  return LINK_PARSE.sub("<u><span foreground='%s'>\\1</span></u>" % col, t)
+def linkify(t):
+  return LINK_PARSE.sub('<a href="\\1">\\1</a>', t)
 
 def image_cache(url, cache_dir):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)
@@ -37,61 +37,6 @@ def image_cache(url, cache_dir):
     output.close()
 
   return img_path
-
-class StatusMessageText(glitter.WrapLabel):
-  __gsignals__ = {
-      # <- widget, message, link string
-      "link-clicked": (gobject.SIGNAL_RUN_FIRST, None, (object, object, object)),
-      # <- widget, message
-      "right-clicked": (gobject.SIGNAL_RUN_FIRST, None, (object, object))
-  }
-  def __init__(self, message = None, preferences = None):
-    glitter.WrapLabel.__init__(self)
-    self.preferences = preferences
-    if message: self.populate_data(message)
-    self.connect("button-press-event", self.on_button_press)
-    self.ev.set_events(gtk.gdk.POINTER_MOTION_MASK)
-    self.ev.connect("motion-notify-event", self.on_mouse_notify)
-  
-  def on_mouse_notify(self, w, e, data = None):
-    x,y = self.ev.get_pointer()
-    pos = self.pango_layout.xy_to_index(int(x * pango.SCALE), int(y * pango.SCALE))
-    _,extents = self.pango_layout.get_extents()
-    right_edge = extents[0] + extents[2]
-    for match in LINK_PARSE.finditer(self.pango_layout.get_text()):
-      lx,ly,lw,lh = self.pango_layout.index_to_pos(match.span()[0])  # start of the link text
-      tx,ty,tw,th = self.pango_layout.index_to_pos(match.span()[1])  # end of the link text
-      x *= pango.SCALE
-      y *= pango.SCALE
-      # try to account for wrapped link text here
-      if pos[0] in range(*match.span()) and x < right_edge and \
-        (y < ty or y > ty and x < tx + tw): 
-          self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.HAND2))
-      else:
-        self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.LEFT_PTR))
-
-  def populate_data(self, message):
-    self.message = message
-    if hasattr(message, "pango_markup"):
-      self.pango_layout.set_markup("""<span foreground="%s">%s</span>""" % (
-          self.preferences["foreground_color"], apply_pango_link_style(message.pango_markup, self.preferences["link_color"])))
-    else:
-      self.pango_layout.set_markup(
-        """<span foreground="%s"><big><b>%s</b></big><small> (%s)</small>\n%s</span>""" % (
-        self.preferences["foreground_color"],
-        message.sender, generate_time_string(message.time),
-        apply_pango_link_style(message.text, self.preferences["link_color"])))
-
-  def on_button_press(self, w, e):
-    if e.button == 1:
-      pos = self.pango_layout.xy_to_index(int(e.x * pango.SCALE), int(e.y * pango.SCALE))
-
-      for match in LINK_PARSE.finditer(self.pango_layout.get_text()):
-        if pos[0] in range(*match.span()):
-          self.emit("link-clicked", self, self.message, self.pango_layout.get_text()[match.start():match.end()])
-    elif e.button == 3: self.emit("right-clicked", self, self.message)
-
-gobject.type_register(StatusMessageText)
 
 MESSAGE_DRAWING_SETTINGS = ["message_drawing_gradients", "message_drawing_radius", "message_drawing_transparency", "foreground_color", "link_color", "message_text_shadow", "text_shadow_color"]
 

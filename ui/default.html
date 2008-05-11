@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <style>
+      body {
+        background: url(blue_stripe.png);
+      }
+
+      a {
+        color: white;
+      }
+      
+      a:hover, .time a:hover {
+        text-decoration: underline;
+      }
+
+      .message {
+        padding: 5px;
+        color: white;
+        margin-bottom: 5px;
+        text-shadow: 1px 1px black;
+        font-family: Lucida Grande;
+        line-height: 120%;
+        -webkit-border-radius: 5px;
+      }
+
+      .title {
+        font-size: large;
+        font-weight: bold;
+      }
+
+      .time a {
+        font-size: small;
+        text-decoration: none;
+      }
+
+      
+
+      .imgbox {
+        float: left;
+        margin: 10px;
+        width: 48px;
+        height: 48px;
+        background-image: url(');
+        background-repeat: no-repeat;
+        -webkit-border-radius: 5px;
+      }
+
+      .inlinenick {
+        text-decoration: none;
+        font-weight: bold;       
+      }
+
+      .reply {
+        display: none;
+      }
+    </style>
+
+    <script src="jquery.js"></script>
+    <script>
+      function addMessage(text) {
+        $(".messages").append(text)
+      }
+
+      function clearMessages() {
+        $(".messages").html("")
+      }
+    </script>
+  </head>
+  <body>
+    <div class="messages">
+      <h1>Test</h1>
+    </div>
+  </body>
+</html>
+

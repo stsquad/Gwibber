@@ -32,6 +32,7 @@ class Message:
     self.url = IMAGE_PAGE_URL % (data["owner"], data["id"])
     self.profile_url = "http://www.flickr.com/people/%s" % (data["owner"])
     self.thumbnail = IMAGE_URL % (data["farm"], data["server"], data["id"], data["secret"], "t")
+    self.html_string = """<img src="%s" />""" % self.thumbnail
 
   def is_new(self):
     return self.time > datetime.datetime(

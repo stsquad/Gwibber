@@ -8,9 +8,11 @@ SegPhault (Ryan Paul) - 12/22/2007
 """
 
 import urllib2, urllib, base64, simplejson, gtk
-import time, datetime, gwui, config
+import time, datetime, gwui, config, re
 
-from gwui import StatusMessage, ConfigPanel
+from gwui import ConfigPanel
+
+NICK_PARSE = re.compile("@([A-Za-z0-9]+)")
 
 def parse_time(t):
   return datetime.datetime.strptime(t, "%a %b %d %H:%M:%S +0000 %Y")
@@ -29,6 +31,8 @@ class Message:
     self.bgcolor = "message_color"
     self.url = "http://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
     self.profile_url = "http://twitter.com/%s" % data["user"]["screen_name"]
+    self.html_string = '<span class="text">%s</span>' % NICK_PARSE.sub(
+      '@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>', gwui.linkify(self.text))
 
   def is_new(self):
     return self.time > datetime.datetime(
