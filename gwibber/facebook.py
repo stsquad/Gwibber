@@ -33,10 +33,14 @@ class Message:
     self.sender_id = self.sender.replace(" ","_")
     self.time = parse_time(data.getElementsByTagName("pubDate")[0].firstChild.nodeValue)
     self.text = sanitize_text(data.getElementsByTagName("title")[0].firstChild.nodeValue)
+    self.url = data.getElementsByTagName("link")[0].firstChild.nodeValue
     self.bgcolor = "message_color"
     
     if self.client.profile_images.has_key(self.sender):
       self.image = self.client.profile_images[self.sender]
+    else: self.image = "http://digg.com/img/udl.png"
+
+    self.profile_url = "http://www.facebook.com"
 
   def is_new(self):
     return self.time > datetime.datetime(

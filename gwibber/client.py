@@ -604,36 +604,22 @@ class GwibberClient(gtk.Window):
       message.html_string = '<span class="text">%s</span>' % \
         gwui.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
 
-    if not hasattr(message, "profile_url"):
-      print message
-      message.profile_url = "blah"
-
-    if not hasattr(message, "url"):
-      print message
-      message.url = "blah"
-
-    if not hasattr(message, "image"):
-      print message
-      message.image = "blah"
+    message.image = "file://%s" % gwui.image_cache(message.image)
 
     return repr("""
-      <div class="message" style="background: -webkit-gradient(linear, left top, left 220%%, from(%(bgstyle)s), to(black));">
+      <div class="message" title="%(sender_nick)s" style="background: -webkit-gradient(linear, left top, left 220%%, from(%(bgstyle)s), to(black));">
         <table>
-          <tr>
-            <td>
-              <a href="%(profile_url)s">
-                <div class="imgbox" style="background-image: url(%(image)s);"></div>
-              </a>
-            </td>
-            <td>
-              <p class="content">
-                <span class="title">%(sender)s</span>
-                <span class="time"> (<a href="%(url)s">%(time)s</a>)</span><br />
-                </a>
-                <span class="text">%(html_string)s</span>
-              </p>
-            </td>
-          </tr>
+          <tr><td>
+            <a href="%(profile_url)s">
+              <div class="imgbox" style="background-image: url(%(image)s);"></div>
+            </a>
+          </td><td>
+            <p class="content">
+              <span class="title">%(sender)s</span>
+              <span class="time"> (<a href="%(url)s">%(time)s</a>)</span><br />
+              <span class="text">%(html_string)s</span>
+            </p>
+          </td></tr>
         </table>
       </div>
       """ % message.__dict__)
