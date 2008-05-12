@@ -3,25 +3,30 @@
     <style>
       body {
         background: url(blue_stripe.png);
-      }
-
-      a {
+        word-break: break-word;
         color: white;
+        font-size: 12px;
       }
+      
+      a { color: white; }
       
       a:hover, .time a:hover {
         text-decoration: underline;
       }
 
+      p { line-height: 125%; }
+      
+      td { vertical-align: top; }
+
       .message {
-        padding: 5px;
-        color: white;
+        padding: 10px;
+        padding-bottom: 20px;
         margin-bottom: 5px;
         text-shadow: 1px 1px black;
         font-family: Lucida Grande;
-        line-height: 120%;
-        -webkit-border-radius: 5px;
+        -webkit-border-radius: 7px;
       }
+
 
       .title {
         font-size: large;
@@ -33,25 +38,18 @@
         text-decoration: none;
       }
 
-      
-
       .imgbox {
-        float: left;
-        margin: 10px;
         width: 48px;
         height: 48px;
+        margin-right: 5px;
         background-image: url(');
         background-repeat: no-repeat;
-        -webkit-border-radius: 5px;
+        -webkit-border-radius: 7px;
       }
 
       .inlinenick {
         text-decoration: none;
         font-weight: bold;       
-      }
-
-      .reply {
-        display: none;
       }
     </style>
 

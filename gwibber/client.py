@@ -594,7 +594,7 @@ class GwibberClient(gtk.Window):
 
   def generate_message_html(self, message):
     color = gtk.gdk.color_parse(message.account[message.bgcolor])
-    message.bgstyle = "rgba(%s,%s,%s,0.4)" % (color.red/255, color.green/255, color.blue/255)
+    message.bgstyle = "rgba(%s,%s,%s,0.6)" % (color.red/255, color.green/255, color.blue/255)
     message.time = gwui.generate_time_string(message.time)
 
     if hasattr(message, "html_content"):
@@ -604,18 +604,37 @@ class GwibberClient(gtk.Window):
       message.html_string = '<span class="text">%s</span>' % \
         gwui.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
 
+    if not hasattr(message, "profile_url"):
+      print message
+      message.profile_url = "blah"
+
+    if not hasattr(message, "url"):
+      print message
+      message.url = "blah"
+
+    if not hasattr(message, "image"):
+      print message
+      message.image = "blah"
+
     return repr("""
-      <div class="message" style="background-color: %(bgstyle)s;">
-        <a href="%(profile_url)s">
-          <div class="imgbox" style="background-image: url(%(image)s);"></div>
-        </a>
-        <p class="content">
-          <span class="title">%(sender)s</span>
-          <span class="time"> (<a href="%(url)s">%(time)s</a>)</span><br />
-          </a>
-          <span class="text">%(html_string)s</span>
-        </p>
-        <a class="reply" href="gwibber:reply#message1">Reply</a>
+      <div class="message" style="background: -webkit-gradient(linear, left top, left 220%%, from(%(bgstyle)s), to(black));">
+        <table>
+          <tr>
+            <td>
+              <a href="%(profile_url)s">
+                <div class="imgbox" style="background-image: url(%(image)s);"></div>
+              </a>
+            </td>
+            <td>
+              <p class="content">
+                <span class="title">%(sender)s</span>
+                <span class="time"> (<a href="%(url)s">%(time)s</a>)</span><br />
+                </a>
+                <span class="text">%(html_string)s</span>
+              </p>
+            </td>
+          </tr>
+        </table>
       </div>
       """ % message.__dict__)
 
