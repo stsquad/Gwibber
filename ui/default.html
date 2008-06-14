@@ -53,25 +53,35 @@
         font-weight: bold;       
       }
 
-      .toolbar {
-        float: left;
+      .messages h1 {
+        text-align: center;
       }
+
+      .replybutton {
+        float: right;
+        display: none;
+      }
+
     </style>
 
     <script src="jquery.js"></script>
     <script>
       function addMessage(text) {
-        $(".messages").append(text)
+        $(".messages").append(text);
+        
+        $(".message:last").hover(
+          function() {$(this).find(".replybutton").fadeIn("fast")},
+          function() {$(this).find(".replybutton").fadeOut("fast")});
       }
 
       function clearMessages() {
-        $(".messages").html("")
+        $(".messages").html("");
       }
     </script>
   </head>
   <body>
     <div class="messages">
-      <h1>Test</h1>
+      <h1>Welcome to Gwibber!</h1>
     </div>
   </body>
 </html>

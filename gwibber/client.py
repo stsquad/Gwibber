@@ -8,7 +8,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 """
 
 import sys, time, operator, os, threading, datetime, traceback
-import gtk, gtk.glade, gobject, dbus, table, webkit
+import gtk, gtk.glade, gobject, table, webkit
 import twitter, jaiku, facebook, digg, flickr, pownce
 import gwui, config, gintegration, webbrowser
 
@@ -56,6 +56,8 @@ class GwibberClient(gtk.Window):
     self.accounts = config.Accounts()
     self.last_update = None
     layout = gtk.VBox()
+
+    self.message_store = []
     
     self.errors = table.generate([
       ["date", lambda t: t.time.strftime("%Y-%m-%d")],
@@ -148,12 +150,13 @@ class GwibberClient(gtk.Window):
   def apply_ui_element_settings(self):
     for i in CONFIGURABLE_UI_ELEMENTS:
       if hasattr(self, i):
-        getattr(self, i).set_property("visible",
-          self.preferences["show_%s" % i])
+        getattr(self, i).set_property(
+          "visible", self.preferences["show_%s" % i])
 
   def on_refresh_interval_changed(self, *a):
     gobject.source_remove(self.timer)
-    self.timer = gobject.timeout_add(60000 * int(self.preferences["refresh_interval"]), self.update)
+    self.timer = gobject.timeout_add(
+      60000 * int(self.preferences["refresh_interval"]), self.update)
 
   def on_message_context_menu(self, e, w, message):
     menu = gtk.Menu()
@@ -236,7 +239,11 @@ class GwibberClient(gtk.Window):
         reply.show_all()
     
   def on_link_clicked(self, view, frame, req):
-    webbrowser.open(req.get_uri())
+    uri = req.get_uri()
+    if uri.startswith("gwibber:"):
+      if uri.startswith("gwibber:reply"):
+        self.reply(self.message_store[int(uri.split("/")[-1])])
+    else: webbrowser.open(uri)
     return True
 
   def on_profile_image_clicked(self, e, w, message):
@@ -256,8 +263,8 @@ class GwibberClient(gtk.Window):
   def on_input_change(self, widget):
     self.statusbar.pop(1)
     if len(widget.get_text()) > 0:
-      self.statusbar.push(1,
-        "Characters remaining: %s" % (widget.get_max_length() - len(widget.get_text())))
+      self.statusbar.push(1, "Characters remaining: %s" % (
+        widget.get_max_length() - len(widget.get_text())))
 
   def setup_menus(self):
     menuGwibber = gtk.Menu()
@@ -606,7 +613,7 @@ class GwibberClient(gtk.Window):
 
     message.image = "file://%s" % gwui.image_cache(message.image)
 
-    return repr("""
+    return """
       <div class="message" title="%(sender_nick)s" style="background: -webkit-gradient(linear, left top, left 220%%, from(%(bgstyle)s), to(black));">
         <table>
           <tr><td>
@@ -621,14 +628,20 @@ class GwibberClient(gtk.Window):
             </p>
           </td></tr>
         </table>
+        <div class="replybutton">
+          <a href="gwibber:reply/%(message_index)s"><img src="reply.png" /></a>
+        </div>
       </div>
-      """ % message.__dict__)
+      """ % message.__dict__
 
   def draw_messages(self):
     self.content.execute_script("clearMessages()")
+    self.message_store = [None]
     for message in self.data:
-      self.content.execute_script("addMessage(%s)" %
-        self.generate_message_html(message)[1:])
+      message.message_index = len(self.message_store)
+      self.message_store += [message]
+      m = self.generate_message_html(message) 
+      self.content.execute_script("addMessage(%s)" % repr(m)[1:])
 
   def on_input_activate(self, e):
     if self.input.get_text().strip():
@@ -667,15 +680,6 @@ class GwibberClient(gtk.Window):
               else:
                 gintegration.notify.Notification(m.sender, m.text)
 
-        """
-        if self.last_update:
-          for count, m in enumerate(self.content):
-            if len(self.data) < count or m.message.text != self.data[count].text:
-              self.draw_messages()
-              break
-        else: self.draw_messages()
-        """
-
         self.draw_messages()
         
         self.statusbar.pop(0)
@@ -690,7 +694,7 @@ class GwibberClient(gtk.Window):
     t.start()
 
     return True
-    
+
 if __name__ == '__main__':
   w = GwibberClient()
   w.connect("destroy", gtk.main_quit)
