@@ -119,9 +119,9 @@ class GwibberClient(gtk.Window):
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/%s" % i,
         lambda *a: self.apply_ui_drawing_settings())
     
-    self.show_all()
     self.apply_ui_element_settings()
     self.apply_ui_drawing_settings()
+    self.show_all()
     #self.update()
 
   def on_toggle_window_visibility(self, w):
@@ -131,6 +131,10 @@ class GwibberClient(gtk.Window):
   def apply_ui_drawing_settings(self):
     bgcolor = self.preferences["background_color"]
     bgimage = self.preferences["background_image"]
+
+    # RGBA Colormap
+    cm = self.get_screen().get_rgba_colormap()
+    gtk.widget_set_default_colormap(cm)
 
     """
     style = self.background.get_style().copy()
