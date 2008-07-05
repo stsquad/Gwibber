@@ -9,7 +9,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 import sys, time, operator, os, threading, datetime, traceback
 import gtk, gtk.glade, gobject, table, webkit
-import twitter, jaiku, facebook, digg, flickr, pownce
+import twitter, jaiku, facebook, digg, flickr, pownce, identica
 import gwui, config, gintegration, webbrowser
 
 gtk.gdk.threads_init()
@@ -43,6 +43,7 @@ PROTOCOLS = {
   "facebook": facebook,
   "flickr": flickr,
   "pownce": pownce,
+  "identica": identica,
 }
 
 class GwibberClient(gtk.Window):
