@@ -8,16 +8,13 @@ SegPhault (Ryan Paul) - 07/05/2008
 import urllib2, urllib, base64, simplejson, re
 import time, datetime, config, gtk, gwui
 from xml.dom import minidom
+
 from gwui import StatusMessage, ConfigPanel
 
-LINK_PARSE =  re.compile("<a[^>]+href=\"(https?://[^\"]+)\">[^<]+</a>")
 NICK_PARSE = re.compile("@([A-Za-z0-9]+)")
 
 def parse_time(t):
   return datetime.datetime.strptime(t,"%Y-%m-%dT%H:%M:%S+00:00")
-
-def sanitize_text(t):
-  return LINK_PARSE.sub("\\1", t.strip())
 
 class Message:
   def __init__(self, client, data):
@@ -29,7 +26,7 @@ class Message:
     self.sender_nick = data.getElementsByTagName("description")[0].firstChild.nodeValue.split("'")[0]
     self.sender_id = self.sender_nick
     self.time = parse_time(data.getElementsByTagName("dc:date")[0].firstChild.nodeValue)
-    self.text = data.getElementsByTagName("title")[0].firstChild.nodeValue
+    self.text = data.getElementsByTagName("title")[0].firstChild.toxml()
     #self.pango_markup = "<big><b>%s</b></big><small> (%s)</small>\n<b>%s</b>\n%s" % (
     #  self.sender, gwui.generate_time_string(self.time), self.title, self.text)
     self.image = "http://identi.ca/theme/stoica/default-avatar-stream.png" # "http://digg.com/users/%s/l.png" % self.sender_nick
