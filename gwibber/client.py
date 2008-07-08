@@ -188,18 +188,21 @@ class GwibberClient(gtk.Window):
       message.account["protocol"].capitalize(),
       message.sender, message.time, message.text))
   
+  def handle_at_reply(self, message, protocol):
+    self.input.grab_focus()
+    self.input.set_text("@%s: " % message.sender_nick)
+    self.input.set_position(-1)
+    for acct in self.accounts:
+      if acct["protocol"] != protocol or  \
+        acct["protocol"] != protocol and \
+        acct["username"] != message.account["username"]:
+          acct["send_enabled"] = False
+
   def reply(self, message):
     acct = message.account
 
-    if acct["protocol"] == "twitter":
-      self.input.grab_focus()
-      self.input.set_text("@%s: " % message.sender_nick)
-      self.input.set_position(-1)
-      for acct in self.accounts:
-        if acct["protocol"] != "twitter" or  \
-          acct["protocol"] != "twitter" and \
-          acct["username"] != message.account["username"]:
-            acct["send_enabled"] = False
+    if acct["protocol"] == "twitter" or acct["protocol"] == "identica":
+      self.handle_at_reply(message, acct["protocol"])
       return
 
     if acct["protocol"] in PROTOCOLS.keys():
