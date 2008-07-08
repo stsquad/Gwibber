@@ -134,8 +134,8 @@ class GwibberClient(gtk.Window):
     bgimage = self.preferences["background_image"]
 
     # RGBA Colormap
-    cm = self.get_screen().get_rgba_colormap()
-    gtk.widget_set_default_colormap(cm)
+    #cm = self.get_screen().get_rgba_colormap()
+    #gtk.widget_set_default_colormap(cm)
 
     """
     style = self.background.get_style().copy()
