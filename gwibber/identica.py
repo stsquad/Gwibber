@@ -44,10 +44,13 @@ class Client:
   def __init__(self, acct):
     self.account = acct
 
-  def can_send(self): return False
+  def can_send(self): return True
   def can_receive(self): return True
 
-  def send_enabled(self): return False
+  def send_enabled(self):
+    return self.account["send_enabled"] and \
+      self.account["username"] != None and \
+      self.account["password"] != None
 
   def receive_enabled(self):
     return self.account["receive_enabled"] and \
@@ -64,3 +67,17 @@ class Client:
   def get_messages(self):
     for data in self.get_data()[0:10]:
       yield Message(self, data)
+
+  def transmit_status(self, message):
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
+
+    opener.open(urllib2.Request("http://identi.ca/main/login",
+      urllib.urlencode({
+        "nickname": self.account["username"],
+        "password": self.account["password"]}))).read()
+
+    return opener.open(urllib2.Request("http://identi.ca/notice/new",
+      urllib.urlencode({"status_textarea": message}))).read()
+
+
+
