@@ -66,9 +66,30 @@
 
     <script src="jquery.js"></script>
     <script>
-      function addMessage(text) {
-        $(".messages").append(text);
-        
+      function addMessage(data) {
+
+        html = '<div class="message '+ data.username + data.protocol +'" title="'+ data.sender_nick +'">' +
+          '<table> \
+            <tr><td> \
+              <a href="'+ data.profile_url +'"> \
+                <div class="imgbox" style="background-image: url('+ data.image +');"></div> \
+              </a> \
+            </td><td> \
+              <p class="content"> \
+                <span class="title">'+ data.sender +'</span> \
+                <span class="time"> (<a href="'+ data.url +'">'+ data.time +'</a>)</span><br /> \
+                <span class="text">'+ data.html_string +'</span> \
+              </p> \
+            </td></tr> \
+          </table> \
+          <div class="replybutton"> \
+            <a href="gwibber:reply/'+ data.message_index +'"><img src="reply.png" /></a> \
+          </div> \
+        </div>'
+    
+        $(".messages").append(html);
+        setMessageColor(data.username, data.protocol, data.bgstyle);
+
         $(".message:last").hover(
           function() {$(this).find(".replybutton").fadeIn("fast")},
           function() {$(this).find(".replybutton").fadeOut("fast")});
@@ -76,6 +97,10 @@
 
       function clearMessages() {
         $(".messages").html("");
+      }
+
+      function setMessageColor(username, protocol, color) {
+        $('.'+username+protocol).css('background', '-webkit-gradient(linear, left top, left 220%, from('+ color +'), to(black))')
       }
     </script>
   </head>

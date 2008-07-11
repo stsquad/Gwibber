@@ -21,6 +21,8 @@ class Message:
   def __init__(self, client, data):
     self.client = client
     self.account = client.account
+    self.protocol = client.account["protocol"]
+    self.username = client.account["username"]
     self.data = data
     self.sender = data["user"]["name"]
     self.sender_nick = data["user"]["screen_name"]

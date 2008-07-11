@@ -20,6 +20,8 @@ class Message:
   def __init__(self, client, data):
     self.client = client
     self.account = client.account
+    self.protocol = client.account["protocol"]
+    self.username = client.account["username"]
     self.data = data
     self.title = data.getElementsByTagName("title")[0].firstChild.nodeValue
     self.sender = data.getElementsByTagName("dc:creator")[0].firstChild.nodeValue

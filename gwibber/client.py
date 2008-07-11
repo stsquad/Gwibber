@@ -12,6 +12,8 @@ import gtk, gtk.glade, gobject, table, webkit
 import twitter, jaiku, facebook, digg, flickr, pownce, identica
 import gwui, config, gintegration, webbrowser
 
+import simplejson
+
 gtk.gdk.threads_init()
 
 MAX_MESSAGE_LENGTH = 140
@@ -77,10 +79,8 @@ class GwibberClient(gtk.Window):
     self.timer = gobject.timeout_add(60000 * int(self.preferences["refresh_interval"]), self.update)
     self.preferences.notify("refresh_interval", self.on_refresh_interval_changed)
 
-    self.content = webkit.WebView()
-    self.content.set_border_width(5)
-    self.content.open("file://%s/default.html" % ui_dir)
-    self.content.connect("navigation-requested", self.on_link_clicked)
+    self.content = gwui.MessageView("file://%s/default.html" % ui_dir)
+    self.content.link_handler = self.on_link_clicked
     
     self.tray_icon = gtk.status_icon_new_from_icon_name("gwibber")
     self.tray_icon.connect("activate", self.on_toggle_window_visibility)
@@ -132,25 +132,6 @@ class GwibberClient(gtk.Window):
   def apply_ui_drawing_settings(self):
     bgcolor = self.preferences["background_color"]
     bgimage = self.preferences["background_image"]
-
-    # RGBA Colormap
-    #cm = self.get_screen().get_rgba_colormap()
-    #gtk.widget_set_default_colormap(cm)
-
-    """
-    style = self.background.get_style().copy()
-
-    if bgimage and os.path.exists(bgimage):
-      pb = gtk.gdk.pixbuf_new_from_file(bgimage)
-      pm, mask = pb.render_pixmap_and_mask(255);
-      style.bg_pixmap[gtk.STATE_NORMAL] = pm
-    else:
-      style.bg_pixmap[gtk.STATE_NORMAL] = None
-      if bgcolor:
-        style.bg[gtk.STATE_NORMAL] = gtk.gdk.color_parse(bgcolor)
-
-    self.background.set_style(style)
-    """
 
   def apply_ui_element_settings(self):
     for i in CONFIGURABLE_UI_ELEMENTS:
@@ -213,13 +194,12 @@ class GwibberClient(gtk.Window):
         reply.set_title("Reply")
         reply.set_border_width(5)
         reply.resize(390, 240)
-        
-        content = gtk.VBox(spacing=5)
-        content.set_border_width(5)
 
-        for msg in client.get_replies(message):
-          m = PROTOCOLS[msg.account["protocol"]].StatusMessage(msg, self.preferences)
-          content.pack_start(m, False, False)
+        def on_load_finished(view, frame):
+          self.draw_messages(content, client.get_replies(message))
+
+        content = gwui.MessageView("file://%s/default.html" % self.ui_dir)
+        content.connect("load-finished", on_load_finished)
 
         def on_reply_send(e):
           if e.get_text().strip():
@@ -228,13 +208,9 @@ class GwibberClient(gtk.Window):
               c.transmit_reply(message, e.get_text().strip())
               e.set_text("")
         
-        background = gtk.EventBox()
-        background.set_style(self.background.get_style())
-        background.add(content) 
-
         scroll = gtk.ScrolledWindow()
         scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        scroll.add_with_viewport(background)
+        scroll.add_with_viewport(content)
 
         input = gtk.Entry()
         input.connect("activate", on_reply_send)
@@ -246,12 +222,11 @@ class GwibberClient(gtk.Window):
         reply.add(vb)
         reply.show_all()
     
-  def on_link_clicked(self, view, frame, req):
-    uri = req.get_uri()
+  def on_link_clicked(self, uri):
     if uri.startswith("gwibber:"):
       if uri.startswith("gwibber:reply"):
-        self.reply(self.message_store[int(uri.split("/")[-1])])
-    else: webbrowser.open(uri)
+        self.reply(self.content.messages[int(uri.split("/")[-1])])
+
     return True
 
   def on_profile_image_clicked(self, e, w, message):
@@ -570,6 +545,8 @@ class GwibberClient(gtk.Window):
           self.on_account_delete(data.get_selected())
 
     def on_account_change(gc, v, entry, t):
+      # handle account color change here
+
       t.queue_draw()
       if len([a for a in self.accounts]) != len(t.tree_store):
         t.tree_store.clear()
@@ -607,49 +584,22 @@ class GwibberClient(gtk.Window):
             "error": err,
           }
 
-  def generate_message_html(self, message):
-    color = gtk.gdk.color_parse(message.account[message.bgcolor])
-    message.bgstyle = "rgba(%s,%s,%s,0.6)" % (color.red/255, color.green/255, color.blue/255)
-    message.time = gwui.generate_time_string(message.time)
+  def draw_messages(self, content, data):
+    content.clear()
+    for message in data:
+      color = gtk.gdk.color_parse(message.account[message.bgcolor])
+      message.bgstyle = "rgba(%s,%s,%s,0.6)" % (color.red/255, color.green/255, color.blue/255)
+      message.time = "" #gwui.generate_time_string(message.time)
+      message.image = "file://%s" % gwui.image_cache(message.image)
 
-    if hasattr(message, "html_content"):
-      return message.html_content
-    
-    if not hasattr(message, "html_string"):
-      message.html_string = '<span class="text">%s</span>' % \
-        gwui.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
+      if hasattr(message, "html_content"):
+        print "Using HTML string: ", message.protocol
 
-    message.image = "file://%s" % gwui.image_cache(message.image)
+      if not hasattr(message, "html_string"):
+        message.html_string = '<span class="text">%s</span>' % \
+          gwui.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
 
-    return """
-      <div class="message" title="%(sender_nick)s" style="background: -webkit-gradient(linear, left top, left 220%%, from(%(bgstyle)s), to(black));">
-        <table>
-          <tr><td>
-            <a href="%(profile_url)s">
-              <div class="imgbox" style="background-image: url(%(image)s);"></div>
-            </a>
-          </td><td>
-            <p class="content">
-              <span class="title">%(sender)s</span>
-              <span class="time"> (<a href="%(url)s">%(time)s</a>)</span><br />
-              <span class="text">%(html_string)s</span>
-            </p>
-          </td></tr>
-        </table>
-        <div class="replybutton">
-          <a href="gwibber:reply/%(message_index)s"><img src="reply.png" /></a>
-        </div>
-      </div>
-      """ % message.__dict__
-
-  def draw_messages(self):
-    self.content.execute_script("clearMessages()")
-    self.message_store = [None]
-    for message in self.data:
-      message.message_index = len(self.message_store)
-      self.message_store += [message]
-      m = self.generate_message_html(message) 
-      self.content.execute_script("addMessage(%s)" % repr(m)[1:])
+      content.add(message)
 
   def on_input_activate(self, e):
     if self.input.get_text().strip():
@@ -674,13 +624,13 @@ class GwibberClient(gtk.Window):
 
     def process():
       try:
-        self.data = list(self.generate_message_list())
-        self.data.sort(key=operator.attrgetter("time"), reverse=True)
+        data = list(self.generate_message_list())
+        data.sort(key=operator.attrgetter("time"), reverse=True)
 
         gtk.gdk.threads_enter()
 
         if self.last_update and self.preferences["show_notifications"]:
-          for m in self.data:
+          for m in data:
             if m.time > self.last_update and gintegration.notify.init("Gwibber"):
               if hasattr(m, "image"):
                 gintegration.notify.Notification(m.sender, m.text,
@@ -688,7 +638,7 @@ class GwibberClient(gtk.Window):
               else:
                 gintegration.notify.Notification(m.sender, m.text)
 
-        self.draw_messages()
+        self.draw_messages(self.content, data)
         
         self.statusbar.pop(0)
         self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
