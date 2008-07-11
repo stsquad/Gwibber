@@ -30,10 +30,6 @@ DEFAULT_PREFERENCES = {
   "background_color": "white",
   "text_shadow_color": "black",
   "background_image": "",
-  "message_drawing_transparency": 100,
-  "message_drawing_gradients": True,
-  "message_drawing_radius": 15,
-  "message_text_shadow": False,
   "show_notifications": True,
   "refresh_interval": 2,
 }
@@ -210,7 +206,7 @@ class GwibberClient(gtk.Window):
         
         scroll = gtk.ScrolledWindow()
         scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        scroll.add_with_viewport(content)
+        scroll.add(content)
 
         input = gtk.Entry()
         input.connect("activate", on_reply_send)
@@ -228,9 +224,6 @@ class GwibberClient(gtk.Window):
         self.reply(self.content.messages[int(uri.split("/")[-1])])
 
     return True
-
-  def on_profile_image_clicked(self, e, w, message):
-    webbrowser.open(message.profile_url)
 
   def on_input_context_menu(self, obj, menu):
     menu.append(gtk.SeparatorMenuItem())
@@ -380,12 +373,8 @@ class GwibberClient(gtk.Window):
     for widget in \
       ["foreground_color",
        "link_color",
-       "message_drawing_radius",
-       "message_drawing_transparency",
-       "message_drawing_gradients",
        "show_notifications",
        "refresh_interval",
-       "message_text_shadow",
        "text_shadow_color",
        "background_color"]:
         self.preferences.bind(glade.get_widget(widget), widget)
@@ -589,7 +578,7 @@ class GwibberClient(gtk.Window):
     for message in data:
       color = gtk.gdk.color_parse(message.account[message.bgcolor])
       message.bgstyle = "rgba(%s,%s,%s,0.6)" % (color.red/255, color.green/255, color.blue/255)
-      message.time = "" #gwui.generate_time_string(message.time)
+      message.time = gwui.generate_time_string(message.time)
       message.image = "file://%s" % gwui.image_cache(message.image)
 
       if hasattr(message, "html_content"):

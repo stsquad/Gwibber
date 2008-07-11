@@ -19,6 +19,7 @@ class StatusMessage:
   pass
 
 def generate_time_string(t):
+  if isinstance(t, str): return t
   d = datetime.datetime(*time.gmtime()[0:6]) - t
 
   if d.seconds < 60: return "%d seconds ago" % d.seconds
@@ -34,7 +35,9 @@ def linkify(t):
 
 def image_cache(url, cache_dir = IMG_CACHE_DIR):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)
-  img_path = os.path.join(cache_dir, base64.encodestring(url)[:-1]).replace("\n","")
+  encoded_url = base64.encodestring(url)[:-1]
+  if len(encoded_url) > 50: encoded_url = encoded_url[:50]
+  img_path = os.path.join(cache_dir, encoded_url).replace("\n","")
 
   if not os.path.exists(img_path):
     output = open(img_path, "w+")
