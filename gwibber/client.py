@@ -222,8 +222,8 @@ class GwibberClient(gtk.Window):
     if uri.startswith("gwibber:"):
       if uri.startswith("gwibber:reply"):
         self.reply(self.content.messages[int(uri.split("/")[-1])])
-
-    return True
+        return True
+    else: return False
 
   def on_input_context_menu(self, obj, menu):
     menu.append(gtk.SeparatorMenuItem())
