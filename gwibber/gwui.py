@@ -36,7 +36,7 @@ def linkify(t):
 def image_cache(url, cache_dir = IMG_CACHE_DIR):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)
   encoded_url = base64.encodestring(url)[:-1]
-  if len(encoded_url) > 50: encoded_url = encoded_url[:50]
+  if len(encoded_url) > 200: encoded_url = encoded_url[::-1][:200]
   img_path = os.path.join(cache_dir, encoded_url).replace("\n","")
 
   if not os.path.exists(img_path):
