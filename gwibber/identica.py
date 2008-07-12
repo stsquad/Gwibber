@@ -31,7 +31,7 @@ class Message:
     self.text = data.getElementsByTagName("title")[0].firstChild.toxml()
     #self.pango_markup = "<big><b>%s</b></big><small> (%s)</small>\n<b>%s</b>\n%s" % (
     #  self.sender, gwui.generate_time_string(self.time), self.title, self.text)
-    self.image = "http://identi.ca/theme/stoica/default-avatar-stream.png" # "http://digg.com/users/%s/l.png" % self.sender_nick
+    self.image = "http://identi.ca/%s/avatar/48" % self.sender_nick
     self.bgcolor = "message_color"
     self.url = data.getElementsByTagName("link")[0].firstChild.nodeValue
     self.profile_url = "http://identi.ca/%s" % self.sender_nick
