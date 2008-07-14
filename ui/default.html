@@ -42,7 +42,7 @@
         width: 48px;
         height: 48px;
         margin-right: 5px;
-        background-image: url(');
+        background-image: url('');
         background-repeat: no-repeat;
         -webkit-border-radius: 7px;
         -webkit-box-reflect:below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.6, transparent), to(rgba(0,0,0, 0.6)));
@@ -62,10 +62,32 @@
         display: none;
       }
 
+      .diggbox {
+        -webkit-border-radius: 7px;
+        margin-right: 5px;
+        padding: 1px;
+        text-align: center;
+        color: black; /* #877E43; */
+        text-shadow: none;
+        background:  -webkit-gradient(linear, left top, left 220%, from(rgba(254, 240, 152, 0.9)), to(black));
+        /* #FEF098 */
+        display: none;
+      }
+
+      .diggcount {
+        font-size: large;
+      }
+
     </style>
 
     <script src="jquery.js"></script>
     <script>
+      function addDiggCount(message, data)
+      {
+          message.html('<p><span class="diggcount">' + data.diggs + '</span><br /><small>diggs</small></p>');
+          message.css('display', 'block');
+      }
+
       function addMessage(data) {
 
         html = '<div class="message '+ data.username + data.protocol +'" title="'+ data.sender_nick +'">' +
@@ -74,9 +96,11 @@
               <a href="'+ data.profile_url +'"> \
                 <div class="imgbox" style="background-image: url('+ data.image +');"></div> \
               </a> \
+              <br />\
+              <div class="diggbox"></div> \
             </td><td> \
               <p class="content"> \
-                <span class="title">'+ data.sender +'</span> \
+                <span class="title">'+ (data.title == undefined ? data.sender : data.title) +'</span> \
                 <span class="time"> (<a href="'+ data.url +'">'+ data.time +'</a>)</span><br /> \
                 <span class="text">'+ data.html_string +'</span> \
               </p> \
@@ -89,6 +113,10 @@
     
         $(".messages").append(html);
         setMessageColor(data.username, data.protocol, data.bgstyle);
+
+        if (data.protocol == "digg") {
+          addDiggCount($(".diggbox:last"), data);
+        }
 
         $(".message:last").hover(
           function() {$(this).find(".replybutton").fadeIn("fast")},

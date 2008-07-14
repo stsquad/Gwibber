@@ -34,7 +34,7 @@ class Message:
     self.pango_markup = "<big><b>%s</b></big><small> (%s)</small>\n<b>%s</b>\n%s" % (
       self.sender, gwui.generate_time_string(self.time), self.title, self.text)
     self.image = "http://digg.com/users/%s/l.png" % self.sender_nick
-    self.bgcolor = "digg_color"
+    self.bgcolor = "comment_color"
     self.url = data.getElementsByTagName("link")[0].firstChild.nodeValue
     self.profile_url = "http://digg.com/users/%s" % self.sender
 
@@ -45,9 +45,13 @@ class Message:
 class Digg(Message):
   def __init__(self, client, data):
     Message.__init__(self, client, data)
-    self.title = "%s dugg %s" % (self.sender_nick,    
+    self.title = "%s <small>dugg %s</small>" % (self.sender_nick,    
       data.getElementsByTagName("title")[0].firstChild.nodeValue)
-    self.bgcolor = "comment_color"
+    self.bgcolor = "digg_color"
+
+    self.diggs = simplejson.loads(urllib2.urlopen(urllib2.Request(
+      "http://services.digg.com/story/%s?appkey=http://cixar.com&type=json" %
+        self.url.split("/")[-1])).read())["stories"][0]["diggs"]
 
 class Client:
   def __init__(self, acct):

@@ -23,7 +23,6 @@ class Message:
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
     self.data = data
-    self.title = data.getElementsByTagName("title")[0].firstChild.nodeValue
     self.sender = data.getElementsByTagName("dc:creator")[0].firstChild.nodeValue
     self.sender_nick = data.getElementsByTagName("description")[0].firstChild.nodeValue.split("'")[0]
     self.sender_id = self.sender_nick
