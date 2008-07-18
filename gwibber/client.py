@@ -57,6 +57,7 @@ class GwibberClient(gtk.Window):
     layout = gtk.VBox()
 
     self.message_store = []
+    self.message_target = None
     
     self.errors = table.generate([
       ["date", lambda t: t.time.strftime("%Y-%m-%d")],
@@ -93,8 +94,13 @@ class GwibberClient(gtk.Window):
     self.input.connect("changed", self.on_input_change)
     self.input.set_max_length(140)
 
+    self.cancel_button = gtk.Button("Cancel")
+    self.cancel_button.connect("clicked", self.on_cancel_reply)
+
     self.editor = gtk.HBox()
     self.editor.pack_start(self.input)
+    self.editor.pack_start(self.cancel_button, False)
+    
     
     vb = gtk.VBox(spacing=5)
     vb.pack_start(self.messages, True, True)
@@ -119,7 +125,14 @@ class GwibberClient(gtk.Window):
     self.apply_ui_element_settings()
     self.apply_ui_drawing_settings()
     self.show_all()
+
+    self.cancel_button.hide()
     #self.update()
+
+  def on_cancel_reply(self, w):
+    self.cancel_button.hide()
+    self.message_target = None
+    self.input.set_text("")
 
   def on_toggle_window_visibility(self, w):
     if self.get_property("visible"): self.hide()
@@ -169,11 +182,17 @@ class GwibberClient(gtk.Window):
     self.input.grab_focus()
     self.input.set_text("@%s: " % message.sender_nick)
     self.input.set_position(-1)
+
+    self.message_target = message.account
+    self.cancel_button.show()
+
+    """
     for acct in self.accounts:
       if acct["protocol"] != protocol or  \
         acct["protocol"] != protocol and \
         acct["username"] != message.account["username"]:
           acct["send_enabled"] = False
+    """
 
   def reply(self, message):
     acct = message.account
@@ -516,7 +535,7 @@ class GwibberClient(gtk.Window):
       if stock == gtk.STOCK_CLOSE:
         manager.destroy()
 
-      elif stock == gtk.STOCK_NEW:
+      elif stock == gtk.STOCK_ADD:
         mac = gtk.Menu()
         for p in PROTOCOLS.keys():
           mi = gtk.MenuItem("%s" % p.capitalize())
@@ -543,7 +562,7 @@ class GwibberClient(gtk.Window):
     
     config.GCONF.notify_add("/apps/gwibber/accounts", on_account_change, data)
 
-    for stock in [gtk.STOCK_NEW, gtk.STOCK_PROPERTIES, gtk.STOCK_DELETE, gtk.STOCK_CLOSE]:
+    for stock in [gtk.STOCK_ADD, gtk.STOCK_PROPERTIES, gtk.STOCK_DELETE, gtk.STOCK_CLOSE]:
       b = gtk.Button(stock=stock)
       b.connect("clicked", on_click_button, stock)
       buttons.pack_start(b)
@@ -590,21 +609,32 @@ class GwibberClient(gtk.Window):
 
       content.add(message)
 
+  def send_message(self, acct, text):
+    if acct["protocol"] in PROTOCOLS.keys():
+      try:
+        c = PROTOCOLS[acct["protocol"]].Client(acct)
+        if c.can_send() and c.send_enabled():
+          c.transmit_status(text)
+      except:
+        self.errors += {
+          "time": datetime.datetime.utcnow(),
+          "username": acct["username"],
+          "protocol": acct["protocol"],
+          "message": "Failed to send message",
+        }
+
   def on_input_activate(self, e):
     if self.input.get_text().strip():
-      for acct in self.accounts:
-        if acct["protocol"] in PROTOCOLS.keys():
-          try:
-            c = PROTOCOLS[acct["protocol"]].Client(acct)
-            if c.can_send() and c.send_enabled():
-              c.transmit_status(self.input.get_text().strip())
-          except:
-            self.errors += {
-              "time": datetime.datetime.utcnow(),
-              "username": acct["username"],
-              "protocol": acct["protocol"],
-              "message": "Failed to send message",
-            }
+      if self.message_target:
+        for acct in self.accounts:
+          if acct.id == self.message_target.id:
+            print acct.id, self.message_target.id
+            self.send_message(acct, self.input.get_text().strip())
+            self.on_cancel_reply(None)
+            return
+      else:      
+        for acct in self.accounts:
+          self.send_message(acct, self.input.get_text().strip())
       self.input.set_text("")
 
   def update(self):
