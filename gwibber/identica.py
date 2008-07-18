@@ -1,20 +1,21 @@
 #!/usr/bin/env python
 
 """
-Identica interface for Gwibber
-SegPhault (Ryan Paul) - 07/05/2008
+
+Identi.ca interface for Gwibber
+SegPhault (Ryan Paul) - 07/18/2008
+
 """
 
-import urllib2, urllib, base64, simplejson, re
-import time, datetime, config, gtk, gwui
-from xml.dom import minidom
+import urllib2, urllib, base64, simplejson, gtk
+import time, datetime, gwui, config, re
 
-from gwui import StatusMessage, ConfigPanel
+from gwui import ConfigPanel
 
 NICK_PARSE = re.compile("@([A-Za-z0-9]+)")
 
 def parse_time(t):
-  return datetime.datetime.strptime(t,"%Y-%m-%dT%H:%M:%S+00:00")
+  return datetime.datetime.strptime(t, "%a %b %d %H:%M:%S +0000 %Y")
 
 class Message:
   def __init__(self, client, data):
@@ -23,19 +24,17 @@ class Message:
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
     self.data = data
-    self.sender = data.getElementsByTagName("dc:creator")[0].firstChild.nodeValue
-    self.sender_nick = data.getElementsByTagName("description")[0].firstChild.nodeValue.split("'")[0]
-    self.sender_id = self.sender_nick
-    self.time = parse_time(data.getElementsByTagName("dc:date")[0].firstChild.nodeValue)
-    self.text = data.getElementsByTagName("title")[0].firstChild.toxml()
-    #self.pango_markup = "<big><b>%s</b></big><small> (%s)</small>\n<b>%s</b>\n%s" % (
-    #  self.sender, gwui.generate_time_string(self.time), self.title, self.text)
-    self.image = "http://identi.ca/%s/avatar/48" % self.sender_nick
+    self.sender = data["user"]["name"]
+    self.sender_nick = data["user"]["screen_name"]
+    self.sender_id = data["user"]["id"]
+    self.time = parse_time(data["created_at"])
+    self.text = data["text"]
+    self.image = data["user"]["profile_image_url"]
     self.bgcolor = "message_color"
-    self.url = data.getElementsByTagName("link")[0].firstChild.nodeValue
-    self.profile_url = "http://identi.ca/%s" % self.sender_nick
+    self.url = "http://identi.ca/api/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
+    self.profile_url = "http://identi.ca/api/%s" % data["user"]["screen_name"]
     self.html_string = '<span class="text">%s</span>' % NICK_PARSE.sub(
-      '@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>', gwui.linkify(self.text))
+      '@<a class="inlinenick" href="http://identi.ca/api/\\1">\\1</a>', gwui.linkify(self.text))
 
   def is_new(self):
     return self.time > datetime.datetime(
@@ -55,30 +54,25 @@ class Client:
 
   def receive_enabled(self):
     return self.account["receive_enabled"] and \
-      self.account["username"] != None
+      self.account["username"] != None and \
+      self.account["password"] != None
+
+  def get_auth(self):
+    return "Basic %s" % base64.encodestring(
+      ("%s:%s" % (self.account["username"], self.account["password"]))).strip()
 
   def connect(self, url, data = None):
-    return urllib2.urlopen(urllib2.Request(url, data)).read()
+    return urllib2.urlopen(urllib2.Request(
+      url, data, {"Authorization": self.get_auth()})).read()
 
   def get_data(self):
-    return minidom.parseString(self.connect(
-      "http://identi.ca/%s/all/rss" %
-        self.account["username"])).getElementsByTagName("item")
+    return simplejson.loads(self.connect(
+      "http://identi.ca/api/statuses/friends_timeline.json"))
 
   def get_messages(self):
-    for data in self.get_data()[0:10]:
+    for data in self.get_data():
       yield Message(self, data)
 
   def transmit_status(self, message):
-    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
-
-    opener.open(urllib2.Request("http://identi.ca/main/login",
-      urllib.urlencode({
-        "nickname": self.account["username"],
-        "password": self.account["password"]}))).read()
-
-    return opener.open(urllib2.Request("http://identi.ca/notice/new",
-      urllib.urlencode({"status_textarea": message}))).read()
-
-
-
+    return self.connect("http://identi.ca/api/statuses/update.json",
+        urllib.urlencode({"status":message}))

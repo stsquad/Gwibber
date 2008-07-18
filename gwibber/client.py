@@ -628,7 +628,6 @@ class GwibberClient(gtk.Window):
       if self.message_target:
         for acct in self.accounts:
           if acct.id == self.message_target.id:
-            print acct.id, self.message_target.id
             self.send_message(acct, self.input.get_text().strip())
             self.on_cancel_reply(None)
             return
