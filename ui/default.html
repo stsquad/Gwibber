@@ -63,7 +63,7 @@
       }
 
       .diggbox {
-        -webkit-border-radius: 7px;
+        -webkit-border-radius: 7px; 
         margin-right: 5px;
         padding: 1px;
         text-align: center;
@@ -78,6 +78,10 @@
         font-size: large;
       }
 
+      .reply {
+        border: 3px solid rgba(143, 6, 32, 0.8);
+        border-style: ridge;
+      }
     </style>
 
     <script src="jquery.js"></script>
@@ -114,9 +118,11 @@
         $(".messages").append(html);
         setMessageColor(data.username, data.protocol, data.bgstyle);
 
-        if (data.protocol == "digg") {
+        if (data.protocol == "digg")
           addDiggCount($(".diggbox:last"), data);
-        }
+
+        if (data.is_reply)
+          $(".message:last").addClass("reply");
 
         $(".message:last").hover(
           function() {$(this).find(".replybutton").fadeIn("fast")},

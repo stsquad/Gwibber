@@ -35,6 +35,7 @@ class Message:
     self.profile_url = "http://identi.ca/api/%s" % data["user"]["screen_name"]
     self.html_string = '<span class="text">%s</span>' % NICK_PARSE.sub(
       '@<a class="inlinenick" href="http://identi.ca/api/\\1">\\1</a>', gwui.linkify(self.text))
+    self.is_reply = ("@%s" % self.username) in self.text
 
   def is_new(self):
     return self.time > datetime.datetime(
