@@ -31,10 +31,10 @@ class Message:
     self.text = data["text"]
     self.image = data["user"]["profile_image_url"]
     self.bgcolor = "message_color"
-    self.url = "http://identi.ca/api/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
-    self.profile_url = "http://identi.ca/api/%s" % data["user"]["screen_name"]
+    self.url = "http://identi.ca/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
+    self.profile_url = "http://identi.ca/%s" % data["user"]["screen_name"]
     self.html_string = '<span class="text">%s</span>' % NICK_PARSE.sub(
-      '@<a class="inlinenick" href="http://identi.ca/api/\\1">\\1</a>', gwui.linkify(self.text))
+      '@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>', gwui.linkify(self.text))
     self.is_reply = ("@%s" % self.username) in self.text
 
   def is_new(self):
