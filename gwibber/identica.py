@@ -31,7 +31,7 @@ class Message:
     self.text = data["text"]
     self.image = data["user"]["profile_image_url"]
     self.bgcolor = "message_color"
-    self.url = "http://identi.ca/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
+    self.url = "http://identi.ca/notice/%s" % data["id"] # % (data["user"]["screen_name"], data["id"])
     self.profile_url = "http://identi.ca/%s" % data["user"]["screen_name"]
     self.html_string = '<span class="text">%s</span>' % NICK_PARSE.sub(
       '@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>', gwui.linkify(self.text))
