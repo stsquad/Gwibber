@@ -6,11 +6,10 @@ SegPhault (Ryan Paul) - 12/22/2007
 """
 
 import urllib2, urllib, base64, simplejson, re, webbrowser
-import time, datetime, config, gtk, gwui, facelib
+import time, datetime, support
 from xml.dom import minidom
 
-from gwui import StatusMessage
-
+CONFIG = ["message_color", "feed_url", "receive_enabled", "send_enabled"]
 APP_KEY = "71b85c6d8cb5bbb9f1a3f8bbdcdd4b05"
 SECRET_KEY = "41e43c90f429a21e55c7ff67aa0dc201"
 LINK_PARSE =  re.compile("<a[^>]+href=\"(https?://[^\"]+)\">[^<]+</a>")
@@ -44,16 +43,12 @@ class Message:
 
     self.profile_url = "http://www.facebook.com"
 
-  def is_new(self):
-    return self.time > datetime.datetime(
-      *time.strptime(config.Preferences()["last_update"])[0:6])
-
 class Client:
   def __init__(self, acct):
     self.account = acct
     self.profile_images = {}
     
-    self.facebook = facelib.Facebook(APP_KEY, SECRET_KEY)
+    self.facebook = support.facelib.Facebook(APP_KEY, SECRET_KEY)
     self.facebook.session_key = self.account["session_key"]
     self.facebook.secret = self.account["secret_key"]
 
@@ -88,49 +83,3 @@ class Client:
   def transmit_status(self, message):
     self.facebook.users.setStatus(message, False)
 
-
-class ConfigPanel(gwui.ConfigPanel):
-  def authorize(self):
-    glade = gtk.glade.XML("ui/preferences.glade")
-    dialog = glade.get_widget("facebook_config")
-    dialog.show_all()
-
-    def on_validate_click(w):
-      fb = facelib.Facebook(APP_KEY, SECRET_KEY,
-        glade.get_widget("entry_auth_token").get_text().strip())
-
-      data = fb.auth.getSession()
-      if data and data.has_key("session_key"):
-        self.account["secret_key"] = str(data["secret"])
-        self.account["session_key"] = str(data["session_key"])
-        
-        m = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, "Keys obtained successfully.")
-      else:
-        m = gtk.MessageDialog(None, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, "Failed to obtain key.") 
-
-      m.run()
-      m.destroy()
-
-    glade.get_widget("button_request").connect("clicked",
-      lambda *a: webbrowser.open("http://www.facebook.com/code_gen.php?v=1.0&api_key=%s" % APP_KEY))
-    
-    glade.get_widget("button_authorize").connect("clicked",
-      lambda *a: webbrowser.open("http://www.facebook.com/authorize.php?api_key=%s&v=1.0&ext_perm=status_update" % APP_KEY))
-
-    glade.get_widget("button_apply_auth").connect("clicked", on_validate_click)
-    glade.get_widget("button_close").connect("clicked", lambda w: dialog.destroy())
-
-  def ui_account_info(self):
-    f = gwui.ConfigFrame("Account Information")
-    t = gtk.Table()
-    t.set_col_spacings(5)
-    t.set_row_spacings(5)
-
-    auth_start = gtk.Button("Authorize Gwibber")
-    auth_start.connect("clicked", lambda *a: self.authorize())
-
-    t.attach(auth_start, 0, 2, 0, 1)
-    t.attach(gtk.Label("Feed URL:"), 0, 1, 1, 2, gtk.SHRINK)
-    t.attach(self.account.bind(gtk.Entry(), "feed_url"), 1, 2, 1, 2)
-    f.add(t)
-    return f

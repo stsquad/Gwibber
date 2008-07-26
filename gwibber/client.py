@@ -452,28 +452,18 @@ class GwibberClient(gtk.Window):
     amenu.set_submenu(menu)
 
   def on_account_properties(self, w, acct):
-    c = PROTOCOLS[acct["protocol"]].ConfigPanel(acct, self.preferences)
+    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
+    dialog = glade.get_widget("dialog_%s" % acct["protocol"])
+    dialog.show_all()
     
-    w = gtk.Window()
-    w.set_title("Manage Acccount")
-    w.set_resizable(False)
-    w.set_border_width(10)
-    
-    buttons = gtk.HButtonBox()
-    bc = gtk.Button(stock=gtk.STOCK_CLOSE)
-    bd = gtk.Button(stock=gtk.STOCK_DELETE)
-    bc.connect("clicked", lambda a: w.destroy())
-    bd.connect("clicked", lambda a: self.on_account_delete(acct, w))
-    buttons.pack_start(bd)
-    buttons.pack_start(bc)
+    for widget in PROTOCOLS[acct["protocol"]].CONFIG:
+      acct.bind(glade.get_widget("%s_%s" % (acct["protocol"], widget)), widget)
 
-    vb = gtk.VBox(spacing=5)
-    vb.pack_start(c.build_ui())
-    vb.pack_start(gtk.HSeparator())
-    vb.pack_start(buttons)
-    
-    w.add(vb)
-    w.show_all()
+    glade.get_widget("%s_btnclose" % acct["protocol"]).connect("clicked",
+      lambda a: dialog.destroy())
+
+    glade.get_widget("%s_btndelete" % acct["protocol"]).connect("clicked",
+      lambda a: self.on_account_delete(acct, dialog))
 
   def on_account_create(self, w, protocol):
     a = self.accounts.new_account()

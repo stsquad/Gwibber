@@ -5,11 +5,11 @@ Digg interface for Gwibber
 SegPhault (Ryan Paul) - 01/06/2008
 """
 
-import urllib2, urllib, base64, simplejson, re
-import time, datetime, config, gtk, gwui
+import urllib2, urllib, base64, support, re
+import time, datetime
 from xml.dom import minidom
-from gwui import StatusMessage
 
+CONFIG = ["message_color", "comment_color", "username", "receive_enabled"]
 LINK_PARSE =  re.compile("<a[^>]+href=\"(https?://[^\"]+)\">[^<]+</a>")
 
 def parse_time(t):
@@ -31,16 +31,10 @@ class Message:
     self.sender_id = self.sender.replace(" ","_")
     self.time = parse_time(data.getElementsByTagName("pubDate")[0].firstChild.nodeValue)
     self.text = sanitize_text(data.getElementsByTagName("description")[0].firstChild.nodeValue)
-    self.pango_markup = "<big><b>%s</b></big><small> (%s)</small>\n<b>%s</b>\n%s" % (
-      self.sender, gwui.generate_time_string(self.time), self.title, self.text)
     self.image = "http://digg.com/users/%s/l.png" % self.sender_nick
     self.bgcolor = "comment_color"
     self.url = data.getElementsByTagName("link")[0].firstChild.nodeValue
     self.profile_url = "http://digg.com/users/%s" % self.sender
-
-  def is_new(self):
-    return self.time > datetime.datetime(
-      *time.strptime(config.Preferences()["last_update"])[0:6])
 
 class Digg(Message):
   def __init__(self, client, data):
@@ -49,7 +43,7 @@ class Digg(Message):
       data.getElementsByTagName("title")[0].firstChild.nodeValue)
     self.bgcolor = "digg_color"
 
-    self.diggs = simplejson.loads(urllib2.urlopen(urllib2.Request(
+    self.diggs = support.simplejson.loads(urllib2.urlopen(urllib2.Request(
       "http://services.digg.com/story/%s?appkey=http://cixar.com&type=json" %
         self.url.split("/")[-1])).read())["stories"][0]["diggs"]
 
@@ -86,32 +80,4 @@ class Client:
     for data in self.get_diggs()[0:10]:
       yield Digg(self, data)
 
-class ConfigPanel(gwui.ConfigPanel):
-  def ui_account_info(self):
-    f = gwui.ConfigFrame("Account Information")
-    t = gtk.Table()
-    t.set_col_spacings(5)
-    t.set_row_spacings(5)
-
-    t.attach(gtk.Label("Username:"), 0, 1, 0, 1, gtk.SHRINK)
-    t.attach(self.account.bind(gtk.Entry(), "username"), 1, 2, 0, 1)
-    f.add(t)
-    return f
-
-  def ui_account_status(self):
-    f = gwui.ConfigFrame("Account Status")
-    vb = gtk.VBox(spacing=5)
-    vb.pack_start(self.account.bind(gtk.CheckButton("Receive Messages"), "receive_enabled"))
-    f.add(vb)
-    return f
-
-  def ui_appearance(self):
-    f = gwui.ConfigFrame("Appearance")
-    t = gtk.Table()
-    t.attach(gtk.Label("Digg color:"), 0, 1, 0, 1, gtk.SHRINK)
-    t.attach(self.account.bind(gtk.ColorButton(), "digg_color"), 1, 2, 0, 1)
-    t.attach(gtk.Label("Comment color:"), 0, 1, 1, 2, gtk.SHRINK)
-    t.attach(self.account.bind(gtk.ColorButton(), "comment_color"), 1, 2, 1, 2)
-    f.add(t)
-    return f
 
