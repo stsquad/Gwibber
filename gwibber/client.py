@@ -585,7 +585,7 @@ class GwibberClient(gtk.Window):
         except:
           err = traceback.format_exc()
           self.errors += {
-            "time": datetime.datetime.utcnow(),
+            "time": datetime.datetime.now(),
             "username": acct["username"],
             "protocol": acct["protocol"],
             "message": "Failed to retrieve messages\n<i><span foreground='red'>%s</span></i>" % err.split("\n")[-2],
@@ -622,7 +622,7 @@ class GwibberClient(gtk.Window):
           c.transmit_status(text)
       except:
         self.errors += {
-          "time": datetime.datetime.utcnow(),
+          "time": datetime.datetime.now(),
           "username": acct["username"],
           "protocol": acct["protocol"],
           "message": "Failed to send message",
