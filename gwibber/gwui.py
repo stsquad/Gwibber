@@ -8,7 +8,7 @@ SegPhault (Ryan Paul) - 05/26/2007
 """
 
 import gtk, pango, gobject, gintegration, config
-import webkit, webbrowser, simplejson
+import webkit, gintegration, simplejson
 import urllib2, base64, time, datetime, os, re
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
@@ -56,7 +56,7 @@ class WebRender(webkit.WebView):
   def on_click_link(self, view, frame, req):
     uri = req.get_uri()
     if not self.link_handler(uri) and self.load_externally:
-      webbrowser.open(uri)
+      gintegration.load_url(uri)
     return self.load_externally
 
   def link_handler(self, uri):

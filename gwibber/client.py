@@ -10,7 +10,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 import sys, time, operator, os, threading, datetime, traceback
 import gtk, gtk.glade, gobject, table, webkit
 import twitter, jaiku, facebook, digg, flickr, pownce, identica
-import gwui, config, gintegration, webbrowser
+import gwui, config, gintegration
 
 import simplejson
 
@@ -165,7 +165,7 @@ class GwibberClient(gtk.Window):
 
     if hasattr(message, "url"):
       mi = gtk.MenuItem("Open in browser")
-      mi.connect("activate", lambda m: webbrowser.open(message.url))
+      mi.connect("activate", lambda m: gintegration.load_url(message.url))
       menu.append(mi)
 
     if gintegration.service_is_running("org.gnome.Tomboy"):

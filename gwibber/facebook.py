@@ -5,7 +5,7 @@ Facebook interface for Gwibber
 SegPhault (Ryan Paul) - 12/22/2007
 """
 
-import urllib2, urllib, base64, simplejson, re, webbrowser
+import urllib2, urllib, base64, simplejson, re
 import time, datetime, config, gtk, gwui, facelib
 from xml.dom import minidom
 
@@ -112,10 +112,10 @@ class ConfigPanel(gwui.ConfigPanel):
       m.destroy()
 
     glade.get_widget("button_request").connect("clicked",
-      lambda *a: webbrowser.open("http://www.facebook.com/code_gen.php?v=1.0&api_key=%s" % APP_KEY))
+      lambda *a: gintegration.load_url("http://www.facebook.com/code_gen.php?v=1.0&api_key=%s" % APP_KEY))
     
     glade.get_widget("button_authorize").connect("clicked",
-      lambda *a: webbrowser.open("http://www.facebook.com/authorize.php?api_key=%s&v=1.0&ext_perm=status_update" % APP_KEY))
+      lambda *a: gintegration.load_url("http://www.facebook.com/authorize.php?api_key=%s&v=1.0&ext_perm=status_update" % APP_KEY))
 
     glade.get_widget("button_apply_auth").connect("clicked", on_validate_click)
     glade.get_widget("button_close_facebook_auth").connect("clicked", lambda w: dialog.destroy())

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import dbus, gobject, dbus.glib
+import dbus, gobject, dbus.glib, os
 
 try:
   import pynotify as notify
@@ -14,6 +14,12 @@ try:
   SPELLCHECK_ENABLED = True
 except:
   SPELLCHECK_ENABLED = False
+
+try:
+  import gnome
+  def load_url(url): gnome.url_show(url)
+except:
+  def load_url(url): os.system("xdg-open %s" % url)
 
 def service_is_running(name):
   return name in dbus.Interface(dbus.SessionBus().get_object(

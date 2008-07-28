@@ -5,8 +5,8 @@ Flickr interface for Gwibber
 SegPhault (Ryan Paul) - 03/01/2008
 """
 
-import urllib2, urllib, base64, simplejson, gtk, os, webbrowser
-import time, datetime, gwui, config
+import urllib2, urllib, base64, simplejson, gtk, os
+import time, datetime, gwui, config, gintegration
 
 API_KEY = "36f660117e6555a9cbda4309cfaf72d0"
 REST_SERVER = "http://api.flickr.com/services/rest"
@@ -81,7 +81,7 @@ class StatusMessage(gwui.StatusMessage):
     ev = gtk.EventBox()
     ev.set_visible_window(False)
     ev.add(img)
-    ev.connect("button-release-event", lambda *a: webbrowser.open(self.message.url))
+    ev.connect("button-release-event", lambda *a: gintegration.load_url(self.message.url))
     b.pack_start(ev)
     return b
 
