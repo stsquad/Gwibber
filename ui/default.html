@@ -78,6 +78,11 @@
         font-size: large;
       }
 
+      .new {
+        border: 3px solid rgba(110, 240, 255, 0.8);
+        border-style: ridge;
+      }
+
       .reply {
         border: 3px solid rgba(143, 6, 32, 0.8);
         border-style: ridge;
@@ -120,6 +125,9 @@
 
         if (data.protocol == "digg")
           addDiggCount($(".diggbox:last"), data);
+
+        if (data.is_new)
+          $(".message:last").addClass("new");          
 
         if (data.is_reply)
           $(".message:last").addClass("reply");

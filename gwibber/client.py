@@ -596,9 +596,14 @@ class GwibberClient(gtk.Window):
     content.clear()
     for message in data:
       color = gtk.gdk.color_parse(message.account[message.bgcolor])
+      message.hexbg = message.account[message.bgcolor][1:3] + message.account[message.bgcolor][5:7] + message.account[message.bgcolor][9:11]
       message.bgstyle = "rgba(%s,%s,%s,0.6)" % (color.red/255, color.green/255, color.blue/255)
-      message.time = gwui.generate_time_string(message.time)
+      message.image_url = message.image
       message.image = "file://%s" % gwui.image_cache(message.image)
+      if self.last_update:
+        message.is_new = message.time > self.last_update
+      else: message.is_new = False
+      message.time = gwui.generate_time_string(message.time)
 
       if hasattr(message, "html_content"):
         print "Using HTML string: ", message.protocol
