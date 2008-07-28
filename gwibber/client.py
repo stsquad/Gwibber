@@ -457,6 +457,7 @@ class GwibberClient(gtk.Window):
 
   def on_account_properties(self, w, acct):
     c = PROTOCOLS[acct["protocol"]].ConfigPanel(acct, self.preferences)
+    c.ui_dir = self.ui_dir
     
     w = gtk.Window()
     w.set_title("Manage Acccount")

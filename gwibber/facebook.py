@@ -91,7 +91,7 @@ class Client:
 
 class ConfigPanel(gwui.ConfigPanel):
   def authorize(self):
-    glade = gtk.glade.XML("ui/preferences.glade")
+    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
     dialog = glade.get_widget("facebook_config")
     dialog.show_all()
 
@@ -118,7 +118,7 @@ class ConfigPanel(gwui.ConfigPanel):
       lambda *a: webbrowser.open("http://www.facebook.com/authorize.php?api_key=%s&v=1.0&ext_perm=status_update" % APP_KEY))
 
     glade.get_widget("button_apply_auth").connect("clicked", on_validate_click)
-    glade.get_widget("button_close").connect("clicked", lambda w: dialog.destroy())
+    glade.get_widget("button_close_facebook_auth").connect("clicked", lambda w: dialog.destroy())
 
   def ui_account_info(self):
     f = gwui.ConfigFrame("Account Information")
