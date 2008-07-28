@@ -127,7 +127,7 @@ class GwibberClient(gtk.Window):
     self.show_all()
 
     self.cancel_button.hide()
-    #self.update()
+    self.update()
 
   def on_cancel_reply(self, w):
     self.cancel_button.hide()
