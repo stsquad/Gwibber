@@ -135,8 +135,12 @@ class GwibberClient(gtk.Window):
     self.input.set_text("")
 
   def on_toggle_window_visibility(self, w):
-    if self.get_property("visible"): self.hide()
-    else: self.show_all()
+    if self.get_property("visible"):
+      self.last_position = self.get_position()
+      self.hide()
+    else:
+      self.show()
+      self.move(*self.last_position)
 
   def apply_ui_drawing_settings(self):
     bgcolor = self.preferences["background_color"]
