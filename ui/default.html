@@ -133,8 +133,8 @@
           $(".message:last").addClass("reply");
 
         $(".message:last").hover(
-          function() {$(this).find(".replybutton").fadeIn("fast")},
-          function() {$(this).find(".replybutton").fadeOut("fast")});
+          function() {$(this).find(".replybutton").fadeIn(100)},
+          function() {$(this).find(".replybutton").hide(0)});
       }
 
       function clearMessages() {
