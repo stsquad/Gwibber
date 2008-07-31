@@ -13,8 +13,7 @@ PROTOCOLS = {
 }
 
 class Client:
-  def __init__(self, preferences, accounts):
-    self.preferences = preferences
+  def __init__(self, accounts):
     self.accounts = accounts
 
   def handle_error(self, acct, err):
@@ -40,7 +39,7 @@ class Client:
     for acct in self.accounts:
       if acct["protocol"] in PROTOCOLS.keys() and \
          acct["protocol"] in filter:
-        try
+        try:
           client = PROTOCOLS[acct["protocol"]].Client(acct)
           if client.can_send() and client.send_enabled():
             client.transmit_status(text)
