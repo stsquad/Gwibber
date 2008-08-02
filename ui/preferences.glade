@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Fri Jul 25 23:05:03 2008 -->
+<!--Generated with glade3 3.4.5 on Fri Aug  1 20:06:05 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="pref_dialog">
     <property name="width_request">300</property>
@@ -930,7 +930,7 @@ a Gwibber login code from Facebook.</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
-              <widget class="GtkButton" id="button_close1">
+              <widget class="GtkButton" id="button_close_facebook_auth">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -984,17 +984,14 @@ a Gwibber login code from Facebook.</property>
                         <property name="column_spacing">5</property>
                         <property name="row_spacing">5</property>
                         <child>
-                          <widget class="GtkLabel" id="label10">
+                          <widget class="GtkEntry" id="twitter_password">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Username:</property>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label11">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Password:</property>
+                            <property name="can_focus">True</property>
+                            <property name="visibility">False</property>
                           </widget>
                           <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
@@ -1010,17 +1007,20 @@ a Gwibber login code from Facebook.</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkEntry" id="twitter_password">
+                          <widget class="GtkLabel" id="label11">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="visibility">False</property>
+                            <property name="label" translatable="yes">Password:</property>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label10">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Username:</property>
+                          </widget>
                         </child>
                       </widget>
                     </child>
@@ -1225,17 +1225,14 @@ a Gwibber login code from Facebook.</property>
                         <property name="column_spacing">5</property>
                         <property name="row_spacing">5</property>
                         <child>
-                          <widget class="GtkLabel" id="label13">
+                          <widget class="GtkEntry" id="protocol_password">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Username:</property>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label14">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Password:</property>
+                            <property name="can_focus">True</property>
+                            <property name="visibility">False</property>
                           </widget>
                           <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
@@ -1251,17 +1248,20 @@ a Gwibber login code from Facebook.</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkEntry" id="protocol_password">
+                          <widget class="GtkLabel" id="label14">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="visibility">False</property>
+                            <property name="label" translatable="yes">Password:</property>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label13">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Username:</property>
+                          </widget>
                         </child>
                       </widget>
                     </child>
@@ -1466,17 +1466,14 @@ a Gwibber login code from Facebook.</property>
                         <property name="column_spacing">5</property>
                         <property name="row_spacing">5</property>
                         <child>
-                          <widget class="GtkLabel" id="label21">
+                          <widget class="GtkEntry" id="jaiku_password">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Username:</property>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label22">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Password:</property>
+                            <property name="can_focus">True</property>
+                            <property name="visibility">False</property>
                           </widget>
                           <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
@@ -1492,17 +1489,20 @@ a Gwibber login code from Facebook.</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkEntry" id="jaiku_password">
+                          <widget class="GtkLabel" id="label22">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="visibility">False</property>
+                            <property name="label" translatable="yes">API key:</property>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label21">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Username:</property>
+                          </widget>
                         </child>
                       </widget>
                     </child>
@@ -1595,16 +1595,17 @@ a Gwibber login code from Facebook.</property>
                         <property name="n_rows">2</property>
                         <property name="n_columns">2</property>
                         <child>
-                          <widget class="GtkColorButton" id="jaiku_comment_color">
+                          <widget class="GtkLabel" id="label30">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
-                            <property name="color">#000000000000</property>
+                            <property name="label" translatable="yes">Message Color:</property>
+                          </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label62">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Comment Color:</property>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
@@ -1623,20 +1624,19 @@ a Gwibber login code from Facebook.</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkLabel" id="label62">
+                          <widget class="GtkColorButton" id="jaiku_comment_color">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Comment Color:</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <property name="color">#000000000000</property>
                           </widget>
                           <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label30">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Message Color:</property>
-                          </widget>
                         </child>
                       </widget>
                     </child>
@@ -1728,17 +1728,14 @@ a Gwibber login code from Facebook.</property>
                         <property name="column_spacing">5</property>
                         <property name="row_spacing">5</property>
                         <child>
-                          <widget class="GtkLabel" id="label32">
+                          <widget class="GtkEntry" id="pownce_password">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Username:</property>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label33">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Password:</property>
+                            <property name="can_focus">True</property>
+                            <property name="visibility">False</property>
                           </widget>
                           <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
@@ -1754,17 +1751,20 @@ a Gwibber login code from Facebook.</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkEntry" id="pownce_password">
+                          <widget class="GtkLabel" id="label33">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="visibility">False</property>
+                            <property name="label" translatable="yes">Password:</property>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label32">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Username:</property>
+                          </widget>
                         </child>
                       </widget>
                     </child>
@@ -1857,16 +1857,17 @@ a Gwibber login code from Facebook.</property>
                         <property name="n_rows">2</property>
                         <property name="n_columns">2</property>
                         <child>
-                          <widget class="GtkColorButton" id="pownce_comment_color">
+                          <widget class="GtkLabel" id="label57">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
-                            <property name="color">#000000000000</property>
+                            <property name="label" translatable="yes">Message Color:</property>
+                          </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label36">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Comment Color:</property>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
@@ -1885,20 +1886,19 @@ a Gwibber login code from Facebook.</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkLabel" id="label36">
+                          <widget class="GtkColorButton" id="pownce_comment_color">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Comment Color:</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <property name="color">#000000000000</property>
                           </widget>
                           <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label57">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Message Color:</property>
-                          </widget>
                         </child>
                       </widget>
                     </child>
@@ -1990,17 +1990,13 @@ a Gwibber login code from Facebook.</property>
                         <property name="column_spacing">5</property>
                         <property name="row_spacing">5</property>
                         <child>
-                          <widget class="GtkLabel" id="label38">
+                          <widget class="GtkEntry" id="identica_password">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Username:</property>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label39">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Password:</property>
+                            <property name="can_focus">True</property>
                           </widget>
                           <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
@@ -2017,16 +2013,20 @@ a Gwibber login code from Facebook.</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkEntry" id="identica_password">
+                          <widget class="GtkLabel" id="label39">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="label" translatable="yes">Password:</property>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label38">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Username:</property>
+                          </widget>
                         </child>
                       </widget>
                     </child>
@@ -2463,12 +2463,6 @@ a Gwibber login code from Facebook.</property>
                         <property name="column_spacing">5</property>
                         <property name="row_spacing">5</property>
                         <child>
-                          <widget class="GtkLabel" id="label50">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Username:</property>
-                          </widget>
-                        </child>
-                        <child>
                           <widget class="GtkEntry" id="flickr_username">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -2477,6 +2471,12 @@ a Gwibber login code from Facebook.</property>
                             <property name="left_attach">1</property>
                             <property name="right_attach">2</property>
                           </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label50">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Username:</property>
+                          </widget>
                         </child>
                       </widget>
                     </child>
@@ -2668,12 +2668,6 @@ a Gwibber login code from Facebook.</property>
                         <property name="column_spacing">5</property>
                         <property name="row_spacing">5</property>
                         <child>
-                          <widget class="GtkLabel" id="label56">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Username:</property>
-                          </widget>
-                        </child>
-                        <child>
                           <widget class="GtkEntry" id="digg_username">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -2682,6 +2676,12 @@ a Gwibber login code from Facebook.</property>
                             <property name="left_attach">1</property>
                             <property name="right_attach">2</property>
                           </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label56">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Username:</property>
+                          </widget>
                         </child>
                       </widget>
                     </child>
@@ -2761,16 +2761,17 @@ a Gwibber login code from Facebook.</property>
                         <property name="n_rows">2</property>
                         <property name="n_columns">2</property>
                         <child>
-                          <widget class="GtkColorButton" id="digg_digg_color">
+                          <widget class="GtkLabel" id="label51">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
-                            <property name="color">#000000000000</property>
+                            <property name="label" translatable="yes">Comment Color:</property>
+                          </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label45">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Digg Color:</property>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
@@ -2789,20 +2790,19 @@ a Gwibber login code from Facebook.</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkLabel" id="label45">
+                          <widget class="GtkColorButton" id="digg_digg_color">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Digg Color:</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <property name="color">#000000000000</property>
                           </widget>
                           <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label51">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Comment Color:</property>
-                          </widget>
                         </child>
                       </widget>
                     </child>

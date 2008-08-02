@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import operator, traceback
 import twitter, jaiku, facebook, digg, flickr, pownce, identica
 
 PROTOCOLS = {
@@ -16,8 +17,11 @@ class Client:
   def __init__(self, accounts):
     self.accounts = accounts
 
-  def handle_error(self, acct, err):
+  def handle_error(self, acct, err, msg = None):
     pass
+
+  def post_process_message(self, message):
+    return message
 
   def get_message_data(self, filter=PROTOCOLS.keys()):
     for acct in self.accounts:
@@ -26,8 +30,10 @@ class Client:
         try:
           client = PROTOCOLS[acct["protocol"]].Client(acct)
           if client.receive_enabled():
-            for message in client.get_messages(): yield message
-        except: self.handle_error(acct, traceback.format_exc())
+            for message in client.get_messages():
+              yield self.post_process_message(message)
+        except: self.handle_error(acct, traceback.format_exc(),
+          "Failed to retrieve messages")
 
   def get_messages(self, filter=PROTOCOLS.keys()):
     data = list(self.get_message_data(filter))
@@ -42,5 +48,6 @@ class Client:
         try:
           client = PROTOCOLS[acct["protocol"]].Client(acct)
           if client.can_send() and client.send_enabled():
-            client.transmit_status(text)
-        except: self.handle_error(acct, traceback.format_exc())
+            client.transmit_status(message)
+        except: self.handle_error(acct, traceback.format_exc(),
+          "Failed to send messages")
