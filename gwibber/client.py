@@ -532,7 +532,7 @@ class GwibberClient(gtk.Window):
     manager.show_all()
 
   def handle_error(self, acct, err, msg = None):
-    print err
+    print acct, err, msg
     return
     self.errors += {
       "time": datetime.datetime.now(),

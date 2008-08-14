@@ -9,6 +9,11 @@ SegPhault (Ryan Paul) - 07/25/2008
 
 import re, os, facelib, datetime, time
 
+import mx.DateTime
+
+def parse_time(t):
+  return mx.DateTime.Parser.DateTimeFromString(t)
+
 LINK_PARSE = re.compile("(https?://[^ )\n]+)")
 
 def linkify(t):
@@ -16,7 +21,8 @@ def linkify(t):
 
 def generate_time_string(t):
   if isinstance(t, str): return t
-  d = datetime.datetime(*time.gmtime()[0:6]) - t
+
+  d = mx.DateTime.gmt() - t
 
   if d.seconds < 60: return "%d seconds ago" % d.seconds
   elif d.seconds < (60 * 60):  return "%d minutes ago" % (d.seconds / 60)
@@ -25,5 +31,3 @@ def generate_time_string(t):
   elif d.days == 1: return "1 day ago"
   elif d.days > 0: return "%d days ago" % d.days
   else: return "BUG: %s" % str(d)
-
-

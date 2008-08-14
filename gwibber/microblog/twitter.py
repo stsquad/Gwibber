@@ -7,14 +7,10 @@ SegPhault (Ryan Paul) - 12/22/2007
 
 """
 
-import urllib2, urllib, base64, support
-import time, datetime, re, support
+import urllib2, urllib, base64, re, support
 
 CONFIG = ["message_color", "password", "username", "receive_enabled", "send_enabled"]
 NICK_PARSE = re.compile("@([A-Za-z0-9]+)")
-
-def parse_time(t):
-  return datetime.datetime.strptime(t, "%a %b %d %H:%M:%S +0000 %Y")
 
 class Message:
   def __init__(self, client, data):
@@ -26,7 +22,7 @@ class Message:
     self.sender = data["user"]["name"]
     self.sender_nick = data["user"]["screen_name"]
     self.sender_id = data["user"]["id"]
-    self.time = parse_time(data["created_at"])
+    self.time = support.parse_time(data["created_at"])
     self.text = data["text"]
     self.image = data["user"]["profile_image_url"]
     self.bgcolor = "message_color"

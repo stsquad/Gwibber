@@ -5,15 +5,11 @@ Digg interface for Gwibber
 SegPhault (Ryan Paul) - 01/06/2008
 """
 
-import urllib2, urllib, base64, support, re
-import time, datetime
+import urllib2, urllib, support, re
 from xml.dom import minidom
 
 CONFIG = ["message_color", "comment_color", "username", "receive_enabled"]
 LINK_PARSE =  re.compile("<a[^>]+href=\"(https?://[^\"]+)\">[^<]+</a>")
-
-def parse_time(t):
-  return datetime.datetime.strptime(t,"%a, %d %b %Y %H:%M:%S %Z")
 
 def sanitize_text(t):
   return LINK_PARSE.sub("\\1", t.strip())
@@ -29,7 +25,7 @@ class Message:
     self.sender = data.getElementsByTagName("author")[0].firstChild.nodeValue
     self.sender_nick = self.sender
     self.sender_id = self.sender.replace(" ","_")
-    self.time = parse_time(data.getElementsByTagName("pubDate")[0].firstChild.nodeValue)
+    self.time = support.parse_time(data.getElementsByTagName("pubDate")[0].firstChild.nodeValue)
     self.text = sanitize_text(data.getElementsByTagName("description")[0].firstChild.nodeValue)
     self.image = "http://digg.com/users/%s/l.png" % self.sender_nick
     self.bgcolor = "comment_color"
