@@ -7,7 +7,7 @@ SegPhault (Ryan Paul) - 03/01/2008
 
 """
 
-import urllib2, urllib, base64, support
+import urllib2, urllib, base64, support, mx.DateTime
 
 CONFIG = ["message_color", "comment_color", "password", "username", "receive_enabled", "send_enabled"]
 API_KEY = "w5t07ju7t1072o1wfx8l9012a51fdabq"
@@ -22,7 +22,7 @@ class Message:
     self.sender = data["sender"]["first_name"]
     self.sender_nick = data["sender"]["username"]
     self.sender_id = data["sender"]["id"]
-    self.time = support.parse_time(data["timestamp"])
+    self.time = mx.DateTime.DateTimeFrom(data["timestamp"]).gmtime()
     self.text = data["body"]
     self.image = data["sender"]["profile_photo_urls"]["medium_photo_url"]
     self.bgcolor = "message_color"

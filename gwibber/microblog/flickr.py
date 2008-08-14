@@ -5,7 +5,7 @@ Flickr interface for Gwibber
 SegPhault (Ryan Paul) - 03/01/2008
 """
 
-import urllib2, urllib, support, datetime
+import urllib2, urllib, support, mx.DateTime
 
 CONFIG = ["message_color", "username", "receive_enabled", "send_enabled"]
 
@@ -16,7 +16,7 @@ IMAGE_URL = "http://farm%s.static.flickr.com/%s/%s_%s_%s.jpg"
 IMAGE_PAGE_URL = "http://www.flickr.com/photos/%s/%s"
 
 def parse_time(t):
-  return datetime.datetime.fromtimestamp(int(t))
+  return mx.DateTime.DateTimeFrom(int(t)).gmtime()
 
 class Message:
   def __init__(self, client, data):
