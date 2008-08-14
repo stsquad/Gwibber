@@ -2,16 +2,15 @@
 
 """
 
-Identi.ca interface for Gwibber
-SegPhault (Ryan Paul) - 07/18/2008
+Twitter interface for Gwibber
+SegPhault (Ryan Paul) - 12/22/2007
 
 """
 
-import urllib2, urllib, base64, simplejson, gtk
-import time, datetime, gwui, config, re
+import urllib2, urllib, base64, support
+import time, datetime, re, support
 
-from gwui import ConfigPanel
-
+CONFIG = ["message_color", "password", "username", "receive_enabled", "send_enabled"]
 NICK_PARSE = re.compile("@([A-Za-z0-9]+)")
 
 def parse_time(t):
@@ -31,15 +30,11 @@ class Message:
     self.text = data["text"]
     self.image = data["user"]["profile_image_url"]
     self.bgcolor = "message_color"
-    self.url = "http://identi.ca/notice/%s" % data["id"] # % (data["user"]["screen_name"], data["id"])
-    self.profile_url = "http://identi.ca/%s" % data["user"]["screen_name"]
+    self.url = "http://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
+    self.profile_url = "http://twitter.com/%s" % data["user"]["screen_name"]
     self.html_string = '<span class="text">%s</span>' % NICK_PARSE.sub(
-      '@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>', gwui.linkify(self.text))
+      '@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>', support.linkify(self.text))
     self.is_reply = ("@%s" % self.username) in self.text
-
-  def is_new(self):
-    return self.time > datetime.datetime(
-      *time.strptime(config.Preferences()["last_update"])[0:6])
 
 class Client:
   def __init__(self, acct):
@@ -67,13 +62,14 @@ class Client:
       url, data, {"Authorization": self.get_auth()})).read()
 
   def get_data(self):
-    return simplejson.loads(self.connect(
-      "http://identi.ca/api/statuses/friends_timeline.json"))
+    return support.simplejson.loads(self.connect(
+      "http://twitter.com/statuses/friends_timeline.json"))
 
   def get_messages(self):
     for data in self.get_data():
       yield Message(self, data)
 
   def transmit_status(self, message):
-    return self.connect("http://identi.ca/api/statuses/update.json",
+    return self.connect("http://twitter.com/statuses/update.json",
         urllib.urlencode({"status":message}))
+

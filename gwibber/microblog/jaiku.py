@@ -7,11 +7,10 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import urllib2, urllib, base64, simplejson
-import time, datetime, config, gtk, gwui, re
+import urllib2, urllib, base64, support
+import time, datetime, re
 
-from gwui import StatusMessage
-
+CONFIG = ["message_color", "comment_color", "password", "username", "receive_enabled", "send_enabled"]
 NONCE_PARSE = re.compile('.*_nonce" value="([^"]+)".*', re.M | re.S)
 
 def parse_time(t):
@@ -36,10 +35,6 @@ class Message:
     self.url = data["url"]
     self.profile_url = "http://%s.jaiku.com" % data["user"]["nick"]
     if data.has_key("icon") and data["icon"] != "": self.icon = data["icon"]
-
-  def is_new(self):
-    return self.time > datetime.datetime(
-      *time.strptime(config.Preferences()["last_update"])[0:6])
 
 class Comment(Message):
   def __init__(self, client, data):
@@ -66,13 +61,13 @@ class Client:
       self.account["password"] != None
 
   def get_data(self):
-    return simplejson.loads(urllib2.urlopen(urllib2.Request(
+    return support.simplejson.loads(urllib2.urlopen(urllib2.Request(
       "http://%s.jaiku.com/contacts/feed/json" % self.account["username"],
         urllib.urlencode({"user": self.account["username"],
           "personal_key":self.account["password"]}))).read())
 
   def get_reply_data(self, msg):
-    return simplejson.loads(urllib2.urlopen(urllib2.Request(
+    return support.simplejson.loads(urllib2.urlopen(urllib2.Request(
       "http://%s.jaiku.com/presence/%s/json" % (msg.sender_nick, msg.id),
         urllib.urlencode({"user": self.account["username"],
           "personal_key":self.account["password"]}))).read())
@@ -110,14 +105,3 @@ class Client:
       "http://api.jaiku.com/json", urllib.urlencode({"user": self.account["username"],
       "personal_key":self.account["password"],
       "message": message, "method": "presence.send"}))).read()
-
-class ConfigPanel(gwui.ConfigPanel):
-  def ui_appearance(self):
-    f = gwui.ConfigFrame("Appearance")
-    t = gtk.Table()
-    t.attach(gtk.Label("Message color:"), 0, 1, 0, 1, gtk.SHRINK)
-    t.attach(self.account.bind(gtk.ColorButton(), "message_color"), 1, 2, 0, 1)
-    t.attach(gtk.Label("Comment color:"), 0, 1, 1, 2, gtk.SHRINK)
-    t.attach(self.account.bind(gtk.ColorButton(), "comment_color"), 1, 2, 1, 2)
-    f.add(t)
-    return f

@@ -7,12 +7,9 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import sys, time, operator, os, threading, datetime, traceback
+import sys, time, os, threading, datetime
 import gtk, gtk.glade, gobject, table, webkit
-import twitter, jaiku, facebook, digg, flickr, pownce, identica
-import gwui, config, gintegration
-
-import simplejson
+import microblog, gwui, config, gintegration
 
 gtk.gdk.threads_init()
 
@@ -34,16 +31,6 @@ DEFAULT_PREFERENCES = {
   "refresh_interval": 2,
 }
 
-PROTOCOLS = {
-  "jaiku": jaiku,
-  "digg": digg,
-  "twitter": twitter,
-  "facebook": facebook,
-  "flickr": flickr,
-  "pownce": pownce,
-  "identica": identica,
-}
-
 class GwibberClient(gtk.Window):
   def __init__(self, ui_dir="ui"):
     gtk.Window.__init__(self)
@@ -52,9 +39,13 @@ class GwibberClient(gtk.Window):
     config.GCONF.add_dir(config.GCONF_PREFERENCES_DIR, config.gconf.CLIENT_PRELOAD_NONE)
     self.preferences = config.Preferences()
     self.ui_dir = ui_dir
-    self.accounts = config.Accounts()
     self.last_update = None
     layout = gtk.VBox()
+
+    self.accounts = config.Accounts()
+    self.client = microblog.Client(self.accounts)
+    self.client.handle_error = self.handle_error
+    self.client.post_process_message = self.post_process_message
 
     self.message_store = []
     self.message_target = None
@@ -157,26 +148,6 @@ class GwibberClient(gtk.Window):
     self.timer = gobject.timeout_add(
       60000 * int(self.preferences["refresh_interval"]), self.update)
 
-  def on_message_context_menu(self, e, w, message):
-    menu = gtk.Menu()
-    mi = gtk.MenuItem("_Reply")
-    mi.connect("activate", lambda m: self.reply(message))
-    menu.append(mi)
-
-    if hasattr(message, "url"):
-      mi = gtk.MenuItem("Open in browser")
-      mi.connect("activate", lambda m: gintegration.load_url(message.url))
-      menu.append(mi)
-
-    if gintegration.service_is_running("org.gnome.Tomboy"):
-      mi = gtk.MenuItem("Copy to _Tomboy")
-      mi.connect("activate", lambda m: self.copy_to_tomboy(message))
-      menu.append(mi)
-
-    menu.show_all()
-    menu.attach_to_widget(w, None)
-    menu.popup(None, None, None, 3, 0)
-
   def copy_to_tomboy(self, message):
     gintegration.create_tomboy_note("%s message from %s at %s\n\n%s" % (
       message.account["protocol"].capitalize(),
@@ -190,14 +161,6 @@ class GwibberClient(gtk.Window):
     self.message_target = message.account
     self.cancel_button.show()
 
-    """
-    for acct in self.accounts:
-      if acct["protocol"] != protocol or  \
-        acct["protocol"] != protocol and \
-        acct["username"] != message.account["username"]:
-          acct["send_enabled"] = False
-    """
-
   def reply(self, message):
     acct = message.account
 
@@ -205,8 +168,8 @@ class GwibberClient(gtk.Window):
       self.handle_at_reply(message, acct["protocol"])
       return
 
-    if acct["protocol"] in PROTOCOLS.keys():
-      client = PROTOCOLS[acct["protocol"]].Client(acct)
+    if acct["protocol"] in microblog.PROTOCOLS.keys():
+      client = microblog.PROTOCOLS[acct["protocol"]].Client(acct)
 
       if hasattr(client, "can_reply"):
         reply = gtk.Window()
@@ -215,14 +178,15 @@ class GwibberClient(gtk.Window):
         reply.resize(390, 240)
 
         def on_load_finished(view, frame):
-          self.draw_messages(content, client.get_replies(message))
+          for m in client.get_replies(message):
+            content.add(self.post_process_message(m))
 
         content = gwui.MessageView("file://%s/default.html" % self.ui_dir)
         content.connect("load-finished", on_load_finished)
 
         def on_reply_send(e):
           if e.get_text().strip():
-            c = PROTOCOLS[acct["protocol"]].Client(acct)
+            c = microblog.PROTOCOLS[acct["protocol"]].Client(acct)
             if c.can_send():
               c.transmit_reply(message, e.get_text().strip())
               e.set_text("")
@@ -251,8 +215,8 @@ class GwibberClient(gtk.Window):
   def on_input_context_menu(self, obj, menu):
     menu.append(gtk.SeparatorMenuItem())
     for acct in self.accounts:
-      if acct["protocol"] in PROTOCOLS.keys():
-        if PROTOCOLS[acct["protocol"]].Client(acct).can_send():
+      if acct["protocol"] in microblog.PROTOCOLS.keys():
+        if microblog.PROTOCOLS[acct["protocol"]].Client(acct).can_send():
           mi = gtk.CheckMenuItem("%s (%s)" % (acct["username"], acct["protocol"]))
           acct.bind(mi, "send_enabled")
           menu.append(mi)
@@ -425,7 +389,7 @@ class GwibberClient(gtk.Window):
     menu.append(menuAccountsCreate)
     mac = gtk.Menu()
 
-    for p in PROTOCOLS.keys():
+    for p in microblog.PROTOCOLS.keys():
       mi = gtk.MenuItem("%s" % p.capitalize())
       mi.connect("activate", self.on_account_create, p)
       mac.append(mi)
@@ -434,11 +398,11 @@ class GwibberClient(gtk.Window):
     menu.append(gtk.SeparatorMenuItem())
     
     for acct in self.accounts:
-      if acct["protocol"] in PROTOCOLS.keys():
+      if acct["protocol"] in microblog.PROTOCOLS.keys():
         sm = gtk.Menu()
         
         for i in ["receive", "send"]:
-          if getattr(PROTOCOLS[acct["protocol"]].Client(acct), "can_%s" % i)():
+          if getattr(microblog.PROTOCOLS[acct["protocol"]].Client(acct), "can_%s" % i)():
             mi = gtk.CheckMenuItem("_%s Messages" % i.capitalize())
             acct.bind(mi, "%s_enabled" % i)
             sm.append(mi)
@@ -456,29 +420,18 @@ class GwibberClient(gtk.Window):
     amenu.set_submenu(menu)
 
   def on_account_properties(self, w, acct):
-    c = PROTOCOLS[acct["protocol"]].ConfigPanel(acct, self.preferences)
-    c.ui_dir = self.ui_dir
+    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
+    dialog = glade.get_widget("dialog_%s" % acct["protocol"])
+    dialog.show_all()
     
-    w = gtk.Window()
-    w.set_title("Manage Acccount")
-    w.set_resizable(False)
-    w.set_border_width(10)
-    
-    buttons = gtk.HButtonBox()
-    bc = gtk.Button(stock=gtk.STOCK_CLOSE)
-    bd = gtk.Button(stock=gtk.STOCK_DELETE)
-    bc.connect("clicked", lambda a: w.destroy())
-    bd.connect("clicked", lambda a: self.on_account_delete(acct, w))
-    buttons.pack_start(bd)
-    buttons.pack_start(bc)
+    for widget in microblog.PROTOCOLS[acct["protocol"]].CONFIG:
+      acct.bind(glade.get_widget("%s_%s" % (acct["protocol"], widget)), widget)
 
-    vb = gtk.VBox(spacing=5)
-    vb.pack_start(c.build_ui())
-    vb.pack_start(gtk.HSeparator())
-    vb.pack_start(buttons)
-    
-    w.add(vb)
-    w.show_all()
+    glade.get_widget("%s_btnclose" % acct["protocol"]).connect("clicked",
+      lambda a: dialog.destroy())
+
+    glade.get_widget("%s_btndelete" % acct["protocol"]).connect("clicked",
+      lambda a: self.on_account_delete(acct, dialog))
 
   def on_account_create(self, w, protocol):
     a = self.accounts.new_account()
@@ -502,7 +455,7 @@ class GwibberClient(gtk.Window):
     manager.resize(390,240)
 
     def can_toggle(a, key):
-      c = PROTOCOLS[a["protocol"]].Client(a)
+      c = microblog.PROTOCOLS[a["protocol"]].Client(a)
       if getattr(c, "can_%s" % key)(): return True
 
     def toggle_table_checkbox(cr, i, key, table):
@@ -542,7 +495,7 @@ class GwibberClient(gtk.Window):
 
       elif stock == gtk.STOCK_ADD:
         mac = gtk.Menu()
-        for p in PROTOCOLS.keys():
+        for p in microblog.PROTOCOLS.keys():
           mi = gtk.MenuItem("%s" % p.capitalize())
           mi.connect("activate", self.on_account_create, p)
           mac.append(mi)
@@ -560,7 +513,6 @@ class GwibberClient(gtk.Window):
     def on_account_change(gc, v, entry, t):
       # handle account color change here
 
-      t.queue_draw()
       if len([a for a in self.accounts]) != len(t.tree_store):
         t.tree_store.clear()
         for a in self.accounts: t+= a
@@ -579,100 +531,77 @@ class GwibberClient(gtk.Window):
     manager.add(vb)
     manager.show_all()
 
-  def generate_message_list(self):
-    for acct in self.accounts:
-      if acct["protocol"] in PROTOCOLS.keys():
-        try:
-          client = PROTOCOLS[acct["protocol"]].Client(acct)
-          if client.receive_enabled():
-            for message in client.get_messages():
-              yield message
-        except:
-          err = traceback.format_exc()
-          self.errors += {
-            "time": datetime.datetime.now(),
-            "username": acct["username"],
-            "protocol": acct["protocol"],
-            "message": "Failed to retrieve messages\n<i><span foreground='red'>%s</span></i>" % err.split("\n")[-2],
-            "error": err,
-          }
-
-  def draw_messages(self, content, data):
-    content.clear()
-    for message in data:
-      color = gtk.gdk.color_parse(message.account[message.bgcolor])
-      message.hexbg = message.account[message.bgcolor][1:3] + message.account[message.bgcolor][5:7] + message.account[message.bgcolor][9:11]
-      message.bgstyle = "rgba(%s,%s,%s,0.6)" % (color.red/255, color.green/255, color.blue/255)
-      message.image_url = message.image
-      message.image = "file://%s" % gwui.image_cache(message.image)
-      if self.last_update:
-        message.is_new = message.time > self.last_update
-      else: message.is_new = False
-      message.time = gwui.generate_time_string(message.time)
-
-      if hasattr(message, "html_content"):
-        print "Using HTML string: ", message.protocol
-
-      if not hasattr(message, "html_string"):
-        message.html_string = '<span class="text">%s</span>' % \
-          gwui.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
-
-      content.add(message)
-
-  def send_message(self, acct, text):
-    if acct["protocol"] in PROTOCOLS.keys():
-      try:
-        c = PROTOCOLS[acct["protocol"]].Client(acct)
-        if c.can_send() and c.send_enabled():
-          c.transmit_status(text)
-      except:
-        self.errors += {
-          "time": datetime.datetime.now(),
-          "username": acct["username"],
-          "protocol": acct["protocol"],
-          "message": "Failed to send message",
-        }
+  def handle_error(self, acct, err, msg = None):
+    print err
+    return
+    self.errors += {
+      "time": datetime.datetime.now(),
+      "username": acct["username"],
+      "protocol": acct["protocol"],
+      "message": "%s\n<i><span foreground='red'>%s</span></i>" % (msg, err.split("\n")[-2]),
+      "error": err,
+    }
 
   def on_input_activate(self, e):
     if self.input.get_text().strip():
       if self.message_target:
-        for acct in self.accounts:
-          if acct.id == self.message_target.id:
-            self.send_message(acct, self.input.get_text().strip())
-            self.on_cancel_reply(None)
-            return
-      else:      
-        for acct in self.accounts:
-          self.send_message(acct, self.input.get_text().strip())
+        protocols = [self.message_target["protocol"]]
+      else: protocols = microblog.PROTOCOLS.keys()
+    
+      self.client.transmit_status(self.input.get_text().strip(), protocols)
+      self.on_cancel_reply(None)
+
       self.input.set_text("")
+
+  def post_process_message(self, message):
+    color = gtk.gdk.color_parse(message.account[message.bgcolor])
+    message.hexbg = message.account[message.bgcolor][1:3] + message.account[message.bgcolor][5:7] + message.account[message.bgcolor][9:11]
+    message.bgstyle = "rgba(%s,%s,%s,0.6)" % (color.red/255, color.green/255, color.blue/255)
+    message.image_url = message.image
+    message.image_path = gwui.image_cache(message.image_url)
+    message.image = "file://%s" % message.image_path
+
+    if self.last_update:
+      message.is_new = message.time > self.last_update
+    else: message.is_new = False
+    
+    message.time_string = microblog.support.generate_time_string(message.time)
+
+    if not hasattr(message, "html_string"):
+      message.html_string = '<span class="text">%s</span>' % \
+        microblog.support.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
+
+    message.json = microblog.support.simplejson.dumps(
+      message.__dict__, indent=4, default=str)
+
+    return message
 
   def update(self):
     self.throbber.set_from_animation(gtk.gdk.PixbufAnimation("%s/progress.gif" % self.ui_dir))
-    #while gtk.events_pending(): gtk.main_iteration()
 
     def process():
       try:
-        data = list(self.generate_message_list())
-        data.sort(key=operator.attrgetter("time"), reverse=True)
+        data = self.client.get_messages()
+
+        can_notify = self.preferences["show_notifications"] and \
+          gintegration.notify.init("Gwibber")
+        
+        for message in data:
+          if message.is_new and can_notify:
+            if hasattr(message, "image_path"):
+              gintegration.notify.Notification(message.sender,
+                message.text, message.image_path).show()
+            else: gintegration.notify.Notification(message.sender, message.text).show()
 
         gtk.gdk.threads_enter()
+        self.content.clear()
+        for message in data: self.content.add(message)
+        gtk.gdk.threads_leave()
 
-        if self.last_update and self.preferences["show_notifications"]:
-          for m in data:
-            if m.time > self.last_update and gintegration.notify.init("Gwibber"):
-              if hasattr(m, "image"):
-                gintegration.notify.Notification(m.sender, m.text,
-                  gwui.image_cache(m.image, IMAGE_CACHE_DIR)).show()
-              else:
-                gintegration.notify.Notification(m.sender, m.text)
-
-        self.draw_messages(self.content, data)
-        
         self.statusbar.pop(0)
         self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
         self.last_update = datetime.datetime.utcnow()
         
-        gtk.gdk.threads_leave()
       finally: gobject.idle_add(self.throbber.clear)
     
     t = threading.Thread(target=process)

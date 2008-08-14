@@ -3,7 +3,7 @@
 try: import gconf
 except: from gnome import gconf
 
-import gtk, gwp
+import gwp
 
 GCONF_DIR = "/apps/gwibber"
 GCONF_PREFERENCES_DIR = GCONF_DIR + "/preferences"

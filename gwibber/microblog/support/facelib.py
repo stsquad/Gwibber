@@ -851,10 +851,8 @@ class Facebook(object):
 
     def login(self, popup=False):
         """Open a web browser telling the user to login to Facebook."""
-        import gintegration
-        gintegration.load_url(self.get_login_url(popup=popup))
-        #import webbrowser
-        #webbrowser.open(self.get_login_url(popup=popup))
+        import webbrowser
+        webbrowser.open(self.get_login_url(popup=popup))
 
 
     def check_session(self, request):
