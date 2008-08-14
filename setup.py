@@ -11,7 +11,7 @@ setup(name="gwibber",
 	author_email="segphault@arstechnica.com",
   url="http://cixar.com/~segphault",
 	license="GNU General Public License (GPL)",
-	packages=['gwibber', 'gwibber/simplejson'],
+	packages=['gwibber', 'gwibber.microblog', 'gwibber.microblog.support', 'gwibber.microblog.support.simplejson'],
 	data_files=[
 		('share/gwibber/ui/', glob("ui/*.glade")),
 		('share/gwibber/ui/', glob("ui/*.png")),
@@ -22,4 +22,4 @@ setup(name="gwibber",
 		('share/pixmaps', ['ui/gwibber.svg']),
 		('share/applications/',['gwibber.desktop'])],
 	scripts=['bin/gwibber'] 
-)	
+)
