@@ -5,8 +5,7 @@ Facebook interface for Gwibber
 SegPhault (Ryan Paul) - 12/22/2007
 """
 
-import urllib2, urllib, base64, simplejson, re, webbrowser
-import time, datetime, support
+import urllib2, urllib, re, support
 from xml.dom import minidom
 
 CONFIG = ["message_color", "feed_url", "receive_enabled", "send_enabled"]
@@ -16,11 +15,6 @@ LINK_PARSE =  re.compile("<a[^>]+href=\"(https?://[^\"]+)\">[^<]+</a>")
 
 def sanitize_text(t):
   return LINK_PARSE.sub("\\1", t.strip()).replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")
-
-def parse_time(t):
-  return datetime.datetime.strptime(
-    " ".join(t.split(" ")[0:-1]), "%a, %d %b %Y %H:%M:%S") + \
-      datetime.timedelta(hours=int(t.split()[-1][2]))
 
 class Message:
   def __init__(self, client, data):
@@ -32,7 +26,7 @@ class Message:
     self.sender = data.getElementsByTagName("author")[0].firstChild.nodeValue
     self.sender_nick = self.sender
     self.sender_id = self.sender.replace(" ","_")
-    self.time = parse_time(data.getElementsByTagName("pubDate")[0].firstChild.nodeValue)
+    self.time = support.parse_time(data.getElementsByTagName("pubDate")[0].firstChild.nodeValue)
     self.text = sanitize_text(data.getElementsByTagName("title")[0].firstChild.nodeValue)
     self.url = data.getElementsByTagName("link")[0].firstChild.nodeValue
     self.bgcolor = "message_color"

@@ -5,8 +5,7 @@ Flickr interface for Gwibber
 SegPhault (Ryan Paul) - 03/01/2008
 """
 
-import urllib2, urllib, base64, support
-import time, datetime
+import urllib2, urllib, support, datetime
 
 CONFIG = ["message_color", "username", "receive_enabled", "send_enabled"]
 

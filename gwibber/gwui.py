@@ -7,9 +7,8 @@ SegPhault (Ryan Paul) - 05/26/2007
 
 """
 
-import gtk, pango, gobject, gintegration, config
 import webkit, gintegration, microblog
-import urllib2, base64, time, datetime, os, re
+import urllib2, base64, time, os
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
 IMG_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")

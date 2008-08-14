@@ -7,14 +7,10 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import urllib2, urllib, base64, support
-import time, datetime, re
+import urllib2, urllib, support, re
 
 CONFIG = ["message_color", "comment_color", "password", "username", "receive_enabled", "send_enabled"]
 NONCE_PARSE = re.compile('.*_nonce" value="([^"]+)".*', re.M | re.S)
-
-def parse_time(t):
-  return datetime.datetime.strptime(t, "%Y-%m-%dT%H:%M:%S %Z")
 
 class Message:
   def __init__(self, client, data):
@@ -27,7 +23,7 @@ class Message:
     self.sender = "%s %s" % (data["user"]["first_name"], data["user"]["last_name"])
     self.sender_nick = data["user"]["nick"]
     self.sender_id = data["user"]["nick"]
-    self.time = parse_time(data["created_at"])
+    self.time = support.parse_time(data["created_at"])
     if data.has_key("title"):
       self.text = data["title"].replace('"', "&quot;").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     self.image = data["user"]["avatar"]
