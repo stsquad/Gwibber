@@ -47,6 +47,7 @@ class GwibberClient(gtk.Window):
     self.client.handle_error = self.handle_error
     self.client.post_process_message = self.post_process_message
 
+    self.notification_bubbles = {}
     self.message_store = []
     self.message_target = None
     
@@ -104,6 +105,26 @@ class GwibberClient(gtk.Window):
     layout.pack_start(vb, True, True)
     layout.pack_start(self.statusbar, False)
     self.add(layout)
+
+    if gintegration.can_notify:
+      import dbus
+
+      def on_notify_close(nId):
+        if self.notification_bubbles.has_key(nId):
+          del self.notification_bubbles[nId]
+
+      def on_notify_action(nId, action):
+        if action == "reply":
+          self.reply(self.notification_bubbles[nId])
+      
+      bus = dbus.SessionBus()
+      bus.add_signal_receiver(on_notify_close,
+        dbus_interface="org.freedesktop.Notifications",
+        signal_name="CloseNotification")
+      
+      bus.add_signal_receiver(on_notify_action,
+        dbus_interface="org.freedesktop.Notifications",
+        signal_name="ActionInvoked")
 
     for i in CONFIGURABLE_UI_ELEMENTS:
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
@@ -584,14 +605,17 @@ class GwibberClient(gtk.Window):
         data = self.client.get_messages()
 
         can_notify = self.preferences["show_notifications"] and \
-          gintegration.notify.init("Gwibber")
+          gintegration.can_notify
         
         for message in data:
           if message.is_new and can_notify:
-            if hasattr(message, "image_path"):
-              gintegration.notify.Notification(message.sender,
-                message.text, message.image_path).show()
-            else: gintegration.notify.Notification(message.sender, message.text).show()
+            gtk.gdk.threads_enter()
+            n = gintegration.notify(message.sender, message.text,
+              hasattr(message, "image_path") and message.image_path or None,
+              ["reply", "Reply"])
+            gtk.gdk.threads_leave()
+            
+            self.notification_bubbles[n] = message
 
         gtk.gdk.threads_enter()
         self.content.clear()

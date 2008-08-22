@@ -3,11 +3,15 @@
 import dbus, gobject, dbus.glib, os
 
 try:
-  import pynotify as notify
-except:
-  class notify:
-    @classmethod
-    def init(self, app): return False
+  notifier = dbus.Interface(dbus.SessionBus().get_object(
+    "org.freedesktop.Notifications", "/org/freedesktop/Notifications"),
+    "org.freedesktop.Notifications")
+
+  def notify(title, text, icon = None, actions = [], timer = 9000):
+    return notifier.Notify("Gwibber", 0, icon, title, text, actions, {}, timer)
+
+  can_notify = True
+except: can_notify = False
 
 try:
   import sexy
