@@ -7,7 +7,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import sys, time, os, threading, datetime
+import sys, time, os, threading, mx.DateTime
 import gtk, gtk.glade, gobject, table, webkit
 import microblog, gwui, config, gintegration
 
@@ -600,7 +600,7 @@ class GwibberClient(gtk.Window):
 
         self.statusbar.pop(0)
         self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
-        self.last_update = datetime.datetime.utcnow()
+        self.last_update = mx.DateTime.gmt()
         
       finally: gobject.idle_add(self.throbber.clear)
     

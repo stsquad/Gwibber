@@ -7,7 +7,7 @@ SegPhault (Ryan Paul) - 07/25/2008
 
 """
 
-import re, os, facelib, datetime, time
+import re, os, facelib, time
 
 import mx.DateTime
 
