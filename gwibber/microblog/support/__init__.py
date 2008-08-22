@@ -7,12 +7,14 @@ SegPhault (Ryan Paul) - 07/25/2008
 
 """
 
-import re, os, facelib, time
-
-import mx.DateTime
+import re, os, facelib, locale, mx.DateTime
 
 def parse_time(t):
-  return mx.DateTime.Parser.DateTimeFromString(t)
+  loc = locale.getlocale(locale.LC_ALL)
+  locale.setlocale(locale.LC_ALL, 'C')
+  result = mx.DateTime.Parser.DateTimeFromString(t)
+  locale.setlocale(locale.LC_ALL, loc)
+  return result 
 
 LINK_PARSE = re.compile("(https?://[^ )\n]+)")
 
@@ -31,3 +33,6 @@ def generate_time_string(t):
   elif d.days == 1: return "1 day ago"
   elif d.days > 0: return "%d days ago" % d.days
   else: return "BUG: %s" % str(d)
+
+
+
