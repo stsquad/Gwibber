@@ -86,6 +86,15 @@
         border: 3px solid rgba(143, 6, 32, 0.8);
         border-style: ridge;
       }
+
+      .dupes {
+        display: none;
+      }
+
+      .toggledupe {
+        float: left;
+        display: none;
+      }
     </style>
 
     <script src="jquery.js"></script>
@@ -98,7 +107,7 @@
 
       function addMessage(data) {
 
-        html = '<div class="message '+ data.username + data.protocol +'" title="'+ data.sender_nick +'">' +
+        html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol +'" title="'+ data.sender_nick +'">' +
           '<table> \
             <tr><td> \
               <a href="'+ data.profile_url +'"> \
@@ -114,12 +123,21 @@
               </p> \
             </td></tr> \
           </table> \
+          <div class="toggledupe"><img src="add.png" /></div> \
+          <div class="dupes"></div> \
           <div class="replybutton"> \
             <a href="gwibber:reply/'+ data.message_index +'"><img src="reply.png" /></a> \
           </div> \
         </div>'
-    
-        $(".messages").append(html);
+
+        if (data.is_duplicate)
+        {
+          $("#" + data.gId + " .dupes:first").append(html);
+          $("#" + data.gId + " .toggledupe:first").show(0).unbind().toggle(
+            function() {$(this).parent().find(".dupes").show(100)},
+            function() {$(this).parent().find(".dupes").hide(100)});
+        } else $(".messages").append(html);
+
         setMessageColor(data.username, data.protocol, data.bgstyle);
 
         if (data.protocol == "digg")

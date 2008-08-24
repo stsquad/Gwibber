@@ -7,7 +7,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import sys, time, os, threading, mx.DateTime
+import sys, time, os, threading, mx.DateTime, hashlib
 import gtk, gtk.glade, gobject, table, webkit
 import microblog, gwui, config, gintegration
 
@@ -582,6 +582,8 @@ class GwibberClient(gtk.Window):
     message.image_path = gwui.image_cache(message.image_url)
     message.image = "file://%s" % message.image_path
 
+    message.gId = hashlib.sha1(message.text).hexdigest()
+
     if self.last_update:
       message.is_new = message.time > self.last_update
     else: message.is_new = False
@@ -591,9 +593,6 @@ class GwibberClient(gtk.Window):
     if not hasattr(message, "html_string"):
       message.html_string = '<span class="text">%s</span>' % \
         microblog.support.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
-
-    message.json = microblog.support.simplejson.dumps(
-      message.__dict__, indent=4, default=str)
 
     return message
 
@@ -606,15 +605,19 @@ class GwibberClient(gtk.Window):
 
         can_notify = self.preferences["show_notifications"] and \
           gintegration.can_notify
+
+        seen = []
         
         for message in data:
+          message.is_duplicate = message.gId in seen
+          if not message.is_duplicate: seen.append(message.gId)
+
           if message.is_new and can_notify:
             gtk.gdk.threads_enter()
-            n = gintegration.notify(message.sender, message.text,
-              hasattr(message, "image_path") and message.image_path or None,
-              ["reply", "Reply"])
+            n = gintegration.notify(message.sender, message.text, hasattr(message,
+              "image_path") and message.image_path or None, ["reply", "Reply"])
             gtk.gdk.threads_leave()
-            
+
             self.notification_bubbles[n] = message
 
         gtk.gdk.threads_enter()
