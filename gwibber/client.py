@@ -25,11 +25,11 @@ DEFAULT_PREFERENCES = {
   "show_notifications": True,
   "refresh_interval": 2,
   
-  "link_color": "darkblue",
-  "foreground_color": "black",
-  "background_color": "white",
-  "text_shadow_color": "black",
-  "background_image": "",
+#  "link_color": "darkblue",
+#  "foreground_color": "black",
+#  "background_color": "white",
+#  "text_shadow_color": "black",
+#  "background_image": "",
 }
 
 for i in CONFIGURABLE_UI_ELEMENTS:
@@ -134,9 +134,9 @@ class GwibberClient(gtk.Window):
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
         lambda *a: self.apply_ui_element_settings())
 
-    for i in CONFIGURABLE_UI_SETTINGS:
-      config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/%s" % i,
-        lambda *a: self.apply_ui_drawing_settings())
+    #for i in CONFIGURABLE_UI_SETTINGS:
+    #  config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/%s" % i,
+    #    lambda *a: self.apply_ui_drawing_settings())
     
     self.show_all()
     self.apply_ui_element_settings()
@@ -390,22 +390,8 @@ class GwibberClient(gtk.Window):
     dialog = glade.get_widget("pref_dialog")
     dialog.show_all()
 
-    for widget in \
-      ["foreground_color",
-       "link_color",
-       "show_notifications",
-       "refresh_interval",
-       "text_shadow_color",
-       "background_color"]:
-        self.preferences.bind(glade.get_widget(widget), widget)
-
-    def setbgimg(*a):
-      self.preferences["background_image"] = glade.get_widget("background_image").get_filename() or ""
-    
-    glade.get_widget("background_image").set_filename(self.preferences["background_image"])
-    glade.get_widget("background_image").connect("selection-changed", setbgimg)
-    glade.get_widget("background_image_clear").connect("clicked",
-      lambda *a: glade.get_widget("background_image").set_uri(""))
+    for widget in ["show_notifications", "refresh_interval"]:
+      self.preferences.bind(glade.get_widget(widget), widget)
 
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
   
