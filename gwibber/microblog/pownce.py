@@ -23,7 +23,7 @@ class Message:
     self.sender_nick = data["sender"]["username"]
     self.sender_id = data["sender"]["id"]
     self.time = mx.DateTime.DateTimeFrom(data["timestamp"]).gmtime()
-    self.text = data["body"]
+    self.text = support.xml_escape(data["body"])
     self.image = data["sender"]["profile_photo_urls"]["medium_photo_url"]
     self.bgcolor = "message_color"
     if data.has_key("permalink"):

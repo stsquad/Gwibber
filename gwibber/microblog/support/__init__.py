@@ -21,6 +21,9 @@ LINK_PARSE = re.compile("(https?://[^ )\n]+)")
 def linkify(t):
   return LINK_PARSE.sub('<a href="\\1">\\1</a>', t)
 
+def xml_escape(t):
+  return t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
 def generate_time_string(t):
   if isinstance(t, str): return t
 

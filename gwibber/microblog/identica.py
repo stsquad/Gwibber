@@ -23,7 +23,7 @@ class Message:
     self.sender_nick = data["user"]["screen_name"]
     self.sender_id = data["user"]["id"]
     self.time = support.parse_time(data["created_at"])
-    self.text = data["text"]
+    self.text = support.xml_escape(data["text"])
     self.image = data["user"]["profile_image_url"]
     self.bgcolor = "message_color"
     self.url = "http://identi.ca/notice/%s" % data["id"] # % (data["user"]["screen_name"], data["id"])

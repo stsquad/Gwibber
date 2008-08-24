@@ -622,7 +622,7 @@ class GwibberClient(gtk.Window):
     message.image_path = gwui.image_cache(message.image_url)
     message.image = "file://%s" % message.image_path
 
-    message.gId = hashlib.sha1(message.text.strip(".")).hexdigest()
+    message.gId = hashlib.sha1(message.text[:128].strip(".")).hexdigest()
 
     if self.last_update:
       message.is_new = message.time > self.last_update
