@@ -28,6 +28,10 @@ class Message:
     self.sender_id = self.sender.replace(" ","_")
     self.time = support.parse_time(data.getElementsByTagName("pubDate")[0].firstChild.nodeValue)
     self.text = sanitize_text(data.getElementsByTagName("title")[0].firstChild.nodeValue)
+
+    if self.text.startswith(self.sender):
+      self.text = self.text[len(self.sender)+1:]
+
     self.url = data.getElementsByTagName("link")[0].firstChild.nodeValue
     self.bgcolor = "message_color"
     

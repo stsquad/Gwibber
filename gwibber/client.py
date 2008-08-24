@@ -454,6 +454,46 @@ class GwibberClient(gtk.Window):
     glade.get_widget("%s_btndelete" % acct["protocol"]).connect("clicked",
       lambda a: self.on_account_delete(acct, dialog))
 
+    if acct["protocol"] == "facebook":
+      glade.get_widget("btnAuthorize").connect("clicked",
+        lambda a: self.facebook_authorize(acct))
+
+  def facebook_authorize(self, account):
+    from gwibber.microblog.support import facelib
+
+    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
+    dialog = glade.get_widget("facebook_config")
+    dialog.show_all()
+
+    def on_validate_click(w):
+      fb = facelib.Facebook(microblog.facebook.APP_KEY, microblog.facebook.SECRET_KEY,
+        glade.get_widget("entry_auth_token").get_text().strip())
+
+      data = fb.auth.getSession()
+      if data and data.has_key("session_key"):
+        account["secret_key"] = str(data["secret"])
+        account["session_key"] = str(data["session_key"])
+        
+        m = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK,
+          "Keys obtained successfully.")
+      else:
+        m = gtk.MessageDialog(None, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK,
+          "Failed to obtain key.") 
+
+      m.run()
+      m.destroy()
+    
+    glade.get_widget("button_request").connect("clicked",
+      lambda *a: gintegration.load_url("http://www.facebook.com/code_gen.php?v=1.0&api_key=%s" % microblog.facebook.APP_KEY))
+    
+    glade.get_widget("button_authorize").connect("clicked",
+      lambda *a: gintegration.load_url("http://www.facebook.com/authorize.php?api_key=%s&v=1.0&ext_perm=status_update" % microblog.facebook.APP_KEY))
+
+    glade.get_widget("button_apply_auth").connect("clicked", on_validate_click)
+    glade.get_widget("button_close").connect("clicked", lambda w: dialog.destroy())
+
+
+
   def on_account_create(self, w, protocol):
     a = self.accounts.new_account()
     a["protocol"] = protocol
@@ -582,7 +622,7 @@ class GwibberClient(gtk.Window):
     message.image_path = gwui.image_cache(message.image_url)
     message.image = "file://%s" % message.image_path
 
-    message.gId = hashlib.sha1(message.text).hexdigest()
+    message.gId = hashlib.sha1(message.text.strip(".")).hexdigest()
 
     if self.last_update:
       message.is_new = message.time > self.last_update
