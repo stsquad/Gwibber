@@ -152,7 +152,7 @@ class GwibberClient(gtk.Window):
     self.show_all()
     self.apply_ui_element_settings()
     self.cancel_button.hide()
-    #self.update()
+    self.update()
 
   def on_window_close(self, w, e):
     if self.preferences["minimize_to_tray"]:
@@ -665,15 +665,16 @@ class GwibberClient(gtk.Window):
         
         for message in data:
           message.is_duplicate = message.gId in seen
-          if not message.is_duplicate: seen.append(message.gId)
+          if not message.is_duplicate:
+            seen.append(message.gId)
 
-          if message.is_new and can_notify:
-            gtk.gdk.threads_enter()
-            n = gintegration.notify(message.sender, message.text, hasattr(message,
-              "image_path") and message.image_path or None, ["reply", "Reply"])
-            gtk.gdk.threads_leave()
+            if message.is_new and can_notify:
+              gtk.gdk.threads_enter()
+              n = gintegration.notify(message.sender, message.text, hasattr(message,
+                "image_path") and message.image_path or None, ["reply", "Reply"])
+              gtk.gdk.threads_leave()
 
-            self.notification_bubbles[n] = message
+              self.notification_bubbles[n] = message
 
         gtk.gdk.threads_enter()
         self.content.clear()
