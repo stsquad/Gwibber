@@ -255,22 +255,23 @@ class GwibberClient(gtk.Window):
     menuView = gtk.Menu()
     menuAccounts = gtk.Menu()
     menuHelp = gtk.Menu()
+    menuTray = gtk.Menu()
 
-    menuGwibberRefresh = gtk.ImageMenuItem(gtk.STOCK_REFRESH)
-    menuGwibberRefresh.connect("activate", self.on_refresh)
-    menuGwibber.append(menuGwibberRefresh)
+    actRefresh = gtk.Action("gwibberRefresh", "_Refresh", None, gtk.STOCK_REFRESH)
+    actRefresh.connect("activate", self.on_refresh)
+    menuGwibber.append(actRefresh.create_menu_item())
 
-    menuGwibberPreferences = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
-    menuGwibberPreferences.connect("activate", self.on_preferences)
-    menuGwibber.append(menuGwibberPreferences)
+    actPreferences = gtk.Action("gwibberPreferences", "_Preferences", None, gtk.STOCK_PREFERENCES)
+    actPreferences.connect("activate", self.on_preferences)
+    menuGwibber.append(actPreferences.create_menu_item())
 
-    menuGwibberQuit = gtk.ImageMenuItem(gtk.STOCK_QUIT)
-    menuGwibberQuit.connect("activate", self.on_quit)
-    menuGwibber.append(menuGwibberQuit)
+    actQuit  = gtk.Action("gwibberQuit", "_Quit", None, gtk.STOCK_QUIT)
+    actQuit.connect("activate", self.on_quit)
+    menuGwibber.append(actQuit.create_menu_item())
 
-    menuGwibberAbout = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
-    menuGwibberAbout.connect("activate", self.on_about)
-    menuHelp.append(menuGwibberAbout)
+    actAbout = gtk.Action("gwibberAbout", "_About", None, gtk.STOCK_ABOUT)
+    actAbout.connect("activate", self.on_about)
+    menuHelp.append(actAbout.create_menu_item())
 
     for i in CONFIGURABLE_UI_ELEMENTS:
       mi = gtk.CheckMenuItem("_%s" % " ".join(i.split("_")).capitalize())
@@ -300,6 +301,13 @@ class GwibberClient(gtk.Window):
     menuSpinner.set_right_justified(True)
     menuSpinner.set_sensitive(False)
     menuSpinner.set_image(self.throbber)
+
+    menuTray.append(actRefresh.create_menu_item())
+    menuTray.append(actPreferences.create_menu_item())
+    menuTray.append(actQuit.create_menu_item())
+
+    self.tray_icon.connect("popup-menu", lambda i,b,a: menuTray.popup(
+      None, None, gtk.status_icon_position_menu, b, a, self.tray_icon))
     
     menubar = gtk.MenuBar()
     menubar.append(menuGwibberItem)
