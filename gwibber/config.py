@@ -34,7 +34,7 @@ class Wrapper:
         "%s/%s" % (self.path, key), value)
 
   def bind(self, widget, key, **args):
-    gwp.create_persistency_link(widget, "%s/%s" % (self.path, key))
+    gwp.create_persistency_link(widget, "%s/%s" % (self.path, key), **args)
     return widget
 
   def notify(self, key, method):

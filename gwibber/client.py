@@ -22,14 +22,18 @@ VERSION_NUMBER = 0.7
 
 DEFAULT_PREFERENCES = {
   "version": VERSION_NUMBER,
+  "show_notifications": True,
+  "refresh_interval": 2,
+  
   "link_color": "darkblue",
   "foreground_color": "black",
   "background_color": "white",
   "text_shadow_color": "black",
   "background_image": "",
-  "show_notifications": True,
-  "refresh_interval": 2,
 }
+
+for i in CONFIGURABLE_UI_ELEMENTS:
+  DEFAULT_PREFERENCES["show_%s" % i] = True
 
 class GwibberClient(gtk.Window):
   def __init__(self, ui_dir="ui"):
@@ -134,9 +138,9 @@ class GwibberClient(gtk.Window):
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/%s" % i,
         lambda *a: self.apply_ui_drawing_settings())
     
+    self.show_all()
     self.apply_ui_element_settings()
     self.apply_ui_drawing_settings()
-    self.show_all()
 
     self.cancel_button.hide()
     self.update()
@@ -454,7 +458,9 @@ class GwibberClient(gtk.Window):
     dialog.show_all()
     
     for widget in microblog.PROTOCOLS[acct["protocol"]].CONFIG:
-      acct.bind(glade.get_widget("%s_%s" % (acct["protocol"], widget)), widget)
+      w = glade.get_widget("%s_%s" % (acct["protocol"], widget))
+      if isinstance(w, gtk.ColorButton): acct.bind(w, widget, default="#729FCF")
+      else: acct.bind(w, widget)
 
     glade.get_widget("%s_btnclose" % acct["protocol"]).connect("clicked",
       lambda a: dialog.destroy())
