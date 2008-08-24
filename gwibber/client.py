@@ -77,6 +77,9 @@ class GwibberClient(gtk.Window):
     self.content = gwui.MessageView("file://%s/default.html" % ui_dir)
     self.content.link_handler = self.on_link_clicked
     
+    gtk.icon_theme_add_builtin_icon("gwibber", 22,
+      gtk.gdk.pixbuf_new_from_file_at_size("%s/gwibber.svg" % ui_dir, 24, 24))
+
     self.set_icon_name("gwibber")
     self.tray_icon = gtk.status_icon_new_from_icon_name("gwibber")
     self.tray_icon.connect("activate", self.on_toggle_window_visibility)
