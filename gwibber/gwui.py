@@ -8,7 +8,7 @@ SegPhault (Ryan Paul) - 05/26/2007
 """
 
 import webkit, gintegration, microblog
-import urllib2, base64, time, os
+import urllib2, hashlib, time, os
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
 IMG_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
@@ -46,7 +46,7 @@ class MessageView(WebRender):
 
 def image_cache(url, cache_dir = IMG_CACHE_DIR):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)
-  encoded_url = base64.encodestring(url)[:-1]
+  encoded_url = hashlib.sha1(url).hexdigest()
   if len(encoded_url) > 200: encoded_url = encoded_url[::-1][:200]
   img_path = os.path.join(cache_dir, encoded_url).replace("\n","")
 
