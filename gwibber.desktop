@@ -1,7 +1,7 @@
 [Desktop Entry]
-Version=0.2
+Version=0.7
 Encoding=UTF-8
-Name=gwibber
+Name=Gwibber Microblogging Client
 Type=Application
 Comment=Microblogging client for GNOME
 Exec=gwibber

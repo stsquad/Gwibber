@@ -16,7 +16,7 @@ gtk.gdk.threads_init()
 MAX_MESSAGE_LENGTH = 140
 
 CONFIGURABLE_UI_ELEMENTS = ["editor", "statusbar", "messages", "tray_icon"]
-CONFIGURABLE_UI_SETTINGS = ["background_color", "background_image"]
+#CONFIGURABLE_UI_SETTINGS = ["background_color", "background_image"]
 IMAGE_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
 VERSION_NUMBER = 0.7
 
@@ -24,6 +24,8 @@ DEFAULT_PREFERENCES = {
   "version": VERSION_NUMBER,
   "show_notifications": True,
   "refresh_interval": 2,
+  "minimize_to_tray": False,
+  "hide_taskbar_entry": False,
   
 #  "link_color": "darkblue",
 #  "foreground_color": "black",
@@ -37,9 +39,9 @@ for i in CONFIGURABLE_UI_ELEMENTS:
 
 class GwibberClient(gtk.Window):
   def __init__(self, ui_dir="ui"):
-    gtk.Window.__init__(self)
+    gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
     self.set_title("Gwibber")
-    self.resize(300, 300)
+    self.set_default_size(330, 500)
     config.GCONF.add_dir(config.GCONF_PREFERENCES_DIR, config.gconf.CLIENT_PRELOAD_NONE)
     self.preferences = config.Preferences()
     self.ui_dir = ui_dir
@@ -64,7 +66,7 @@ class GwibberClient(gtk.Window):
         "markup": lambda t: t.message})]
     ])
 
-    self.connect("destroy", gtk.main_quit)
+    self.connect("delete-event", self.on_window_close)
 
     for key, value in DEFAULT_PREFERENCES.items():
       if self.preferences[key] == None: self.preferences[key] = value
@@ -75,6 +77,7 @@ class GwibberClient(gtk.Window):
     self.content = gwui.MessageView("file://%s/default.html" % ui_dir)
     self.content.link_handler = self.on_link_clicked
     
+    self.set_icon_name("gwibber")
     self.tray_icon = gtk.status_icon_new_from_icon_name("gwibber")
     self.tray_icon.connect("activate", self.on_toggle_window_visibility)
 
@@ -120,6 +123,8 @@ class GwibberClient(gtk.Window):
       def on_notify_action(nId, action):
         if action == "reply":
           self.reply(self.notification_bubbles[nId])
+          self.window.show()
+          self.present()
       
       bus = dbus.SessionBus()
       bus.add_signal_receiver(on_notify_close,
@@ -133,6 +138,9 @@ class GwibberClient(gtk.Window):
     for i in CONFIGURABLE_UI_ELEMENTS:
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
         lambda *a: self.apply_ui_element_settings())
+    
+    self.preferences.notify("hide_taskbar_entry",
+      lambda *a: self.apply_ui_element_settings())
 
     #for i in CONFIGURABLE_UI_SETTINGS:
     #  config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/%s" % i,
@@ -140,11 +148,16 @@ class GwibberClient(gtk.Window):
     
     self.show_all()
     self.apply_ui_element_settings()
-    self.apply_ui_drawing_settings()
-
     self.cancel_button.hide()
-    self.update()
+    #self.update()
 
+  def on_window_close(self, w, e):
+    if self.preferences["minimize_to_tray"]:
+      self.preferences["show_tray_icon"] = True
+      self.on_toggle_window_visibility(w)
+      return True
+    else: gtk.main_quit()
+  
   def on_cancel_reply(self, w):
     self.cancel_button.hide()
     self.message_target = None
@@ -158,15 +171,14 @@ class GwibberClient(gtk.Window):
       self.show()
       self.move(*self.last_position)
 
-  def apply_ui_drawing_settings(self):
-    bgcolor = self.preferences["background_color"]
-    bgimage = self.preferences["background_image"]
-
   def apply_ui_element_settings(self):
     for i in CONFIGURABLE_UI_ELEMENTS:
       if hasattr(self, i):
         getattr(self, i).set_property(
           "visible", self.preferences["show_%s" % i])
+    
+    self.set_property("skip-taskbar-hint",
+      self.preferences["hide_taskbar_entry"])
 
   def on_refresh_interval_changed(self, *a):
     gobject.source_remove(self.timer)
@@ -390,8 +402,8 @@ class GwibberClient(gtk.Window):
     dialog = glade.get_widget("pref_dialog")
     dialog.show_all()
 
-    for widget in ["show_notifications", "refresh_interval"]:
-      self.preferences.bind(glade.get_widget(widget), widget)
+    for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry"]:
+      self.preferences.bind(glade.get_widget("pref_%s" % widget), widget)
 
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
   
