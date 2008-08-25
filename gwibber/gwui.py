@@ -14,9 +14,11 @@ DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
 IMG_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
 
 class WebRender(webkit.WebView):
-  def __init__(self, theme):
+  def __init__(self, ui_dir, theme):
     webkit.WebView.__init__(self)
-    self.open(theme)
+    self.theme = theme
+    self.ui_dir = ui_dir
+    self.open("file://%s/themes/%s/theme.html" % (ui_dir, theme))
     self.connect("navigation-requested", self.on_click_link)
     self.load_externally = True
 
@@ -30,8 +32,8 @@ class WebRender(webkit.WebView):
     pass
 
 class MessageView(WebRender):
-  def __init__(self, theme):
-    WebRender.__init__(self, theme)
+  def __init__(self, ui_dir, theme):
+    WebRender.__init__(self, ui_dir, theme)
     self.messages = [None]
 
   def add(self, message):

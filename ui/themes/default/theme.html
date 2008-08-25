@@ -99,15 +99,30 @@
 
     <script src="jquery.js"></script>
     <script>
-      function addDiggCount(message, data)
-      {
-          message.html('<p><span class="diggcount">' + data.diggs + '</span><br /><small>diggs</small></p>');
-          message.css('display', 'block');
+      function addMessages(messages) {
+        $.each(messages, function() {addMessage(this)});
+      }
+      
+      function clearMessages() {
+        $(".messages").html("");
+      }
+
+      function addDiggCount(message, data) {
+        message.html('<p><span class="diggcount">' + data.diggs + '</span><br /><small>diggs</small></p>');
+        message.css('display', 'block');
+      }
+
+      function setAccountConfig(data) {
+        $.each(data, function() {
+          for (var conf in this) {
+            if (conf.search("color") > 0)
+              setMessageColor(this.id, conf, this[conf].red, this[conf].green, this[conf].blue, 0.6);
+          }
+        });
       }
 
       function addMessage(data) {
-
-        html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol +'" title="'+ data.sender_nick +'">' +
+        html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol + ' ' + data.aId + data.bgcolor +'" title="'+ data.sender_nick +'">' +
           '<table> \
             <tr><td> \
               <a href="'+ data.profile_url +'"> \
@@ -130,15 +145,12 @@
           </div> \
         </div>'
 
-        if (data.is_duplicate)
-        {
+        if (data.is_duplicate) {
           $("#" + data.gId + " .dupes:first").append(html);
           $("#" + data.gId + " .toggledupe:first").show(0).unbind().toggle(
             function() {$(this).parent().find(".dupes").show(100)},
             function() {$(this).parent().find(".dupes").hide(100)});
         } else $(".messages").append(html);
-
-        setMessageColor(data.username, data.protocol, data.bgstyle);
 
         if (data.protocol == "digg")
           addDiggCount($(".diggbox:last"), data);
@@ -154,12 +166,8 @@
           function() {$(this).find(".replybutton").hide(0)});
       }
 
-      function clearMessages() {
-        $(".messages").html("");
-      }
-
-      function setMessageColor(username, protocol, color) {
-        $('.'+username+protocol).css('background', '-webkit-gradient(linear, left top, left 220%, from('+ color +'), to(black))')
+      function setMessageColor(aId, colorName, r, g, b, a) {
+        $('.'+aId+colorName).css('background', '-webkit-gradient(linear, left top, left 220%, from(rgba('+r+','+g+','+b+','+a+')), to(black))')
       }
     </script>
   </head>

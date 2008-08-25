@@ -74,7 +74,7 @@ class GwibberClient(gtk.Window):
     self.timer = gobject.timeout_add(60000 * int(self.preferences["refresh_interval"]), self.update)
     self.preferences.notify("refresh_interval", self.on_refresh_interval_changed)
 
-    self.content = gwui.MessageView("file://%s/default.html" % ui_dir)
+    self.content = gwui.MessageView(ui_dir, "default")
     self.content.link_handler = self.on_link_clicked
     
     gtk.icon_theme_add_builtin_icon("gwibber", 22,
@@ -142,6 +142,8 @@ class GwibberClient(gtk.Window):
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
         lambda *a: self.apply_ui_element_settings())
     
+    config.GCONF.notify_add("/apps/gwibber/accounts", self.on_account_change)
+
     self.preferences.notify("hide_taskbar_entry",
       lambda *a: self.apply_ui_element_settings())
 
@@ -153,6 +155,10 @@ class GwibberClient(gtk.Window):
     self.apply_ui_element_settings()
     self.cancel_button.hide()
     self.update()
+
+  def on_account_change(self, client, junk, entry, *args):
+    if "color" in entry.get_key():
+      self.set_account_colors()
 
   def on_window_close(self, w, e):
     if self.preferences["minimize_to_tray"]:
@@ -587,8 +593,6 @@ class GwibberClient(gtk.Window):
           self.on_account_delete(data.get_selected())
 
     def on_account_change(gc, v, entry, t):
-      # handle account color change here
-
       if len([a for a in self.accounts]) != len(t.tree_store):
         t.tree_store.clear()
         for a in self.accounts: t+= a
@@ -630,14 +634,12 @@ class GwibberClient(gtk.Window):
       self.input.set_text("")
 
   def post_process_message(self, message):
-    color = gtk.gdk.color_parse(message.account[message.bgcolor])
-    message.hexbg = message.account[message.bgcolor][1:3] + message.account[message.bgcolor][5:7] + message.account[message.bgcolor][9:11]
-    message.bgstyle = "rgba(%s,%s,%s,0.6)" % (color.red/255, color.green/255, color.blue/255)
     message.image_url = message.image
     message.image_path = gwui.image_cache(message.image_url)
     message.image = "file://%s" % message.image_path
 
     message.gId = hashlib.sha1(message.text[:128].strip(".")).hexdigest()
+    message.aId = message.account.id
 
     if self.last_update:
       message.is_new = message.time > self.last_update
@@ -650,6 +652,21 @@ class GwibberClient(gtk.Window):
         microblog.support.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
 
     return message
+
+  def get_account_config(self):
+    for acct in self.accounts:
+      data = {"id": acct.id, "username": acct["username"], "protocol": acct["protocol"]}
+      for c in microblog.PROTOCOLS[acct["protocol"]].CONFIG:
+        if "color" in c:
+          color = gtk.gdk.color_parse(acct[c])
+          data[c] = {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
+      yield data
+
+  def set_account_colors(self):
+    jsonaccounts = microblog.support.simplejson.dumps(
+      list(self.get_account_config()), indent=4, default=str)
+    
+    self.content.execute_script("setAccountConfig(%s)" % jsonaccounts)
 
   def update(self):
     self.throbber.set_from_animation(gtk.gdk.PixbufAnimation("%s/progress.gif" % self.ui_dir))
@@ -675,11 +692,14 @@ class GwibberClient(gtk.Window):
               gtk.gdk.threads_leave()
 
               self.notification_bubbles[n] = message
+        
+        jsonmessages = microblog.support.simplejson.dumps([dict(m.__dict__, message_index=n)
+          for n, m in enumerate(data)], indent=4, default=str)
 
-        gtk.gdk.threads_enter()
         self.content.clear()
-        for message in data: self.content.add(message)
-        gtk.gdk.threads_leave()
+        self.content.execute_script("addMessages(%s)" % jsonmessages)
+        self.set_account_colors()
+        self.message_store = data
 
         self.statusbar.pop(0)
         self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
