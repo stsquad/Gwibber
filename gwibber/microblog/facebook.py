@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 """
 Facebook interface for Gwibber

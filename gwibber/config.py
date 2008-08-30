@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 try: import gconf
 except: from gnome import gconf

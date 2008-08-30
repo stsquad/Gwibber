@@ -1,10 +1,9 @@
 [Desktop Entry]
-Version=0.7
 Encoding=UTF-8
 Name=Gwibber Microblogging Client
 Type=Application
 Comment=Microblogging client for GNOME
 Exec=gwibber
-Icon=gwibber.svg
+Icon=gwibber
 Categories=Network
 GenericName=Microblogging Client

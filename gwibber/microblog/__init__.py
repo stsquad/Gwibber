@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 import operator, traceback
 import twitter, jaiku, facebook, digg, flickr, pownce, identica

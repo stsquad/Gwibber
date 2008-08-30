@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 import dbus, gobject, dbus.glib, os
 

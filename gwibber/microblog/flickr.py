@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 """
 Flickr interface for Gwibber
