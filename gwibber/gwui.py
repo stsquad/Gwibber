@@ -7,23 +7,38 @@ SegPhault (Ryan Paul) - 05/26/2007
 
 """
 
-import webkit, gintegration, microblog
+import webkit, gintegration, microblog, gtk
 import urllib2, hashlib, time, os
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
 IMG_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
 
-class WebRender(webkit.WebView):
+class MessageView(webkit.WebView):
   def __init__(self, ui_dir, theme):
     webkit.WebView.__init__(self)
-    self.theme = theme
     self.ui_dir = ui_dir
-    self.open("file://%s/themes/%s/theme.html" % (ui_dir, theme))
-    self.connect("navigation-requested", self.on_click_link)
     self.load_externally = True
+    self.connect("navigation-requested", self.on_click_link)
+    self.load_theme(theme)
+
+  def load_theme(self, theme):
+    self.theme = theme
+    self.open("file://%s/themes/%s/theme.html" % (self.ui_dir, theme))
+
+  def load_messages(self, message_store):
+    msgs = microblog.support.simplejson.dumps([dict(m.__dict__, message_index=n)
+      for n, m in enumerate(message_store)], indent=4, default=str)
+    self.execute_script("addMessages(%s)" % msgs)
+
+  def load_preferences(self, preferences):
+    json = microblog.support.simplejson.dumps(
+      list(preferences), indent=4, default=str)
+    self.execute_script("setAccountConfig(%s)" % json)
 
   def on_click_link(self, view, frame, req):
     uri = req.get_uri()
+    if uri.startswith("file:///"): return False
+    
     if not self.link_handler(uri) and self.load_externally:
       gintegration.load_url(uri)
     return self.load_externally
@@ -31,20 +46,19 @@ class WebRender(webkit.WebView):
   def link_handler(self, uri):
     pass
 
-class MessageView(WebRender):
+class ThemeSelector:
   def __init__(self, ui_dir, theme):
-    WebRender.__init__(self, ui_dir, theme)
-    self.messages = [None]
+    self.theme = theme
 
-  def add(self, message):
-    message.message_index = len(self.messages)
-    self.messages += [message]
-    self.execute_script("addMessage(%s)" % microblog.support.simplejson.dumps(
-      message.__dict__, indent=4, default=str))
+    self.widgets = gtk.VBox()
+    self.content = MessageView(ui_dir, theme)
+    self.selector = gtk.RadioButton(None, theme.capitalize())
 
-  def clear(self):
-    self.execute_script("clearMessages()")
-    self.messages = [None]
+    self.widgets.pack_start(self.content)
+    self.widgets.pack_start(self.selector, False, False)
+
+    self.content.set_full_content_zoom(True)
+    self.content.set_zoom_level(0.2)
 
 def image_cache(url, cache_dir = IMG_CACHE_DIR):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)

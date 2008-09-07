@@ -100,6 +100,7 @@
     <script src="jquery.js"></script>
     <script>
       function addMessages(messages) {
+        clearMessages()
         $.each(messages, function() {addMessage(this)});
       }
       
