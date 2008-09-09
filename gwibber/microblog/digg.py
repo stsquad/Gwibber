@@ -7,7 +7,7 @@ SegPhault (Ryan Paul) - 01/06/2008
 import urllib2, urllib, support, re
 from xml.dom import minidom
 
-CONFIG = ["message_color", "comment_color", "username", "receive_enabled"]
+CONFIG = ["digg_color", "comment_color", "username", "receive_enabled"]
 LINK_PARSE =  re.compile("<a[^>]+href=\"(https?://[^\"]+)\">[^<]+</a>")
 
 def sanitize_text(t):

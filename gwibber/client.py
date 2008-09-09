@@ -73,7 +73,7 @@ class GwibberClient(gtk.Window):
     self.timer = gobject.timeout_add(60000 * int(self.preferences["refresh_interval"]), self.update)
     self.preferences.notify("refresh_interval", self.on_refresh_interval_changed)
 
-    self.content = gwui.MessageView("file://%s/default.html" % ui_dir)
+    self.content = gwui.MessageView(ui_dir, "default")
     self.content.link_handler = self.on_link_clicked
     
     gtk.icon_theme_add_builtin_icon("gwibber", 22,
@@ -141,6 +141,8 @@ class GwibberClient(gtk.Window):
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
         lambda *a: self.apply_ui_element_settings())
     
+    config.GCONF.notify_add("/apps/gwibber/accounts", self.on_account_change)
+
     self.preferences.notify("hide_taskbar_entry",
       lambda *a: self.apply_ui_element_settings())
 
@@ -152,6 +154,36 @@ class GwibberClient(gtk.Window):
     self.apply_ui_element_settings()
     self.cancel_button.hide()
     self.update()
+
+  def theme_preview_test(self, *a):
+    themes = [gwui.ThemeSelector(self.ui_dir, t) for t in ["default", "funkatron"]]
+
+    hb = gtk.HBox(spacing=5)
+    for t in themes: hb.pack_start(t.widgets)
+    for t in themes[1:]: t.selector.set_group(themes[0].selector)
+    
+    def testit(*a):
+      for t in themes:
+        t.content.load_messages(self.message_store)
+        t.content.load_preferences(self.get_account_config())
+
+    b = gtk.Button("Test")
+    b.connect("clicked", testit)
+
+    w = gtk.Window()
+    w.set_title("Theme Selector")
+    w.set_border_width(5)
+
+    vb = gtk.VBox(spacing=5)
+    vb.pack_start(hb)
+    vb.pack_start(b, False, False)
+    w.add(vb)
+
+    w.show_all()
+
+  def on_account_change(self, client, junk, entry, *args):
+    if "color" in entry.get_key():
+      self.set_account_colors(self.content)
 
   def on_window_close(self, w, e):
     if self.preferences["minimize_to_tray"]:
@@ -247,7 +279,7 @@ class GwibberClient(gtk.Window):
   def on_link_clicked(self, uri):
     if uri.startswith("gwibber:"):
       if uri.startswith("gwibber:reply"):
-        self.reply(self.content.messages[int(uri.split("/")[-1])])
+        self.reply(self.message_store[int(uri.split("/")[-1])])
         return True
     else: return False
 
@@ -268,6 +300,21 @@ class GwibberClient(gtk.Window):
       self.statusbar.push(1, "Characters remaining: %s" % (
         widget.get_max_length() - len(widget.get_text())))
 
+  def load_messages_into_view(self, view):
+    msgs = microblog.support.simplejson.dumps([dict(m.__dict__, message_index=n)
+      for n, m in enumerate(self.message_store)], indent=4, default=str)
+
+    view.execute_script("addMessages(%s)" % msgs)
+    self.set_account_colors(view)
+
+  def on_theme_change(self, w):
+    def on_load_finished(*a):
+      self.load_messages_into_view(self.content)      
+
+    self.content.connect("load-finished", on_load_finished)
+    self.content.load_theme("funkatron")
+
+
   def setup_menus(self):
     menuGwibber = gtk.Menu()
     menuView = gtk.Menu()
@@ -286,6 +333,10 @@ class GwibberClient(gtk.Window):
     actQuit  = gtk.Action("gwibberQuit", "_Quit", None, gtk.STOCK_QUIT)
     actQuit.connect("activate", self.on_quit)
     menuGwibber.append(actQuit.create_menu_item())
+
+    #actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
+    #actThemeTest.connect("activate", self.theme_preview_test)
+    #menuHelp.append(actThemeTest.create_menu_item())
 
     actAbout = gtk.Action("gwibberAbout", "_About", None, gtk.STOCK_ABOUT)
     actAbout.connect("activate", self.on_about)
@@ -586,8 +637,6 @@ class GwibberClient(gtk.Window):
           self.on_account_delete(data.get_selected())
 
     def on_account_change(gc, v, entry, t):
-      # handle account color change here
-
       if len([a for a in self.accounts]) != len(t.tree_store):
         t.tree_store.clear()
         for a in self.accounts: t+= a
@@ -629,14 +678,12 @@ class GwibberClient(gtk.Window):
       self.input.set_text("")
 
   def post_process_message(self, message):
-    color = gtk.gdk.color_parse(message.account[message.bgcolor])
-    message.hexbg = message.account[message.bgcolor][1:3] + message.account[message.bgcolor][5:7] + message.account[message.bgcolor][9:11]
-    message.bgstyle = "rgba(%s,%s,%s,0.6)" % (color.red/255, color.green/255, color.blue/255)
     message.image_url = message.image
     message.image_path = gwui.image_cache(message.image_url)
     message.image = "file://%s" % message.image_path
 
     message.gId = hashlib.sha1(message.text[:128].strip(".")).hexdigest()
+    message.aId = message.account.id
 
     if self.last_update:
       message.is_new = message.time > self.last_update
@@ -649,6 +696,21 @@ class GwibberClient(gtk.Window):
         microblog.support.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
 
     return message
+
+  def get_account_config(self):
+    for acct in self.accounts:
+      data = {"id": acct.id, "username": acct["username"], "protocol": acct["protocol"]}
+      for c in microblog.PROTOCOLS[acct["protocol"]].CONFIG:
+        if "color" in c:
+          color = gtk.gdk.color_parse(acct[c])
+          data[c] = {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
+      yield data
+
+  def set_account_colors(self, view):
+    jsonaccounts = microblog.support.simplejson.dumps(
+      list(self.get_account_config()), indent=4, default=str)
+    
+    view.execute_script("setAccountConfig(%s)" % jsonaccounts)
 
   def update(self):
     self.throbber.set_from_animation(gtk.gdk.PixbufAnimation("%s/progress.gif" % self.ui_dir))
@@ -674,11 +736,15 @@ class GwibberClient(gtk.Window):
               gtk.gdk.threads_leave()
 
               self.notification_bubbles[n] = message
+        
+        jsonmessages = microblog.support.simplejson.dumps([dict(m.__dict__, message_index=n)
+          for n, m in enumerate(data)], indent=4, default=str)
 
         gtk.gdk.threads_enter()
-        self.content.clear()
-        for message in data: self.content.add(message)
+        self.content.execute_script("addMessages(%s)" % jsonmessages)
+        self.set_account_colors(self.content)
         gtk.gdk.threads_leave()
+        self.message_store = data
 
         self.statusbar.pop(0)
         self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
