@@ -37,6 +37,7 @@ class Client:
 
   def can_send(self): return True
   def can_receive(self): return True
+  def can_get_replies(self): return True
 
   def send_enabled(self):
     return self.account["send_enabled"] and \
@@ -59,6 +60,14 @@ class Client:
   def get_data(self):
     return support.simplejson.loads(self.connect(
       "http://identi.ca/api/statuses/friends_timeline.json"))
+
+  def get_reply_data(self):
+    return support.simplejson.loads(self.connect(
+      "http://identi.ca/api/statuses/replies.json"))
+
+  def get_replies(self):
+    for data in self.get_reply_data():
+      yield Message(self, data)
 
   def get_messages(self):
     for data in self.get_data():

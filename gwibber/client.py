@@ -14,7 +14,7 @@ gtk.gdk.threads_init()
 
 MAX_MESSAGE_LENGTH = 140
 
-CONFIGURABLE_UI_ELEMENTS = ["editor", "statusbar", "messages", "tray_icon"]
+CONFIGURABLE_UI_ELEMENTS = ["editor", "statusbar", "tray_icon"]
 #CONFIGURABLE_UI_SETTINGS = ["background_color", "background_image"]
 IMAGE_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
 VERSION_NUMBER = 0.7
@@ -47,13 +47,22 @@ class GwibberClient(gtk.Window):
     self.last_update = None
     layout = gtk.VBox()
 
+    gtk.rc_parse_string("""
+    style "tab-close-button-style" {
+      GtkWidget::focus-padding = 0
+      GtkWidget::focus-line-width = 0
+      xthickness = 0
+      ythickness = 0
+     }
+     widget "*.tab-close-button" style "tab-close-button-style"
+     """)
+
     self.accounts = config.Accounts()
     self.client = microblog.Client(self.accounts)
     self.client.handle_error = self.handle_error
     self.client.post_process_message = self.post_process_message
 
     self.notification_bubbles = {}
-    self.message_store = []
     self.message_target = None
     
     self.errors = table.generate([
@@ -73,9 +82,6 @@ class GwibberClient(gtk.Window):
     self.timer = gobject.timeout_add(60000 * int(self.preferences["refresh_interval"]), self.update)
     self.preferences.notify("refresh_interval", self.on_refresh_interval_changed)
 
-    self.content = gwui.MessageView(ui_dir, "default")
-    self.content.link_handler = self.on_link_clicked
-    
     gtk.icon_theme_add_builtin_icon("gwibber", 22,
       gtk.gdk.pixbuf_new_from_file_at_size("%s/gwibber.svg" % ui_dir, 24, 24))
 
@@ -83,9 +89,9 @@ class GwibberClient(gtk.Window):
     self.tray_icon = gtk.status_icon_new_from_icon_name("gwibber")
     self.tray_icon.connect("activate", self.on_toggle_window_visibility)
 
-    self.messages = gtk.ScrolledWindow()
-    self.messages.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-    self.messages.add(self.content)
+    self.tabs = gtk.Notebook()
+    self.add_tab(self.client.get_messages, "Messages")      
+    self.add_tab(self.client.get_replies, "Replies")
 
     if gintegration.SPELLCHECK_ENABLED:
       self.input = gintegration.sexy.SpellEntry()
@@ -102,9 +108,8 @@ class GwibberClient(gtk.Window):
     self.editor.pack_start(self.input)
     self.editor.pack_start(self.cancel_button, False)
     
-    
     vb = gtk.VBox(spacing=5)
-    vb.pack_start(self.messages, True, True)
+    vb.pack_start(self.tabs, True, True)
     vb.pack_start(self.editor, False, False)
     vb.set_border_width(5)
     
@@ -153,7 +158,54 @@ class GwibberClient(gtk.Window):
     self.show_all()
     self.apply_ui_element_settings()
     self.cancel_button.hide()
+    #self.update()
+
+  def on_search(self, *a):
+    dialog = gtk.MessageDialog(None,
+      gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION,
+      gtk.BUTTONS_OK, None)
+
+    entry = gtk.Entry()
+    entry.connect("activate", lambda *a: dialog.response(gtk.RESPONSE_OK))
+
+    dialog.set_markup("Enter a search query:")
+    dialog.vbox.pack_end(entry, True, True, 0)
+    dialog.show_all()
+    ret = dialog.run()
+    dialog.hide()
+
+    query = entry.get_text()
+    self.add_tab(
+      lambda: self.client.get_search_results(query), "Search: %s" % query, True)
     self.update()
+
+  def add_tab(self, data_handler, text, show_close = False):
+    view = gwui.MessageView(self.ui_dir, "default")
+    view.link_handler = self.on_link_clicked
+    view.data_retrieval_handler = data_handler # self.client.get_messages
+    view.config_retrieval_handler = self.get_account_config
+
+    scroll = gtk.ScrolledWindow()
+    scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+    scroll.add(view)
+
+    img = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
+
+    btn = gtk.Button()
+    btn.set_image(img)
+    btn.set_relief(gtk.RELIEF_NONE)
+    btn.set_name("tab-close-button")
+
+    hb = gtk.HBox(spacing=2)
+    hb.pack_start(gtk.Label(text))
+    if show_close: hb.pack_end(btn, False, False)
+    hb.show_all()
+    
+    self.tabs.append_page(scroll, hb)
+    self.tabs.set_tab_reorderable(scroll, True)
+    self.tabs.show_all()
+
+    btn.connect("clicked", lambda w: self.tabs.remove_page(self.tabs.page_num(view)))
 
   def theme_preview_test(self, *a):
     themes = [gwui.ThemeSelector(self.ui_dir, t) for t in ["default", "funkatron"]]
@@ -276,10 +328,10 @@ class GwibberClient(gtk.Window):
         reply.add(vb)
         reply.show_all()
     
-  def on_link_clicked(self, uri):
+  def on_link_clicked(self, uri, view):
     if uri.startswith("gwibber:"):
       if uri.startswith("gwibber:reply"):
-        self.reply(self.message_store[int(uri.split("/")[-1])])
+        self.reply(view.message_store[int(uri.split("/")[-1])])
         return True
     else: return False
 
@@ -302,7 +354,7 @@ class GwibberClient(gtk.Window):
 
   def load_messages_into_view(self, view):
     msgs = microblog.support.simplejson.dumps([dict(m.__dict__, message_index=n)
-      for n, m in enumerate(self.message_store)], indent=4, default=str)
+      for n, m in enumerate(view.message_store)], indent=4, default=str)
 
     view.execute_script("addMessages(%s)" % msgs)
     self.set_account_colors(view)
@@ -325,6 +377,10 @@ class GwibberClient(gtk.Window):
     actRefresh = gtk.Action("gwibberRefresh", "_Refresh", None, gtk.STOCK_REFRESH)
     actRefresh.connect("activate", self.on_refresh)
     menuGwibber.append(actRefresh.create_menu_item())
+
+    actSearch = gtk.Action("gwibberSearch", "_Search", None, gtk.STOCK_FIND)
+    actSearch.connect("activate", self.on_search)
+    menuGwibber.append(actSearch.create_menu_item())
 
     actPreferences = gtk.Action("gwibberPreferences", "_Preferences", None, gtk.STOCK_PREFERENCES)
     actPreferences.connect("activate", self.on_preferences)
@@ -557,8 +613,6 @@ class GwibberClient(gtk.Window):
     glade.get_widget("button_apply_auth").connect("clicked", on_validate_click)
     glade.get_widget("button_close_facebook_auth").connect("clicked", lambda w: dialog.destroy())
 
-
-
   def on_account_create(self, w, protocol):
     a = self.accounts.new_account()
     a["protocol"] = protocol
@@ -706,45 +760,38 @@ class GwibberClient(gtk.Window):
           data[c] = {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
       yield data
 
-  def set_account_colors(self, view):
-    jsonaccounts = microblog.support.simplejson.dumps(
-      list(self.get_account_config()), indent=4, default=str)
-    
-    view.execute_script("setAccountConfig(%s)" % jsonaccounts)
+  def show_notification_bubbles(self, data):
+    for message in data:
+      if message.is_new and self.preferences["show_notifications"] and gintegration.can_notify:
+        gtk.gdk.threads_enter()
+        n = gintegration.notify(message.sender, message.text, hasattr(message,
+          "image_path") and message.image_path or None, ["reply", "Reply"])
+        gtk.gdk.threads_leave()
 
+        self.notification_bubbles[n] = message
+
+  def flag_duplicates(self, data):
+    seen = []
+    for message in data:
+      message.is_duplicate = message.gId in seen
+      if not message.is_duplicate: seen.append(message.gId)
+  
   def update(self):
     self.throbber.set_from_animation(gtk.gdk.PixbufAnimation("%s/progress.gif" % self.ui_dir))
 
     def process():
       try:
-        data = self.client.get_messages()
 
-        can_notify = self.preferences["show_notifications"] and \
-          gintegration.can_notify
-
-        seen = []
-        
-        for message in data:
-          message.is_duplicate = message.gId in seen
-          if not message.is_duplicate:
-            seen.append(message.gId)
-
-            if message.is_new and can_notify:
-              gtk.gdk.threads_enter()
-              n = gintegration.notify(message.sender, message.text, hasattr(message,
-                "image_path") and message.image_path or None, ["reply", "Reply"])
-              gtk.gdk.threads_leave()
-
-              self.notification_bubbles[n] = message
-        
-        jsonmessages = microblog.support.simplejson.dumps([dict(m.__dict__, message_index=n)
-          for n, m in enumerate(data)], indent=4, default=str)
+        for tab in self.tabs.get_children():
+          view = tab.get_child()
+          view.message_store = view.data_retrieval_handler()
 
         gtk.gdk.threads_enter()
-        self.content.execute_script("addMessages(%s)" % jsonmessages)
-        self.set_account_colors(self.content)
+        for tab in self.tabs.get_children():
+          view = tab.get_child()
+          view.load_messages()
+          view.load_preferences(self.get_account_config())
         gtk.gdk.threads_leave()
-        self.message_store = data
 
         self.statusbar.pop(0)
         self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))

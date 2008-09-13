@@ -19,14 +19,17 @@ class MessageView(webkit.WebView):
     self.load_externally = True
     self.connect("navigation-requested", self.on_click_link)
     self.load_theme(theme)
+    self.message_store = []
+    self.data_retrieval_handler = None
 
   def load_theme(self, theme):
     self.theme = theme
     self.open("file://%s/themes/%s/theme.html" % (self.ui_dir, theme))
 
-  def load_messages(self, message_store):
+  def load_messages(self, message_store = None):
     msgs = microblog.support.simplejson.dumps([dict(m.__dict__, message_index=n)
-      for n, m in enumerate(message_store)], indent=4, default=str)
+      for n, m in enumerate(message_store or self.message_store)],
+        indent=4, default=str)
     self.execute_script("addMessages(%s)" % msgs)
 
   def load_preferences(self, preferences):
@@ -38,7 +41,7 @@ class MessageView(webkit.WebView):
     uri = req.get_uri()
     if uri.startswith("file:///"): return False
     
-    if not self.link_handler(uri) and self.load_externally:
+    if not self.link_handler(uri, self) and self.load_externally:
       gintegration.load_url(uri)
     return self.load_externally
 
