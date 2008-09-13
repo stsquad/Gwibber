@@ -158,7 +158,7 @@ class GwibberClient(gtk.Window):
     self.show_all()
     self.apply_ui_element_settings()
     self.cancel_button.hide()
-    #self.update()
+    self.update()
 
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
@@ -785,6 +785,7 @@ class GwibberClient(gtk.Window):
         for tab in self.tabs.get_children():
           view = tab.get_child()
           view.message_store = view.data_retrieval_handler()
+          self.flag_duplicates(view.message_store)
 
         gtk.gdk.threads_enter()
         for tab in self.tabs.get_children():
