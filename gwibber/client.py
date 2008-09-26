@@ -162,7 +162,6 @@ class GwibberClient(gtk.Window):
       self.last_focus_time = self.last_update
     else:
       self.last_focus_time= mx.DateTime.gmt()
-    print "reset last_focus_time t: ", self.last_focus_time
     self.tray_icon.set_property("blinking", False)
     return True
 
@@ -661,11 +660,7 @@ class GwibberClient(gtk.Window):
       message.is_unread = False
 
     if message.is_unread:
-      print "unread message time is: ", message.time
       self.unread_messages = True
-    else:
-      print "read message time is: ", message.time
-
 
     message.time_string = microblog.support.generate_time_string(message.time)
 
