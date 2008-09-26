@@ -27,6 +27,12 @@
         -webkit-border-radius: 7px;
       }
 
+      .searchresult {
+        padding: 1px;
+        -webkit-border-radius: 7px;
+        background: -webkit-gradient(linear, left top, left 220%, from(rgba(143, 6, 32, 0.8)), to(black))
+
+      }
 
       .title {
         font-size: large;
@@ -103,15 +109,31 @@
 
     <script src="jquery.js"></script>
     <script>
-      function addDiggCount(message, data)
-      {
-          message.html('<p><span class="diggcount">' + data.diggs + '</span><br /><small>diggs</small></p>');
-          message.css('display', 'block');
+      function addMessages(messages) {
+        clearMessages()
+        $.each(messages, function() {addMessage(this)});
+      }
+      
+      function clearMessages() {
+        $(".messages").html("");
+      }
+
+      function addDiggCount(message, data) {
+        message.html('<p><span class="diggcount">' + data.diggs + '</span><br /><small>diggs</small></p>');
+        message.css('display', 'block');
+      }
+
+      function setAccountConfig(data) {
+        $.each(data, function() {
+          for (var conf in this) {
+            if (conf.search("color") > 0)
+              setMessageColor(this.id, conf, this[conf].red, this[conf].green, this[conf].blue, 0.6);
+          }
+        });
       }
 
       function addMessage(data) {
-
-        html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol +'" title="'+ data.sender_nick +'">' +
+        html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol + ' ' + data.aId + data.bgcolor +'" title="'+ data.sender_nick +'">' +
           '<table> \
             <tr><td> \
               <a href="'+ data.profile_url +'"> \
@@ -120,7 +142,9 @@
               <br />\
               <div class="diggbox"></div> \
             </td><td> \
-              ' + ( data.is_unread ? '<div class="unread"><img src="unread.png"/></div>' : '' ) + '\
+                <!-- for some reason showing/hiding this dynamically doesn't work 
+                     if the window is hidden when the message comes in -->
+                ' + ( data.is_unread ? '<div class="unread"><img src="unread.png"/></div>' : '' ) + '\
               <p class="content"> \
                 <span class="title">'+ (data.title == undefined ? data.sender : data.title) +'</span> \
                 <span class="time"> (<a href="'+ data.url +'">'+ data.time_string +'</a>)</span><br /> \
@@ -135,15 +159,12 @@
           </div> \
         </div>'
 
-        if (data.is_duplicate)
-        {
+        if (data.is_duplicate) {
           $("#" + data.gId + " .dupes:first").append(html);
           $("#" + data.gId + " .toggledupe:first").show(0).unbind().toggle(
             function() {$(this).parent().find(".dupes").show(100)},
             function() {$(this).parent().find(".dupes").hide(100)});
         } else $(".messages").append(html);
-
-        setMessageColor(data.username, data.protocol, data.bgstyle);
 
         if (data.protocol == "digg")
           addDiggCount($(".diggbox:last"), data);
@@ -159,18 +180,14 @@
           function() {$(this).find(".replybutton").hide(0)});
       }
 
-      function clearMessages() {
-        $(".messages").html("");
-      }
-
-      function setMessageColor(username, protocol, color) {
-        $('.'+username+protocol).css('background', '-webkit-gradient(linear, left top, left 220%, from('+ color +'), to(black))')
+      function setMessageColor(aId, colorName, r, g, b, a) {
+        $('.'+aId+colorName).css('background', '-webkit-gradient(linear, left top, left 220%, from(rgba('+r+','+g+','+b+','+a+')), to(black))')
       }
     </script>
   </head>
   <body>
     <div class="messages">
-      <h1>Welcome to Gwibber!</h1>
+      <h1>Loading...</h1>
     </div>
   </body>
 </html>

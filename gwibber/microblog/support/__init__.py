@@ -20,6 +20,10 @@ LINK_PARSE = re.compile("(https?://[^ )\n]+)")
 def linkify(t):
   return LINK_PARSE.sub('<a href="\\1">\\1</a>', t)
 
+def highlight_search_results(t, q):
+  pattern = re.compile(re.escape(q), re.I)
+  return re.sub(pattern, ' <span class="searchresult">&nbsp;%s </span> ' % q, t)
+
 def xml_escape(t):
   return t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
