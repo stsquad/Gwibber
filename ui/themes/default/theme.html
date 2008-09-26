@@ -142,8 +142,6 @@
               <br />\
               <div class="diggbox"></div> \
             </td><td> \
-                <!-- for some reason showing/hiding this dynamically doesn't work 
-                     if the window is hidden when the message comes in -->
                 ' + ( data.is_unread ? '<div class="unread"><img src="unread.png"/></div>' : '' ) + '\
               <p class="content"> \
                 <span class="title">'+ (data.title == undefined ? data.sender : data.title) +'</span> \
