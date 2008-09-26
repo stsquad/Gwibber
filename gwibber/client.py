@@ -45,6 +45,9 @@ class GwibberClient(gtk.Window):
     self.preferences = config.Preferences()
     self.ui_dir = ui_dir
     self.last_update = None
+
+    # don't show new messages until after first refresh
+    self.last_focus_time = mx.DateTime.gmt()
     layout = gtk.VBox()
 
     self.accounts = config.Accounts()
@@ -66,6 +69,7 @@ class GwibberClient(gtk.Window):
     ])
 
     self.connect("delete-event", self.on_window_close)
+    self.connect("focus-out-event", self.on_focus_out)
 
     for key, value in DEFAULT_PREFERENCES.items():
       if self.preferences[key] == None: self.preferences[key] = value
@@ -152,6 +156,15 @@ class GwibberClient(gtk.Window):
     self.apply_ui_element_settings()
     self.cancel_button.hide()
     self.update()
+
+  def on_focus_out(self, widget, event):
+    if self.last_update:
+      self.last_focus_time = self.last_update
+    else:
+      self.last_focus_time= mx.DateTime.gmt()
+    print "reset last_focus_time t: ", self.last_focus_time
+    self.tray_icon.set_property("blinking", False)
+    return True
 
   def on_window_close(self, w, e):
     if self.preferences["minimize_to_tray"]:
@@ -641,7 +654,19 @@ class GwibberClient(gtk.Window):
     if self.last_update:
       message.is_new = message.time > self.last_update
     else: message.is_new = False
-    
+
+    if self.last_focus_time:
+      message.is_unread = message.time > self.last_focus_time
+    else:
+      message.is_unread = False
+
+    if message.is_unread:
+      print "unread message time is: ", message.time
+      self.unread_messages = True
+    else:
+      print "read message time is: ", message.time
+
+
     message.time_string = microblog.support.generate_time_string(message.time)
 
     if not hasattr(message, "html_string"):
@@ -651,6 +676,7 @@ class GwibberClient(gtk.Window):
     return message
 
   def update(self):
+    self.unread_messages = False
     self.throbber.set_from_animation(gtk.gdk.PixbufAnimation("%s/progress.gif" % self.ui_dir))
 
     def process():
@@ -684,7 +710,9 @@ class GwibberClient(gtk.Window):
         self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
         self.last_update = mx.DateTime.gmt()
         
-      finally: gobject.idle_add(self.throbber.clear)
+      finally:
+       gobject.idle_add(self.throbber.clear)
+       self.tray_icon.set_property("blinking", self.unread_messages)
     
     t = threading.Thread(target=process)
     t.setDaemon(True)

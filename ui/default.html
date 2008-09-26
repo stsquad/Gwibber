@@ -91,6 +91,10 @@
         display: none;
       }
 
+      .unread {
+        float: right;
+      }
+
       .toggledupe {
         float: left;
         display: none;
@@ -116,6 +120,7 @@
               <br />\
               <div class="diggbox"></div> \
             </td><td> \
+              ' + ( data.is_unread ? '<div class="unread"><img src="unread.png"/></div>' : '' ) + '\
               <p class="content"> \
                 <span class="title">'+ (data.title == undefined ? data.sender : data.title) +'</span> \
                 <span class="time"> (<a href="'+ data.url +'">'+ data.time_string +'</a>)</span><br /> \
