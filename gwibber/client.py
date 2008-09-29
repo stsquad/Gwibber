@@ -24,6 +24,8 @@ DEFAULT_PREFERENCES = {
   "show_notifications": True,
   "refresh_interval": 2,
   "minimize_to_tray": False,
+  "flash_trayicon": True,
+  "minimize_to_tray": False,
   "hide_taskbar_entry": False,
   
 #  "link_color": "darkblue",
@@ -523,7 +525,7 @@ class GwibberClient(gtk.Window):
     dialog = glade.get_widget("pref_dialog")
     dialog.show_all()
 
-    for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry"]:
+    for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry", "flash_trayicon"]:
       self.preferences.bind(glade.get_widget("pref_%s" % widget), widget)
 
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
@@ -798,6 +800,7 @@ class GwibberClient(gtk.Window):
   
   def update(self):
     self.unread_messages = False
+
     self.throbber.set_from_animation(gtk.gdk.PixbufAnimation("%s/progress.gif" % self.ui_dir))
 
     def process():
@@ -821,7 +824,8 @@ class GwibberClient(gtk.Window):
         
       finally:
        gobject.idle_add(self.throbber.clear)
-       self.tray_icon.set_property("blinking", self.unread_messages)
+       if self.preferences["flash_trayicon"]:
+         self.tray_icon.set_property("blinking", self.unread_messages)
     
     t = threading.Thread(target=process)
     t.setDaemon(True)
