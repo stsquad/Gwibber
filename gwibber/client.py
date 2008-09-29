@@ -90,8 +90,9 @@ class GwibberClient(gtk.Window):
     self.tray_icon.connect("activate", self.on_toggle_window_visibility)
 
     self.tabs = gtk.Notebook()
-    self.add_tab(self.client.get_messages, "Messages")      
-    self.add_tab(self.client.get_replies, "Replies")
+    self.tabs.set_scrollable(True)
+    self.add_tab(self.client.get_messages, "Messages", show_icon = "go-home")
+    self.add_tab(self.client.get_replies, "Replies", show_icon = "mail-reply-all")
 
     if gintegration.SPELLCHECK_ENABLED:
       self.input = gintegration.sexy.SpellEntry()
@@ -158,7 +159,7 @@ class GwibberClient(gtk.Window):
     self.show_all()
     self.apply_ui_element_settings()
     self.cancel_button.hide()
-    self.update()
+    #self.update()
 
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
@@ -175,11 +176,10 @@ class GwibberClient(gtk.Window):
     dialog.hide()
 
     query = entry.get_text()
-    self.add_tab(
-      lambda: self.client.get_search_results(query), "Search: %s" % query, True)
-    self.update()
-
-  def add_tab(self, data_handler, text, show_close = False):
+    view = self.add_tab(
+      lambda: self.client.get_search_results(query), query, True, gtk.STOCK_FIND)
+    
+  def add_tab(self, data_handler, text, show_close = False, show_icon = None):
     view = gwui.MessageView(self.ui_dir, "default")
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler # self.client.get_messages
@@ -197,6 +197,8 @@ class GwibberClient(gtk.Window):
     btn.set_name("tab-close-button")
 
     hb = gtk.HBox(spacing=2)
+    if show_icon:
+      hb.pack_start(gtk.image_new_from_icon_name(show_icon, gtk.ICON_SIZE_MENU))
     hb.pack_start(gtk.Label(text))
     if show_close: hb.pack_end(btn, False, False)
     hb.show_all()
@@ -206,6 +208,7 @@ class GwibberClient(gtk.Window):
     self.tabs.show_all()
 
     btn.connect("clicked", lambda w: self.tabs.remove_page(self.tabs.page_num(view)))
+    return view
 
   def theme_preview_test(self, *a):
     themes = [gwui.ThemeSelector(self.ui_dir, t) for t in ["default", "funkatron"]]
@@ -292,41 +295,10 @@ class GwibberClient(gtk.Window):
       return
 
     if acct["protocol"] in microblog.PROTOCOLS.keys():
-      client = microblog.PROTOCOLS[acct["protocol"]].Client(acct)
-
-      if hasattr(client, "can_reply"):
-        reply = gtk.Window()
-        reply.set_title("Reply")
-        reply.set_border_width(5)
-        reply.resize(390, 240)
-
-        def on_load_finished(view, frame):
-          for m in client.get_replies(message):
-            content.add(self.post_process_message(m))
-
-        content = gwui.MessageView("file://%s/default.html" % self.ui_dir)
-        content.connect("load-finished", on_load_finished)
-
-        def on_reply_send(e):
-          if e.get_text().strip():
-            c = microblog.PROTOCOLS[acct["protocol"]].Client(acct)
-            if c.can_send():
-              c.transmit_reply(message, e.get_text().strip())
-              e.set_text("")
-        
-        scroll = gtk.ScrolledWindow()
-        scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        scroll.add(content)
-
-        input = gtk.Entry()
-        input.connect("activate", on_reply_send)
-
-        vb = gtk.VBox(spacing=5)
-        vb.pack_start(scroll)
-        vb.pack_start(input, False, False)
-
-        reply.add(vb)
-        reply.show_all()
+      if hasattr(message.client, "can_reply"):
+        view = self.add_tab(lambda: self.client.get_reply_thread(message), "Jaiku Replies", True)
+        view.load_messages()
+        view.load_preferences(self.get_account_config())
     
   def on_link_clicked(self, uri, view):
     if uri.startswith("gwibber:"):

@@ -58,6 +58,26 @@ class Client:
         except: self.handle_error(acct, traceback.format_exc(),
           "Failed to retrieve messages")
 
+  def get_message_reply_data(self, query):
+    for acct in self.accounts:
+      print acct, query.account
+      if acct["protocol"] in PROTOCOLS.keys() and \
+         acct.id == query.account.id:
+        try:
+          client = PROTOCOLS[acct["protocol"]].Client(acct)
+          if client.receive_enabled() and hasattr(client, "can_reply"):
+            print "starting..."
+            for message in client.get_replies(query):
+              yield self.post_process_message(message)
+        except: self.handle_error(acct, traceback.format_exc(),
+          "Failed to retrieve messages")
+  
+  def get_reply_thread(self, query):
+    data = list(self.get_message_reply_data(query))
+    data.sort(key=operator.attrgetter("time"), reverse=True)
+
+    return data
+  
   def get_replies(self, filter=PROTOCOLS.keys()):
     data = list(self.get_reply_data(filter))
     data.sort(key=operator.attrgetter("time"), reverse=True)
