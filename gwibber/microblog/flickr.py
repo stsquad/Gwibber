@@ -4,9 +4,23 @@ Flickr interface for Gwibber
 SegPhault (Ryan Paul) - 03/01/2008
 """
 
-import urllib2, urllib, support, mx.DateTime
+import urllib2, urllib, support, mx.DateTime, can
 
-CONFIG = ["message_color", "username", "receive_enabled", "send_enabled"]
+PROTOCOL_INFO = {
+  "name": "Flickr",
+  "version": 0.1,
+  
+  "config": [
+    "username",
+    "message_color",
+    "receive_enabled",
+    "send_enabled"
+  ],
+
+  "features": [
+    can.RECEIVE,
+  ],
+}
 
 API_KEY = "36f660117e6555a9cbda4309cfaf72d0"
 REST_SERVER = "http://api.flickr.com/services/rest"
@@ -40,10 +54,6 @@ class Client:
   def __init__(self, acct):
     self.account = acct
 
-  def can_send(self): return False
-  def can_receive(self): return True
-  def send_enabled(self): return False
-
   def receive_enabled(self):
     return self.account["receive_enabled"] and \
       self.account["username"] != None
@@ -60,10 +70,10 @@ class Client:
     return self.restcall("flickr.people.findByUsername",
       {"username": self.account["username"]})["user"]["nsid"]
 
-  def get_data(self):
+  def get_images(self):
     return self.restcall("flickr.photos.getContactsPublicPhotos",
       {"user_id": self.getNSID(), "extras": "date_upload,owner_name,icon_server"})
 
-  def get_messages(self):
-    for data in self.get_data()["photos"]["photo"]:
+  def receive(self):
+    for data in self.get_images()["photos"]["photo"]:
       yield Message(self, data)

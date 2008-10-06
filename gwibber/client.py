@@ -15,7 +15,6 @@ gtk.gdk.threads_init()
 MAX_MESSAGE_LENGTH = 140
 
 CONFIGURABLE_UI_ELEMENTS = ["editor", "statusbar", "tray_icon"]
-#CONFIGURABLE_UI_SETTINGS = ["background_color", "background_image"]
 IMAGE_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
 VERSION_NUMBER = 0.7
 
@@ -25,12 +24,6 @@ DEFAULT_PREFERENCES = {
   "refresh_interval": 2,
   "minimize_to_tray": False,
   "hide_taskbar_entry": False,
-  
-#  "link_color": "darkblue",
-#  "foreground_color": "black",
-#  "background_color": "white",
-#  "text_shadow_color": "black",
-#  "background_image": "",
 }
 
 for i in CONFIGURABLE_UI_ELEMENTS:
@@ -91,8 +84,8 @@ class GwibberClient(gtk.Window):
 
     self.tabs = gtk.Notebook()
     self.tabs.set_scrollable(True)
-    self.add_tab(self.client.get_messages, "Messages", show_icon = "go-home")
-    self.add_tab(self.client.get_replies, "Replies", show_icon = "mail-reply-all")
+    self.add_tab(self.client.receive, "Messages", show_icon = "go-home")
+    self.add_tab(self.client.responses, "Replies", show_icon = "mail-reply-all")
 
     if gintegration.SPELLCHECK_ENABLED:
       self.input = gintegration.sexy.SpellEntry()
@@ -177,7 +170,7 @@ class GwibberClient(gtk.Window):
 
     query = entry.get_text()
     view = self.add_tab(
-      lambda: self.client.get_search_results(query), query, True, gtk.STOCK_FIND)
+      lambda: self.client.search(query), query, True, gtk.STOCK_FIND)
     
   def add_tab(self, data_handler, text, show_close = False, show_icon = None):
     view = gwui.MessageView(self.ui_dir, "default")
@@ -290,15 +283,21 @@ class GwibberClient(gtk.Window):
   def reply(self, message):
     acct = message.account
 
-    if acct["protocol"] == "twitter" or acct["protocol"] == "identica":
-      self.handle_at_reply(message, acct["protocol"])
-      return
+    if acct.supports(microblog.can.REPLY):
+      self.input.grab_focus()
+      self.input.set_text("@%s: " % message.sender_nick)
+      self.input.set_position(-1)
 
+      self.message_target = message.account
+      self.cancel_button.show()
+
+    """
     if acct["protocol"] in microblog.PROTOCOLS.keys():
       if hasattr(message.client, "can_reply"):
-        view = self.add_tab(lambda: self.client.get_reply_thread(message), "Jaiku Replies", True)
+        view = self.add_tab(lambda: self.client.thread(message), "Jaiku Replies", True)
         view.load_messages()
         view.load_preferences(self.get_account_config())
+    """
     
   def on_link_clicked(self, uri, view):
     if uri.startswith("gwibber:"):
@@ -311,8 +310,9 @@ class GwibberClient(gtk.Window):
     menu.append(gtk.SeparatorMenuItem())
     for acct in self.accounts:
       if acct["protocol"] in microblog.PROTOCOLS.keys():
-        if microblog.PROTOCOLS[acct["protocol"]].Client(acct).can_send():
-          mi = gtk.CheckMenuItem("%s (%s)" % (acct["username"], acct["protocol"]))
+        if acct.supports(microblog.can.SEND):
+          mi = gtk.CheckMenuItem("%s (%s)" % (acct["username"],
+            acct.get_protocol().PROTOCOL_INFO["name"]))
           acct.bind(mi, "send_enabled")
           menu.append(mi)
 
@@ -337,7 +337,6 @@ class GwibberClient(gtk.Window):
 
     self.content.connect("load-finished", on_load_finished)
     self.content.load_theme("funkatron")
-
 
   def setup_menus(self):
     menuGwibber = gtk.Menu()
@@ -502,7 +501,7 @@ class GwibberClient(gtk.Window):
     mac = gtk.Menu()
 
     for p in microblog.PROTOCOLS.keys():
-      mi = gtk.MenuItem("%s" % p.capitalize())
+      mi = gtk.MenuItem("%s" % microblog.PROTOCOLS[p].PROTOCOL_INFO["name"])
       mi.connect("activate", self.on_account_create, p)
       mac.append(mi)
 
@@ -514,7 +513,7 @@ class GwibberClient(gtk.Window):
         sm = gtk.Menu()
         
         for i in ["receive", "send"]:
-          if getattr(microblog.PROTOCOLS[acct["protocol"]].Client(acct), "can_%s" % i)():
+          if acct.supports(hasattr(microblog.can, i.upper())):
             mi = gtk.CheckMenuItem("_%s Messages" % i.capitalize())
             acct.bind(mi, "%s_enabled" % i)
             sm.append(mi)
@@ -525,7 +524,8 @@ class GwibberClient(gtk.Window):
         mi.connect("activate", self.on_account_properties, acct)
         sm.append(mi)
 
-        mi = gtk.MenuItem("%s (%s)" % (acct["username"] or "None", acct["protocol"]))
+        mi = gtk.MenuItem("%s (%s)" % (acct["username"] or "None",
+          microblog.PROTOCOLS[acct["protocol"]].PROTOCOL_INFO["name"]))
         mi.set_submenu(sm)
         menu.append(mi)
     menu.show_all()
@@ -536,7 +536,7 @@ class GwibberClient(gtk.Window):
     dialog = glade.get_widget("dialog_%s" % acct["protocol"])
     dialog.show_all()
     
-    for widget in microblog.PROTOCOLS[acct["protocol"]].CONFIG:
+    for widget in microblog.PROTOCOLS[acct["protocol"]].PROTOCOL_INFO["config"]:
       w = glade.get_widget("%s_%s" % (acct["protocol"], widget))
       if isinstance(w, gtk.ColorButton): acct.bind(w, widget, default="#729FCF")
       else: acct.bind(w, widget)
@@ -606,10 +606,6 @@ class GwibberClient(gtk.Window):
     manager.set_border_width(10)
     manager.resize(390,240)
 
-    def can_toggle(a, key):
-      c = microblog.PROTOCOLS[a["protocol"]].Client(a)
-      if getattr(c, "can_%s" % key)(): return True
-
     def toggle_table_checkbox(cr, i, key, table):
       a = table.tree_store.get_obj(i)
       a[key] = (a[key] and [False] or [True])[0]
@@ -621,11 +617,11 @@ class GwibberClient(gtk.Window):
       ["username", lambda a: a["username"] or "None"],
       ["Receive", (col_receive, {
         "active": lambda a: a["receive_enabled"],
-        "visible": lambda a: can_toggle(a, "receive")})],
+        "visible": lambda a: a.supports(microblog.can.RECEIVE)})],
       ["Send", (col_send, {
         "active": lambda a: a["send_enabled"],
-        "visible": lambda a: can_toggle(a, "send")})],
-      ["protocol", lambda a: a["protocol"].capitalize()],
+        "visible": lambda a: a.supports(microblog.can.SEND)})],
+      ["protocol", lambda a: a.get_protocol().PROTOCOL_INFO["name"]],
     ])
 
     col_receive.connect("toggled", toggle_table_checkbox, "receive_enabled", data)
@@ -648,7 +644,7 @@ class GwibberClient(gtk.Window):
       elif stock == gtk.STOCK_ADD:
         mac = gtk.Menu()
         for p in microblog.PROTOCOLS.keys():
-          mi = gtk.MenuItem("%s" % p.capitalize())
+          mi = gtk.MenuItem(a.get_protocol().PROTOCOL_INFO["name"])
           mi.connect("activate", self.on_account_create, p)
           mac.append(mi)
         mac.show_all()
@@ -698,7 +694,7 @@ class GwibberClient(gtk.Window):
         protocols = [self.message_target["protocol"]]
       else: protocols = microblog.PROTOCOLS.keys()
     
-      self.client.transmit_status(self.input.get_text().strip(), protocols)
+      self.client.send(self.input.get_text().strip(), protocols)
       self.on_cancel_reply(None)
 
       self.input.set_text("")
@@ -726,7 +722,7 @@ class GwibberClient(gtk.Window):
   def get_account_config(self):
     for acct in self.accounts:
       data = {"id": acct.id, "username": acct["username"], "protocol": acct["protocol"]}
-      for c in microblog.PROTOCOLS[acct["protocol"]].CONFIG:
+      for c in acct.get_protocol().PROTOCOL_INFO["config"]:
         if "color" in c:
           color = gtk.gdk.color_parse(acct[c])
           data[c] = {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}

@@ -6,9 +6,28 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import urllib2, urllib, support, re
+import urllib2, urllib, support, re, can
 
-CONFIG = ["message_color", "comment_color", "password", "username", "receive_enabled", "send_enabled"]
+PROTOCOL_INFO = {
+  "name": "Jaiku",
+  "version": 0.1,
+  
+  "config": [
+    "password",
+    "username",
+    "message_color",
+    "comment_color",
+    "receive_enabled",
+    "send_enabled"
+  ],
+
+  "features": [
+    can.SEND,
+    can.RECEIVE,
+    can.REPLY,
+  ],
+}
+
 NONCE_PARSE = re.compile('.*_nonce" value="([^"]+)".*', re.M | re.S)
 
 class Message:
@@ -41,10 +60,6 @@ class Client:
   def __init__(self, acct):
     self.account = acct
 
-  def can_send(self): return True
-  def can_receive(self): return True
-  def can_reply(self): return True
-
   def send_enabled(self):
     return self.account["send_enabled"] and \
       self.account["username"] != None and \
@@ -55,25 +70,25 @@ class Client:
       self.account["username"] != None and \
       self.account["password"] != None
 
-  def get_data(self):
+  def get_messages(self):
     return support.simplejson.loads(urllib2.urlopen(urllib2.Request(
       "http://%s.jaiku.com/contacts/feed/json" % self.account["username"],
         urllib.urlencode({"user": self.account["username"],
           "personal_key":self.account["password"]}))).read())
 
-  def get_reply_data(self, msg):
+  def get_thread_data(self, msg):
     return support.simplejson.loads(urllib2.urlopen(urllib2.Request(
       "http://%s.jaiku.com/presence/%s/json" % (msg.sender_nick, msg.id),
         urllib.urlencode({"user": self.account["username"],
           "personal_key":self.account["password"]}))).read())
 
-  def get_replies(self, msg):
+  def get_thread(self, msg):
     yield msg
     for data in self.get_reply_data(msg)["comments"]:
       yield Comment(self, data)
 
-  def get_messages(self):
-    for data in self.get_data()["stream"]:
+  def receive(self):
+    for data in self.get_messages()["stream"]:
       if data.has_key("id"): yield Message(self, data)
       else: yield Comment(self, data)
 
@@ -95,8 +110,9 @@ class Client:
           urllib.urlencode({"user": self.account["username"], "_nonce": nonce, 
             "personal_key":self.account["password"], "comment": message}))).read()
 
-  def transmit_status(self, message):
+  def send(self, message):
     return urllib2.urlopen(urllib2.Request(
       "http://api.jaiku.com/json", urllib.urlencode({"user": self.account["username"],
       "personal_key":self.account["password"],
       "message": message, "method": "presence.send"}))).read()
+

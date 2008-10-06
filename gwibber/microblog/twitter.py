@@ -6,9 +6,31 @@ SegPhault (Ryan Paul) - 12/22/2007
 
 """
 
-import urllib2, urllib, base64, re, support
+import urllib2, urllib, base64, re, support, can
 
-CONFIG = ["message_color", "password", "username", "receive_enabled", "send_enabled"]
+PROTOCOL_INFO = {
+  "name": "Twitter",
+  "version": 0.1,
+  
+  "config": [
+    "password",
+    "username",
+    "message_color",
+    "receive_enabled",
+    "send_enabled"
+  ],
+
+  "features": [
+    can.SEND,
+    can.RECEIVE,
+    can.SEARCH,
+    can.REPLY,
+    can.RESPONSES,
+    can.DELETE,
+    #can.THREAD,
+  ],
+}
+
 NICK_PARSE = re.compile("@([A-Za-z0-9]+)")
 
 class Message:
@@ -59,11 +81,6 @@ class Client:
   def __init__(self, acct):
     self.account = acct
 
-  def can_send(self): return True
-  def can_receive(self): return True
-  def can_search(self): return True
-  def can_get_replies(self): return True
-
   def send_enabled(self):
     return self.account["send_enabled"] and \
       self.account["username"] != None and \
@@ -82,7 +99,7 @@ class Client:
     return urllib2.urlopen(urllib2.Request(
       url, data, {"Authorization": self.get_auth()})).read()
 
-  def get_data(self):
+  def get_message_data(self):
     return support.simplejson.loads(self.connect(
       "http://twitter.com/statuses/friends_timeline.json"))
 
@@ -91,20 +108,20 @@ class Client:
       urllib2.Request("http://search.twitter.com/search.json",
         urllib.urlencode({"q": query}))).read())
 
-  def get_search_results(self, query):
+  def search(self, query):
     for data in self.get_search_data(query)["results"]:
       yield SearchResult(self, data, query)
 
-  def get_replies(self):
+  def responses(self):
     for data in self.get_search_data(
       "@%s" % self.account["username"])["results"]:
       yield SearchResult(self, data)
 
-  def get_messages(self):
-    for data in self.get_data():
+  def receive(self):
+    for data in self.get_message_data():
       yield Message(self, data)
 
-  def transmit_status(self, message):
+  def send(self, message):
     return self.connect("http://twitter.com/statuses/update.json",
         urllib.urlencode({"status":message}))
 

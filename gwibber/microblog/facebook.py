@@ -4,10 +4,26 @@ Facebook interface for Gwibber
 SegPhault (Ryan Paul) - 12/22/2007
 """
 
-import urllib2, urllib, re, support
+import urllib2, urllib, re, support, can
 from xml.dom import minidom
 
-CONFIG = ["message_color", "feed_url", "receive_enabled", "send_enabled"]
+PROTOCOL_INFO = {
+  "name": "Facebook",
+  "version": 0.1,
+  
+  "config": [
+    "feed_url",
+    "message_color",
+    "receive_enabled",
+    "send_enabled"
+  ],
+
+  "features": [
+    can.SEND,
+    can.RECEIVE,
+  ],
+}
+
 APP_KEY = "71b85c6d8cb5bbb9f1a3f8bbdcdd4b05"
 SECRET_KEY = "41e43c90f429a21e55c7ff67aa0dc201"
 LINK_PARSE =  re.compile("<a[^>]+href=\"(https?://[^\"]+)\">[^<]+</a>")
@@ -53,9 +69,6 @@ class Client:
     friends = self.facebook.users.getInfo(self.facebook.friends.get(), ['name', 'pic_square'])
     return dict((f["name"], f["pic_square"]) for f in friends if f["pic_square"])
 
-  def can_send(self): return True
-  def can_receive(self): return True
-
   def send_enabled(self):
     return self.account["send_enabled"] and \
       self.account["session_key"] != None and \
@@ -68,15 +81,15 @@ class Client:
   def connect(self, url, data = None):
     return urllib2.urlopen(urllib2.Request(url, data)).read()
 
-  def get_data(self):
+  def get_messages(self):
     return minidom.parseString(self.connect(
       self.account["feed_url"])).getElementsByTagName("item")
 
-  def get_messages(self):
+  def receive(self):
     self.profile_images = self.get_images()
-    for data in self.get_data():
+    for data in self.get_messages():
       yield Message(self, data)
 
-  def transmit_status(self, message):
+  def send(self, message):
     self.facebook.users.setStatus(message, False)
 

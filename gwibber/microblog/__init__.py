@@ -1,5 +1,5 @@
 
-import operator, traceback
+import operator, traceback, can
 import twitter, jaiku, facebook, digg, flickr, pownce, identica
 
 PROTOCOLS = {
@@ -22,87 +22,45 @@ class Client:
   def post_process_message(self, message):
     return message
 
-  def get_message_data(self, filter=PROTOCOLS.keys()):
+  def get_data(self, test, method, name, filter=PROTOCOLS.keys()):
     for acct in self.accounts:
       if acct["protocol"] in PROTOCOLS.keys() and \
          acct["protocol"] in filter:
         try:
-          client = PROTOCOLS[acct["protocol"]].Client(acct)
-          if client.receive_enabled():
-            for message in client.get_messages():
+          client = acct.get_client()
+          if test(acct):
+            for message in method(client):
               yield self.post_process_message(message)
-        except: self.handle_error(acct, traceback.format_exc(),
-          "Failed to retrieve messages")
+        except: self.handle_error(acct, traceback.format_exc(), name)
 
-  def get_reply_data(self, filter=PROTOCOLS.keys()):
-    for acct in self.accounts:
-      if acct["protocol"] in PROTOCOLS.keys() and \
-         acct["protocol"] in filter:
-        try:
-          client = PROTOCOLS[acct["protocol"]].Client(acct)
-          if client.receive_enabled() and hasattr(client, "can_get_replies"):
-            for message in client.get_replies():
-              yield self.post_process_message(message)
-        except: self.handle_error(acct, traceback.format_exc(),
-          "Failed to retrieve messages")
+  def perform_operation(self, test, method, name, filter=PROTOCOLS.keys()):
+    data = list(self.get_data(test, method, name, filter))
+    data.sort(key=operator.attrgetter("time"), reverse=True)
+    return data
 
-  def get_search_data(self, query, filter=PROTOCOLS.keys()):
-    for acct in self.accounts:
-      if acct["protocol"] in PROTOCOLS.keys() and \
-         acct["protocol"] in filter:
-        try:
-          client = PROTOCOLS[acct["protocol"]].Client(acct)
-          if client.receive_enabled() and hasattr(client, "can_search"):
-            for message in client.get_search_results(query):
-              yield self.post_process_message(message)
-        except: self.handle_error(acct, traceback.format_exc(),
-          "Failed to retrieve messages")
+  def send(self, message, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["send_enabled"] and a.supports(can.SEND),
+      lambda c: c.send(message), "send message", filter)
 
-  def get_message_reply_data(self, query):
-    for acct in self.accounts:
-      print acct, query.account
-      if acct["protocol"] in PROTOCOLS.keys() and \
-         acct.id == query.account.id:
-        try:
-          client = PROTOCOLS[acct["protocol"]].Client(acct)
-          if client.receive_enabled() and hasattr(client, "can_reply"):
-            print "starting..."
-            for message in client.get_replies(query):
-              yield self.post_process_message(message)
-        except: self.handle_error(acct, traceback.format_exc(),
-          "Failed to retrieve messages")
+  def thread(self, query):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and a.supports(can.THREAD) and \
+        a.id == query.account.id,
+      lambda c: c.responses(query), "retrieve thread", filter)
   
-  def get_reply_thread(self, query):
-    data = list(self.get_message_reply_data(query))
-    data.sort(key=operator.attrgetter("time"), reverse=True)
+  def responses(self, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and a.supports(can.RESPONSES),
+      lambda c: c.responses(), "retrieve responses", filter)
 
-    return data
-  
-  def get_replies(self, filter=PROTOCOLS.keys()):
-    data = list(self.get_reply_data(filter))
-    data.sort(key=operator.attrgetter("time"), reverse=True)
+  def receive(self, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and a.supports(can.RECEIVE),
+      lambda c: c.receive(), "retrieve messages", filter)
 
-    return data
+  def search(self, query, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and a.supports(can.SEARCH),
+      lambda c: c.search(query), "perform search query", filter)
 
-  def get_messages(self, filter=PROTOCOLS.keys()):
-    data = list(self.get_message_data(filter))
-    data.sort(key=operator.attrgetter("time"), reverse=True)
-
-    return data
-
-  def get_search_results(self, query, filter=PROTOCOLS.keys()):
-    data = list(self.get_search_data(query, filter))
-    data.sort(key=operator.attrgetter("time"), reverse=True)
-
-    return data
-
-  def transmit_status(self, message, filter=PROTOCOLS.keys()):
-    for acct in self.accounts:
-      if acct["protocol"] in PROTOCOLS.keys() and \
-         acct["protocol"] in filter:
-        try:
-          client = PROTOCOLS[acct["protocol"]].Client(acct)
-          if client.can_send() and client.send_enabled():
-            client.transmit_status(message)
-        except: self.handle_error(acct, traceback.format_exc(),
-          "Failed to send messages")
