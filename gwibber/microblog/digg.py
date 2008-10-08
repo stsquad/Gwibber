@@ -16,7 +16,7 @@ PROTOCOL_INFO = {
   "config": [
     "username",
     "digg_color",
-    "comment_enabled"
+    "comment_color",
     "receive_enabled",
   ],
 

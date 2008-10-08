@@ -175,7 +175,7 @@ class GwibberClient(gtk.Window):
   def add_tab(self, data_handler, text, show_close = False, show_icon = None):
     view = gwui.MessageView(self.ui_dir, "default")
     view.link_handler = self.on_link_clicked
-    view.data_retrieval_handler = data_handler # self.client.get_messages
+    view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
 
     scroll = gtk.ScrolledWindow()
@@ -357,7 +357,7 @@ class GwibberClient(gtk.Window):
         sm = gtk.Menu()
         
         for i in ["receive", "send"]:
-          if acct.supports(hasattr(microblog.can, i.upper())):
+          if acct.supports(getattr(microblog.can, i.upper())):
             mi = gtk.CheckMenuItem("_%s Messages" % i.capitalize())
             acct.bind(mi, "%s_enabled" % i)
             sm.append(mi)
@@ -365,7 +365,7 @@ class GwibberClient(gtk.Window):
         sm.append(gtk.SeparatorMenuItem())
         
         mi = gtk.ImageMenuItem(gtk.STOCK_PROPERTIES)
-        mi.connect("activate", self.accounts.show_properties_dialog, acct)
+        mi.connect("activate", lambda w, a: self.accounts.show_properties_dialog(a), acct)
         sm.append(mi)
 
         mi = gtk.MenuItem("%s (%s)" % (acct["username"] or "None",
@@ -525,10 +525,8 @@ class GwibberClient(gtk.Window):
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
   
   def handle_error(self, acct, err, msg = None):
-    print acct, err, msg
-    return
     self.errors += {
-      "time": datetime.datetime.now(),
+      "time": mx.DateTime.gmt(),
       "username": acct["username"],
       "protocol": acct["protocol"],
       "message": "%s\n<i><span foreground='red'>%s</span></i>" % (msg, err.split("\n")[-2]),
@@ -601,6 +599,7 @@ class GwibberClient(gtk.Window):
           view = tab.get_child()
           view.message_store = view.data_retrieval_handler()
           self.flag_duplicates(view.message_store)
+          self.show_notification_bubbles(view.message_store)
 
         gtk.gdk.threads_enter()
         for tab in self.tabs.get_children():
