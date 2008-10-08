@@ -27,7 +27,7 @@ class Client:
       if acct["protocol"] in PROTOCOLS.keys() and \
          acct["protocol"] in filter:
         try:
-          client = acct.get_client()
+          client = PROTOCOLS[acct["protocol"]].Client(acct)
           if test(acct):
             for message in method(client):
               yield self.post_process_message(message)

@@ -8,7 +8,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 import sys, time, os, threading, mx.DateTime, hashlib
 import gtk, gtk.glade, gobject, table, webkit
-import microblog, gwui, config, gintegration
+import microblog, gwui, config, gintegration, configui
 
 gtk.gdk.threads_init()
 
@@ -50,7 +50,7 @@ class GwibberClient(gtk.Window):
      widget "*.tab-close-button" style "tab-close-button-style"
      """)
 
-    self.accounts = config.Accounts()
+    self.accounts = configui.AccountManager()
     self.client = microblog.Client(self.accounts)
     self.client.handle_error = self.handle_error
     self.client.post_process_message = self.post_process_message
@@ -231,7 +231,8 @@ class GwibberClient(gtk.Window):
 
   def on_account_change(self, client, junk, entry, *args):
     if "color" in entry.get_key():
-      self.set_account_colors(self.content)
+      pass
+      #self.set_account_colors(self.content)
 
   def on_window_close(self, w, e):
     if self.preferences["minimize_to_tray"]:
@@ -272,14 +273,6 @@ class GwibberClient(gtk.Window):
       message.account["protocol"].capitalize(),
       message.sender, message.time, message.text))
   
-  def handle_at_reply(self, message, protocol):
-    self.input.grab_focus()
-    self.input.set_text("@%s: " % message.sender_nick)
-    self.input.set_position(-1)
-
-    self.message_target = message.account
-    self.cancel_button.show()
-
   def reply(self, message):
     acct = message.account
 
@@ -337,6 +330,50 @@ class GwibberClient(gtk.Window):
 
     self.content.connect("load-finished", on_load_finished)
     self.content.load_theme("funkatron")
+
+  def on_accounts_menu(self, amenu):
+    amenu.emit_stop_by_name("select")
+    menu = amenu.get_submenu()
+    for c in menu: menu.remove(c)
+    
+    menuAccountsManage = gtk.MenuItem("_Manage")
+    menuAccountsManage.connect("activate", lambda *a: self.accounts.show_account_list())
+    menu.append(menuAccountsManage)
+   
+    menuAccountsCreate = gtk.MenuItem("_Create")
+    menu.append(menuAccountsCreate)
+    mac = gtk.Menu()
+
+    for p in microblog.PROTOCOLS.keys():
+      mi = gtk.MenuItem("%s" % microblog.PROTOCOLS[p].PROTOCOL_INFO["name"])
+      mi.connect("activate", self.accounts.on_account_create, p)
+      mac.append(mi)
+
+    menuAccountsCreate.set_submenu(mac)
+    menu.append(gtk.SeparatorMenuItem())
+    
+    for acct in self.accounts:
+      if acct["protocol"] in microblog.PROTOCOLS.keys():
+        sm = gtk.Menu()
+        
+        for i in ["receive", "send"]:
+          if acct.supports(hasattr(microblog.can, i.upper())):
+            mi = gtk.CheckMenuItem("_%s Messages" % i.capitalize())
+            acct.bind(mi, "%s_enabled" % i)
+            sm.append(mi)
+        
+        sm.append(gtk.SeparatorMenuItem())
+        
+        mi = gtk.ImageMenuItem(gtk.STOCK_PROPERTIES)
+        mi.connect("activate", self.accounts.show_properties_dialog, acct)
+        sm.append(mi)
+
+        mi = gtk.MenuItem("%s (%s)" % (acct["username"] or "None",
+          microblog.PROTOCOLS[acct["protocol"]].PROTOCOL_INFO["name"]))
+        mi.set_submenu(sm)
+        menu.append(mi)
+    menu.show_all()
+    amenu.set_submenu(menu)
 
   def setup_menus(self):
     menuGwibber = gtk.Menu()
@@ -487,196 +524,6 @@ class GwibberClient(gtk.Window):
 
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
   
-  def on_accounts_menu(self, amenu):
-    amenu.emit_stop_by_name("select")
-    menu = amenu.get_submenu()
-    for c in menu: menu.remove(c)
-    
-    menuAccountsManage = gtk.MenuItem("_Manage")
-    menuAccountsManage.connect("activate", self.on_accounts_manage)
-    menu.append(menuAccountsManage)
-   
-    menuAccountsCreate = gtk.MenuItem("_Create")
-    menu.append(menuAccountsCreate)
-    mac = gtk.Menu()
-
-    for p in microblog.PROTOCOLS.keys():
-      mi = gtk.MenuItem("%s" % microblog.PROTOCOLS[p].PROTOCOL_INFO["name"])
-      mi.connect("activate", self.on_account_create, p)
-      mac.append(mi)
-
-    menuAccountsCreate.set_submenu(mac)
-    menu.append(gtk.SeparatorMenuItem())
-    
-    for acct in self.accounts:
-      if acct["protocol"] in microblog.PROTOCOLS.keys():
-        sm = gtk.Menu()
-        
-        for i in ["receive", "send"]:
-          if acct.supports(hasattr(microblog.can, i.upper())):
-            mi = gtk.CheckMenuItem("_%s Messages" % i.capitalize())
-            acct.bind(mi, "%s_enabled" % i)
-            sm.append(mi)
-        
-        sm.append(gtk.SeparatorMenuItem())
-        
-        mi = gtk.ImageMenuItem(gtk.STOCK_PROPERTIES)
-        mi.connect("activate", self.on_account_properties, acct)
-        sm.append(mi)
-
-        mi = gtk.MenuItem("%s (%s)" % (acct["username"] or "None",
-          microblog.PROTOCOLS[acct["protocol"]].PROTOCOL_INFO["name"]))
-        mi.set_submenu(sm)
-        menu.append(mi)
-    menu.show_all()
-    amenu.set_submenu(menu)
-
-  def on_account_properties(self, w, acct):
-    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
-    dialog = glade.get_widget("dialog_%s" % acct["protocol"])
-    dialog.show_all()
-    
-    for widget in microblog.PROTOCOLS[acct["protocol"]].PROTOCOL_INFO["config"]:
-      w = glade.get_widget("%s_%s" % (acct["protocol"], widget))
-      if isinstance(w, gtk.ColorButton): acct.bind(w, widget, default="#729FCF")
-      else: acct.bind(w, widget)
-
-    glade.get_widget("%s_btnclose" % acct["protocol"]).connect("clicked",
-      lambda a: dialog.destroy())
-
-    glade.get_widget("%s_btndelete" % acct["protocol"]).connect("clicked",
-      lambda a: self.on_account_delete(acct, dialog))
-
-    if acct["protocol"] == "facebook":
-      glade.get_widget("btnAuthorize").connect("clicked",
-        lambda a: self.facebook_authorize(acct))
-
-  def facebook_authorize(self, account):
-    from gwibber.microblog.support import facelib
-
-    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
-    dialog = glade.get_widget("facebook_config")
-    dialog.show_all()
-
-    def on_validate_click(w):
-      fb = facelib.Facebook(microblog.facebook.APP_KEY, microblog.facebook.SECRET_KEY,
-        glade.get_widget("entry_auth_token").get_text().strip())
-
-      data = fb.auth.getSession()
-      if data and data.has_key("session_key"):
-        account["secret_key"] = str(data["secret"])
-        account["session_key"] = str(data["session_key"])
-        
-        m = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK,
-          "Keys obtained successfully.")
-      else:
-        m = gtk.MessageDialog(None, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK,
-          "Failed to obtain key.") 
-
-      m.run()
-      m.destroy()
-    
-    glade.get_widget("button_request").connect("clicked",
-      lambda *a: gintegration.load_url("http://www.facebook.com/code_gen.php?v=1.0&api_key=%s" % microblog.facebook.APP_KEY))
-    
-    glade.get_widget("button_authorize").connect("clicked",
-      lambda *a: gintegration.load_url("http://www.facebook.com/authorize.php?api_key=%s&v=1.0&ext_perm=status_update" % microblog.facebook.APP_KEY))
-
-    glade.get_widget("button_apply_auth").connect("clicked", on_validate_click)
-    glade.get_widget("button_close_facebook_auth").connect("clicked", lambda w: dialog.destroy())
-
-  def on_account_create(self, w, protocol):
-    a = self.accounts.new_account()
-    a["protocol"] = protocol
-    self.on_account_properties(w, a)
-
-  def on_account_delete(self, acct, dialog = None):
-    d = gtk.MessageDialog(dialog, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,
-      gtk.BUTTONS_YES_NO, "Are you sure you want to delete this account?")
-    
-    if d.run() == gtk.RESPONSE_YES:
-      if dialog: dialog.destroy()
-      self.accounts.delete_account(acct)
-    
-    d.destroy()
-
-  def on_accounts_manage(self, mi):
-    manager = gtk.Window()
-    manager.set_title("Manage Accounts")
-    manager.set_border_width(10)
-    manager.resize(390,240)
-
-    def toggle_table_checkbox(cr, i, key, table):
-      a = table.tree_store.get_obj(i)
-      a[key] = (a[key] and [False] or [True])[0]
-
-    col_receive = gtk.CellRendererToggle()
-    col_send = gtk.CellRendererToggle()
-
-    data = table.generate([
-      ["username", lambda a: a["username"] or "None"],
-      ["Receive", (col_receive, {
-        "active": lambda a: a["receive_enabled"],
-        "visible": lambda a: a.supports(microblog.can.RECEIVE)})],
-      ["Send", (col_send, {
-        "active": lambda a: a["send_enabled"],
-        "visible": lambda a: a.supports(microblog.can.SEND)})],
-      ["protocol", lambda a: a.get_protocol().PROTOCOL_INFO["name"]],
-    ])
-
-    col_receive.connect("toggled", toggle_table_checkbox, "receive_enabled", data)
-    col_send.connect("toggled", toggle_table_checkbox, "send_enabled", data)
-
-    for a in self.accounts: data += a
-    
-    scroll = gtk.ScrolledWindow()
-    scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-    scroll.add_with_viewport(data)
-    data.set_property("rules-hint", True)
-
-    buttons = gtk.HButtonBox()
-    buttons.set_layout(gtk.BUTTONBOX_END)
-
-    def on_click_button(w, stock):
-      if stock == gtk.STOCK_CLOSE:
-        manager.destroy()
-
-      elif stock == gtk.STOCK_ADD:
-        mac = gtk.Menu()
-        for p in microblog.PROTOCOLS.keys():
-          mi = gtk.MenuItem(a.get_protocol().PROTOCOL_INFO["name"])
-          mi.connect("activate", self.on_account_create, p)
-          mac.append(mi)
-        mac.show_all()
-        mac.popup(None, None, None, 1, 0)
-
-      elif stock == gtk.STOCK_PROPERTIES:
-        if isinstance(data.get_selected(), config.Account):
-          self.on_account_properties(w, data.get_selected())
-
-      elif stock == gtk.STOCK_DELETE:
-        if isinstance(data.get_selected(), config.Account):
-          self.on_account_delete(data.get_selected())
-
-    def on_account_change(gc, v, entry, t):
-      if len([a for a in self.accounts]) != len(t.tree_store):
-        t.tree_store.clear()
-        for a in self.accounts: t+= a
-    
-    config.GCONF.notify_add("/apps/gwibber/accounts", on_account_change, data)
-
-    for stock in [gtk.STOCK_ADD, gtk.STOCK_PROPERTIES, gtk.STOCK_DELETE, gtk.STOCK_CLOSE]:
-      b = gtk.Button(stock=stock)
-      b.connect("clicked", on_click_button, stock)
-      buttons.pack_start(b)
-
-    vb = gtk.VBox(spacing=5)
-    vb.pack_start(scroll)
-    vb.pack_start(buttons, False, False)
-
-    manager.add(vb)
-    manager.show_all()
-
   def handle_error(self, acct, err, msg = None):
     print acct, err, msg
     return
