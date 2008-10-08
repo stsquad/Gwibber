@@ -12,6 +12,9 @@ PROTOCOLS = {
   "identica": identica,
 }
 
+def supports(a, feature):
+  return feature in PROTOCOLS[a["protocol"]].PROTOCOL_INFO["features"]
+
 class Client:
   def __init__(self, accounts):
     self.accounts = accounts
@@ -39,28 +42,28 @@ class Client:
     return data
 
   def send(self, message, filter=PROTOCOLS.keys()):
-    return self.perform_operation(
-      lambda a: a["send_enabled"] and a.supports(can.SEND),
+    return self.get_data(
+      lambda a: a["send_enabled"] and supports(a, can.SEND),
       lambda c: c.send(message), "send message", filter)
 
   def thread(self, query):
     return self.perform_operation(
-      lambda a: a["receive_enabled"] and a.supports(can.THREAD) and \
+      lambda a: a["receive_enabled"] and supports(a, can.THREAD) and \
         a.id == query.account.id,
       lambda c: c.responses(query), "retrieve thread", filter)
   
   def responses(self, filter=PROTOCOLS.keys()):
     return self.perform_operation(
-      lambda a: a["receive_enabled"] and a.supports(can.RESPONSES),
+      lambda a: a["receive_enabled"] and supports(a, can.RESPONSES),
       lambda c: c.responses(), "retrieve responses", filter)
 
   def receive(self, filter=PROTOCOLS.keys()):
     return self.perform_operation(
-      lambda a: a["receive_enabled"] and a.supports(can.RECEIVE),
+      lambda a: a["receive_enabled"] and supports(a, can.RECEIVE),
       lambda c: c.receive(), "retrieve messages", filter)
 
   def search(self, query, filter=PROTOCOLS.keys()):
     return self.perform_operation(
-      lambda a: a["receive_enabled"] and a.supports(can.SEARCH),
+      lambda a: a["receive_enabled"] and supports(a, can.SEARCH),
       lambda c: c.search(query), "perform search query", filter)
 
