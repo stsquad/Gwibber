@@ -104,7 +104,7 @@ class Client:
       "http://twitter.com/statuses/friends_timeline.json"))
 
   def get_search_data(self, query):
-    return support.simplejson.loads(urllib2.urlopen(
+    return simplejson.loads(urllib2.urlopen(
       urllib2.Request("http://search.twitter.com/search.json",
         urllib.urlencode({"q": query}))).read())
 

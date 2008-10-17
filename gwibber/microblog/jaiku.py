@@ -77,7 +77,7 @@ class Client:
           "personal_key":self.account["password"]}))).read())
 
   def get_thread_data(self, msg):
-    return support.simplejson.loads(urllib2.urlopen(urllib2.Request(
+    return simplejson.loads(urllib2.urlopen(urllib2.Request(
       "http://%s.jaiku.com/presence/%s/json" % (msg.sender_nick, msg.id),
         urllib.urlencode({"user": self.account["username"],
           "personal_key":self.account["password"]}))).read())

@@ -152,7 +152,7 @@ class GwibberClient(gtk.Window):
     self.show_all()
     self.apply_ui_element_settings()
     self.cancel_button.hide()
-    #self.update()
+    self.update()
 
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
