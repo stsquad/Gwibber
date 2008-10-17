@@ -6,7 +6,7 @@ SegPhault (Ryan Paul) - 01/06/2008
 
 """
 
-import urllib2, urllib, support, re, can
+import urllib2, urllib, support, re, can, simplejson
 from xml.dom import minidom
 
 PROTOCOL_INFO = {
@@ -55,7 +55,7 @@ class Digg(Message):
       data.getElementsByTagName("title")[0].firstChild.nodeValue)
     self.bgcolor = "digg_color"
 
-    self.diggs = support.simplejson.loads(urllib2.urlopen(urllib2.Request(
+    self.diggs = simplejson.loads(urllib2.urlopen(urllib2.Request(
       "http://services.digg.com/story/%s?appkey=http://cixar.com&type=json" %
         self.url.split("/")[-1])).read())["stories"][0]["diggs"]
 

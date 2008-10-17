@@ -6,7 +6,7 @@ SegPhault (Ryan Paul) - 03/01/2008
 
 """
 
-import urllib2, urllib, base64, support, mx.DateTime, can
+import urllib2, urllib, base64, support, mx.DateTime, can, simplejson
 
 PROTOCOL_INFO = {
   "name": "Pownce",
@@ -66,7 +66,7 @@ class Client:
       url, data, {"Authorization": self.get_auth()})).read()
 
   def get_thread_data(self, msg):
-    return support.simplejson.loads(self.connect(
+    return simplejson.loads(self.connect(
       "http://api.pownce.com/2.0/notes/%s.json?app_key=%s&show_replies=true" % (msg.id, API_KEY)))
 
   def get_thread(self, msg):
@@ -81,7 +81,7 @@ class Client:
         urllib.urlencode({"note_body": message, "app_key": API_KEY, "reply_to": msg.id}))
     
   def get_data(self):
-    return support.simplejson.loads(self.connect(
+    return simplejson.loads(self.connect(
       "http://api.pownce.com/2.0/note_lists/%s.json?app_key=%s" % (self.account["username"], API_KEY)))
 
   def receive(self):

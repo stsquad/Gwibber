@@ -7,7 +7,7 @@ SegPhault (Ryan Paul) - 05/26/2007
 """
 
 import webkit, gintegration, microblog, gtk
-import urllib2, hashlib, time, os
+import urllib2, hashlib, time, os, simplejson
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
 IMG_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
@@ -27,13 +27,13 @@ class MessageView(webkit.WebView):
     self.open("file://%s/themes/%s/theme.html" % (self.ui_dir, theme))
 
   def load_messages(self, message_store = None):
-    msgs = microblog.support.simplejson.dumps([dict(m.__dict__, message_index=n)
+    msgs = simplejson.dumps([dict(m.__dict__, message_index=n)
       for n, m in enumerate(message_store or self.message_store)],
         indent=4, default=str)
     self.execute_script("addMessages(%s)" % msgs)
 
   def load_preferences(self, preferences):
-    json = microblog.support.simplejson.dumps(
+    json = simplejson.dumps(
       list(preferences), indent=4, default=str)
     self.execute_script("setAccountConfig(%s)" % json)
 

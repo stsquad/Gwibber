@@ -7,7 +7,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 """
 
 import sys, time, os, threading, mx.DateTime, hashlib
-import gtk, gtk.glade, gobject, table, webkit
+import gtk, gtk.glade, gobject, table, webkit, simplejson
 import microblog, gwui, config, gintegration, configui
 
 gtk.gdk.threads_init()
@@ -231,8 +231,9 @@ class GwibberClient(gtk.Window):
 
   def on_account_change(self, client, junk, entry, *args):
     if "color" in entry.get_key():
-      pass
-      #self.set_account_colors(self.content)
+      for tab in self.tabs.get_children():
+        view = tab.get_child()
+        view.load_preferences(self.get_account_config())
 
   def on_window_close(self, w, e):
     if self.preferences["minimize_to_tray"]:
@@ -315,10 +316,10 @@ class GwibberClient(gtk.Window):
     self.statusbar.pop(1)
     if len(widget.get_text()) > 0:
       self.statusbar.push(1, "Characters remaining: %s" % (
-        widget.get_max_length() - len(widget.get_text())))
+        widget.get_max_length() - len(unicode(widget.get_text(), "utf-8"))))
 
   def load_messages_into_view(self, view):
-    msgs = microblog.support.simplejson.dumps([dict(m.__dict__, message_index=n)
+    msgs = simplejson.dumps([dict(m.__dict__, message_index=n)
       for n, m in enumerate(view.message_store)], indent=4, default=str)
 
     view.execute_script("addMessages(%s)" % msgs)

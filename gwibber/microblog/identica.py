@@ -6,7 +6,7 @@ SegPhault (Ryan Paul) - 07/18/2008
 
 """
 
-import urllib2, urllib, base64, re, support, can
+import urllib2, urllib, base64, re, support, can, simplejson
 
 PROTOCOL_INFO = {
   "name": "Identi.ca",
@@ -66,11 +66,11 @@ class Client:
       url, data, {"Authorization": self.get_auth()})).read()
 
   def get_messages(self):
-    return support.simplejson.loads(self.connect(
+    return simplejson.loads(self.connect(
       "http://identi.ca/api/statuses/friends_timeline.json"))
 
   def get_responses(self):
-    return support.simplejson.loads(self.connect(
+    return simplejson.loads(self.connect(
       "http://identi.ca/api/statuses/replies.json"))
 
   def responses(self):

@@ -4,7 +4,7 @@ Flickr interface for Gwibber
 SegPhault (Ryan Paul) - 03/01/2008
 """
 
-import urllib2, urllib, support, mx.DateTime, can
+import urllib2, urllib, support, mx.DateTime, can, simplejson
 
 PROTOCOL_INFO = {
   "name": "Flickr",
@@ -61,7 +61,7 @@ class Client:
     return urllib2.urlopen(urllib2.Request(url, data)).read()
 
   def restcall(self, method, args):
-    return support.simplejson.loads(self.connect(
+    return simplejson.loads(self.connect(
       "%s/?api_key=%s&format=json&nojsoncallback=1&method=%s&%s" % (
         REST_SERVER, API_KEY, method, urllib.urlencode(args))))
 

@@ -6,7 +6,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import urllib2, urllib, support, re, can
+import urllib2, urllib, support, re, can, simplejson
 
 PROTOCOL_INFO = {
   "name": "Jaiku",
@@ -71,7 +71,7 @@ class Client:
       self.account["password"] != None
 
   def get_messages(self):
-    return support.simplejson.loads(urllib2.urlopen(urllib2.Request(
+    return simplejson.loads(urllib2.urlopen(urllib2.Request(
       "http://%s.jaiku.com/contacts/feed/json" % self.account["username"],
         urllib.urlencode({"user": self.account["username"],
           "personal_key":self.account["password"]}))).read())

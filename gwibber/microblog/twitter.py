@@ -6,7 +6,7 @@ SegPhault (Ryan Paul) - 12/22/2007
 
 """
 
-import urllib2, urllib, base64, re, support, can
+import urllib2, urllib, base64, re, support, can, simplejson
 
 PROTOCOL_INFO = {
   "name": "Twitter",
@@ -100,7 +100,7 @@ class Client:
       url, data, {"Authorization": self.get_auth()})).read()
 
   def get_message_data(self):
-    return support.simplejson.loads(self.connect(
+    return simplejson.loads(self.connect(
       "http://twitter.com/statuses/friends_timeline.json"))
 
   def get_search_data(self, query):

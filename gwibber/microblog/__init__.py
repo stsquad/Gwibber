@@ -25,15 +25,17 @@ class Client:
   def post_process_message(self, message):
     return message
 
-  def get_data(self, test, method, name, filter=PROTOCOLS.keys()):
+  def get_data(self, test, method, name, filter=PROTOCOLS.keys(), return_value=True):
     for acct in self.accounts:
       if acct["protocol"] in PROTOCOLS.keys() and \
          acct["protocol"] in filter:
         try:
           client = PROTOCOLS[acct["protocol"]].Client(acct)
           if test(acct):
-            for message in method(client):
-              yield self.post_process_message(message)
+            if return_value:
+              for message in method(client):
+                yield self.post_process_message(message)
+            else: yield method(client)
         except: self.handle_error(acct, traceback.format_exc(), name)
 
   def perform_operation(self, test, method, name, filter=PROTOCOLS.keys()):
@@ -42,9 +44,9 @@ class Client:
     return data
 
   def send(self, message, filter=PROTOCOLS.keys()):
-    return self.get_data(
+    return list(self.get_data(
       lambda a: a["send_enabled"] and supports(a, can.SEND),
-      lambda c: c.send(message), "send message", filter)
+      lambda c: c.send(message), "send message", filter, False))
 
   def thread(self, query):
     return self.perform_operation(
