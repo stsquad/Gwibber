@@ -31,7 +31,8 @@ PROTOCOL_INFO = {
   ],
 }
 
-NICK_PARSE = re.compile("@([A-Za-z0-9]+)")
+NICK_PARSE = re.compile("@([A-Za-z0-9_]+)")
+HASH_PARSE = re.compile("#([A-Za-z0-9_.\-]+)")
 
 class Message:
   def __init__(self, client, data):
@@ -49,8 +50,10 @@ class Message:
     self.bgcolor = "message_color"
     self.url = "http://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
     self.profile_url = "http://twitter.com/%s" % data["user"]["screen_name"]
-    self.html_string = '<span class="text">%s</span>' % NICK_PARSE.sub(
-      '@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>', support.linkify(self.text))
+    self.html_string = '<span class="text">%s</span>' % \
+      HASH_PARSE.sub('#<a class="inlinehash" href="http://hashtags.org/tag/\\1">\\1</a>',
+      NICK_PARSE.sub('@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>',
+        support.linkify(self.text)))
     self.is_reply = ("@%s" % self.username) in self.text
 
 class SearchResult:
