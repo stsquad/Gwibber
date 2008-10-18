@@ -7,6 +7,7 @@ SegPhault (Ryan Paul) - 07/18/2008
 """
 
 import urllib2, urllib, base64, re, support, can, simplejson
+from xml.dom import minidom
 
 PROTOCOL_INFO = {
   "name": "Identi.ca",
@@ -23,7 +24,7 @@ PROTOCOL_INFO = {
   "features": [
     can.SEND,
     can.RECEIVE,
-    #can.SEARCH,
+    can.SEARCH,
     can.REPLY,
     can.RESPONSES,
     can.DELETE,
@@ -56,6 +57,29 @@ class Message:
           support.linkify(self.text)))
     self.is_reply = ("@%s" % self.username) in self.text
 
+class SearchResult:
+  def __init__(self, client, data, query = None):
+    self.client = client
+    self.account = client.account
+    self.protocol = client.account["protocol"]
+    self.username = client.account["username"]
+    self.data = data
+    self.sender = data.getElementsByTagName("dc:creator")[0].firstChild.nodeValue
+    self.sender_nick = data.getElementsByTagName("title")[0].firstChild.nodeValue.split(":")[0]
+    self.sender_id = self.sender_nick
+    self.time = support.parse_time(data.getElementsByTagName("dc:date")[0].firstChild.nodeValue)
+    self.text = data.getElementsByTagName("title")[0].firstChild.nodeValue.split(":", 1)[1].strip()
+    self.image = data.getElementsByTagName("laconica:postIcon")[0].getAttribute("rdf:resource").replace("-96-", "-48-")
+    self.bgcolor = "message_color"
+    self.url = data.getAttribute("rdf:about")
+    self.profile_url = data.getElementsByTagName("sioc:has_creator")[0].getAttribute("rdf:resource")
+
+    self.html_string = '<span class="text">%s</span>' % \
+      HASH_PARSE.sub('#<a class="inlinehash" href="http://identi.ca/tag/\\1">\\1</a>',
+        NICK_PARSE.sub('@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>',
+          support.linkify(self.text)))
+    self.is_reply = ("@%s" % self.username) in self.text
+
 class Client:
   def __init__(self, acct):
     self.account = acct
@@ -75,6 +99,15 @@ class Client:
   def get_responses(self):
     return simplejson.loads(self.connect(
       "http://identi.ca/api/statuses/replies.json"))
+
+  def get_search(self, query):
+    return minidom.parseString(urllib2.urlopen(
+      urllib2.Request("http://identi.ca/search/notice/rss",
+        urllib.urlencode({"q": query}))).read()).getElementsByTagName("item")
+
+  def search(self, query):
+    for data in self.get_search(query):
+      yield SearchResult(self, data, query)
 
   def responses(self):
     for data in self.get_responses():

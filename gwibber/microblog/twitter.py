@@ -76,8 +76,10 @@ class SearchResult:
     if query: html = support.highlight_search_results(self.text, query)
     else: html = self.text
     
-    self.html_string = '<span class="text">%s</span>' % NICK_PARSE.sub(
-      '@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>', support.linkify(html))
+    self.html_string = '<span class="text">%s</span>' % \
+      HASH_PARSE.sub('#<a class="inlinehash" href="http://hashtags.org/tag/\\1">\\1</a>',
+      NICK_PARSE.sub('@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>',
+        support.linkify(self.text)))
     self.is_reply = ("@%s" % self.username) in self.text
 
 class Client:
