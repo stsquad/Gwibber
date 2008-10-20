@@ -51,7 +51,7 @@ class Message:
     self.url = "http://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
     self.profile_url = "http://twitter.com/%s" % data["user"]["screen_name"]
     self.html_string = '<span class="text">%s</span>' % \
-      HASH_PARSE.sub('#<a class="inlinehash" href="http://hashtags.org/tag/\\1">\\1</a>',
+        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:search/#\\1">\\1</a>',
       NICK_PARSE.sub('@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>',
         support.linkify(self.text)))
     self.is_reply = ("@%s" % self.username) in self.text
@@ -77,7 +77,7 @@ class SearchResult:
     else: html = self.text
     
     self.html_string = '<span class="text">%s</span>' % \
-      HASH_PARSE.sub('#<a class="inlinehash" href="http://hashtags.org/tag/\\1">\\1</a>',
+      HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:search/#\\1">\\1</a>',
       NICK_PARSE.sub('@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>',
         support.linkify(self.text)))
     self.is_reply = ("@%s" % self.username) in self.text

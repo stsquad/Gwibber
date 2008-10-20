@@ -52,7 +52,7 @@ class Message:
     self.url = "http://identi.ca/notice/%s" % data["id"] # % (data["user"]["screen_name"], data["id"])
     self.profile_url = "http://identi.ca/%s" % data["user"]["screen_name"]
     self.html_string = '<span class="text">%s</span>' % \
-      HASH_PARSE.sub('#<a class="inlinehash" href="http://identi.ca/tag/\\1">\\1</a>',
+        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:search/#\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>',
           support.linkify(self.text)))
     self.is_reply = ("@%s" % self.username) in self.text
@@ -75,7 +75,7 @@ class SearchResult:
     self.profile_url = data.getElementsByTagName("sioc:has_creator")[0].getAttribute("rdf:resource")
 
     self.html_string = '<span class="text">%s</span>' % \
-      HASH_PARSE.sub('#<a class="inlinehash" href="http://identi.ca/tag/\\1">\\1</a>',
+        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:search/#\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>',
           support.linkify(self.text)))
     self.is_reply = ("@%s" % self.username) in self.text

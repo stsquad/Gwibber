@@ -330,6 +330,10 @@ class GwibberClient(gtk.Window):
       if uri.startswith("gwibber:reply"):
         self.reply(view.message_store[int(uri.split("/")[-1])])
         return True
+      elif uri.startswith("gwibber:search"):
+        query = uri.split("/")[-1]
+        self.add_tab(lambda: self.client.search(query), query, True, gtk.STOCK_FIND)
+        return True
     else: return False
 
   def on_input_context_menu(self, obj, menu):
