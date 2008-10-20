@@ -86,6 +86,7 @@ class GwibberClient(gtk.Window):
     self.tabs.set_scrollable(True)
     self.add_tab(self.client.receive, "Messages", show_icon = "go-home")
     self.add_tab(self.client.responses, "Replies", show_icon = "mail-reply-all")
+    #self.add_map_tab(self.client.friend_positions, "Location")
 
     if gintegration.SPELLCHECK_ENABLED:
       self.input = gintegration.sexy.SpellEntry()
@@ -152,7 +153,7 @@ class GwibberClient(gtk.Window):
     self.show_all()
     self.apply_ui_element_settings()
     self.cancel_button.hide()
-    self.update()
+    #self.update()
 
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
@@ -180,6 +181,37 @@ class GwibberClient(gtk.Window):
 
     scroll = gtk.ScrolledWindow()
     scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+    scroll.add(view)
+
+    img = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
+
+    btn = gtk.Button()
+    btn.set_image(img)
+    btn.set_relief(gtk.RELIEF_NONE)
+    btn.set_name("tab-close-button")
+
+    hb = gtk.HBox(spacing=2)
+    if show_icon:
+      hb.pack_start(gtk.image_new_from_icon_name(show_icon, gtk.ICON_SIZE_MENU))
+    hb.pack_start(gtk.Label(text))
+    if show_close: hb.pack_end(btn, False, False)
+    hb.show_all()
+    
+    self.tabs.append_page(scroll, hb)
+    self.tabs.set_tab_reorderable(scroll, True)
+    self.tabs.show_all()
+
+    btn.connect("clicked", lambda w: self.tabs.remove_page(self.tabs.page_num(view)))
+    return view
+
+  def add_map_tab(self, data_handler, text, show_close = True, show_icon = "applications-internet"):
+    view = gwui.MapView(self.ui_dir)
+    view.link_handler = self.on_link_clicked
+    view.data_retrieval_handler = data_handler
+    view.config_retrieval_handler = self.get_account_config
+
+    scroll = gtk.Frame()
+    #scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
     scroll.add(view)
 
     img = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)

@@ -12,6 +12,26 @@ import urllib2, hashlib, time, os, simplejson
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
 IMG_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
 
+class MapView(webkit.WebView):
+  def __init__(self, ui_dir):
+    webkit.WebView.__init__(self)
+    self.ui_dir = ui_dir
+    self.message_store = []
+    self.data_retrieval_handler = None
+    self.open("file://%s/map.html" % self.ui_dir)
+
+  def load_theme(self, theme):
+    self.theme = theme
+
+  def load_messages(self, message_store = None):
+    msgs = message_store or self.message_store
+    self.execute_script("LoadMap(%s, %s)" % (msgs[0].location_latitude, msgs[0].location_longitude))
+    for m in (message_store or self.message_store):
+      self.execute_script("AddPin(%s, %s, '%s', '%s', '%s')" % (m.location_latitude, m.location_longitude, m.sender, m.location_fullname, m.image_small))
+
+  def load_preferences(self, preferences):
+    pass
+
 class MessageView(webkit.WebView):
   def __init__(self, ui_dir, theme):
     webkit.WebView.__init__(self)

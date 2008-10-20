@@ -1,6 +1,6 @@
 
 import operator, traceback, can
-import twitter, jaiku, facebook, digg, flickr, pownce, identica
+import twitter, jaiku, facebook, digg, flickr, pownce, identica, brightkite
 
 PROTOCOLS = {
   "jaiku": jaiku,
@@ -10,6 +10,7 @@ PROTOCOLS = {
   "flickr": flickr,
   "pownce": pownce,
   "identica": identica,
+  #"brightkite": brightkite,
 }
 
 def supports(a, feature):
@@ -63,6 +64,11 @@ class Client:
     return self.perform_operation(
       lambda a: a["receive_enabled"] and supports(a, can.RECEIVE),
       lambda c: c.receive(), "retrieve messages", filter)
+
+  def friend_positions(self, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and supports(a, can.GEO_FRIEND_POSITIONS),
+      lambda c: c.friend_positions(), "retrieve positions", filter)
 
   def search(self, query, filter=PROTOCOLS.keys()):
     return self.perform_operation(
