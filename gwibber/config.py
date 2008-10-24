@@ -92,7 +92,9 @@ class Accounts:
 
   def __iter__(self):
     for i in GCONF.get_list("%s/index" % self.path, gconf.VALUE_STRING):
-      yield Account(i)
+      a = Account(i)
+      if a["protocol"] in microblog.PROTOCOLS:
+        yield Account(i)
 
 class Preferences(Wrapper):
   def __init__(self, path = GCONF_PREFERENCES_DIR):

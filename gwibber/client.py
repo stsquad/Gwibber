@@ -50,7 +50,7 @@ class GwibberClient(gtk.Window):
      widget "*.tab-close-button" style "tab-close-button-style"
      """)
 
-    self.accounts = configui.AccountManager()
+    self.accounts = configui.AccountManager(ui_dir=ui_dir)
     self.client = microblog.Client(self.accounts)
     self.client.handle_error = self.handle_error
     self.client.post_process_message = self.post_process_message
@@ -603,12 +603,13 @@ class GwibberClient(gtk.Window):
 
   def get_account_config(self):
     for acct in self.accounts:
-      data = {"id": acct.id, "username": acct["username"], "protocol": acct["protocol"]}
-      for c in acct.get_protocol().PROTOCOL_INFO["config"]:
-        if "color" in c:
-          color = gtk.gdk.color_parse(acct[c])
-          data[c] = {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
-      yield data
+      if acct["protocol"] in microblog.PROTOCOLS:
+        data = {"id": acct.id, "username": acct["username"], "protocol": acct["protocol"]}
+        for c in acct.get_protocol().PROTOCOL_INFO["config"]:
+          if "color" in c:
+            color = gtk.gdk.color_parse(acct[c])
+            data[c] = {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
+        yield data
 
   def show_notification_bubbles(self, data):
     for message in data:
