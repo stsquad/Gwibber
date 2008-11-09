@@ -584,9 +584,10 @@ class GwibberClient(gtk.Window):
       self.input.set_text("")
 
   def post_process_message(self, message):
-    message.image_url = message.image
-    message.image_path = gwui.image_cache(message.image_url)
-    message.image = "file://%s" % message.image_path
+    if hasattr(message, "image"):
+      message.image_url = message.image
+      message.image_path = gwui.image_cache(message.image_url)
+      message.image = "file://%s" % message.image_path
 
     message.gId = hashlib.sha1(message.text[:128].strip(".")).hexdigest()
     message.aId = message.account.id

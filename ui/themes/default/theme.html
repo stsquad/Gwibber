@@ -129,14 +129,14 @@
 
       function addMessage(data) {
         html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol + ' ' + data.aId + data.bgcolor +'" title="'+ data.sender_nick +'">' +
-          '<table> \
-            <tr><td> \
+          '<table><tr>' +
+            (data.image ? '<td class="imagecolumn"> \
               <a href="'+ data.profile_url +'"> \
                 <div class="imgbox" style="background-image: url('+ data.image +');"></div> \
               </a> \
               <br />\
               <div class="diggbox"></div> \
-            </td><td> \
+            </td>' : '') + '<td> \
               <p class="content"> \
                 <span class="title">'+ (data.title == undefined ? data.sender : data.title) +'</span> \
                 <span class="time"> (<a href="'+ data.url +'">'+ data.time_string +'</a>)</span><br /> \
