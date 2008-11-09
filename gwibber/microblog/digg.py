@@ -1,13 +1,30 @@
 
 """
+
 Digg interface for Gwibber
 SegPhault (Ryan Paul) - 01/06/2008
+
 """
 
-import urllib2, urllib, support, re
+import urllib2, urllib, support, re, can, simplejson
 from xml.dom import minidom
 
-CONFIG = ["digg_color", "comment_color", "username", "receive_enabled"]
+PROTOCOL_INFO = {
+  "name": "Digg",
+  "version": 0.1,
+  
+  "config": [
+    "username",
+    "digg_color",
+    "comment_color",
+    "receive_enabled",
+  ],
+
+  "features": [
+    can.RECEIVE,
+  ],
+}
+
 LINK_PARSE =  re.compile("<a[^>]+href=\"(https?://[^\"]+)\">[^<]+</a>")
 
 def sanitize_text(t):
@@ -38,18 +55,13 @@ class Digg(Message):
       data.getElementsByTagName("title")[0].firstChild.nodeValue)
     self.bgcolor = "digg_color"
 
-    self.diggs = support.simplejson.loads(urllib2.urlopen(urllib2.Request(
+    self.diggs = simplejson.loads(urllib2.urlopen(urllib2.Request(
       "http://services.digg.com/story/%s?appkey=http://cixar.com&type=json" %
         self.url.split("/")[-1])).read())["stories"][0]["diggs"]
 
 class Client:
   def __init__(self, acct):
     self.account = acct
-
-  def can_send(self): return False
-  def can_receive(self): return True
-
-  def send_enabled(self): return False
 
   def receive_enabled(self):
     return self.account["receive_enabled"] and \
@@ -58,7 +70,7 @@ class Client:
   def connect(self, url, data = None):
     return urllib2.urlopen(urllib2.Request(url, data)).read()
 
-  def get_data(self):
+  def get_comments(self):
     return minidom.parseString(self.connect(
       "http://digg.com/users/%s/friends/comments.rss" %
         self.account["username"])).getElementsByTagName("item")
@@ -68,8 +80,8 @@ class Client:
       "http://digg.com/users/%s/friends/diggs.rss" %
         self.account["username"])).getElementsByTagName("item")
 
-  def get_messages(self):
-    for data in self.get_data()[0:10]:
+  def receive(self):
+    for data in self.get_comments()[0:10]:
       yield Message(self, data)
 
     for data in self.get_diggs()[0:10]:

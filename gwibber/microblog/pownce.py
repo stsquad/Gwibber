@@ -6,9 +6,27 @@ SegPhault (Ryan Paul) - 03/01/2008
 
 """
 
-import urllib2, urllib, base64, support, mx.DateTime
+import urllib2, urllib, base64, support, mx.DateTime, can, simplejson
 
-CONFIG = ["message_color", "comment_color", "password", "username", "receive_enabled", "send_enabled"]
+PROTOCOL_INFO = {
+  "name": "Pownce",
+  "version": 0.1,
+  
+  "config": [
+    "password",
+    "username",
+    "message_color",
+    "comment_color",
+    "receive_enabled",
+    "send_enabled"
+  ],
+
+  "features": [
+    can.SEND,
+    can.RECEIVE,
+  ],
+}
+
 API_KEY = "w5t07ju7t1072o1wfx8l9012a51fdabq"
 
 class Message:
@@ -39,20 +57,6 @@ class Client:
   def __init__(self, acct):
     self.account = acct
 
-  def can_send(self): return True
-  def can_receive(self): return True
-  def can_reply(self): return True
-
-  def send_enabled(self):
-    return self.account["send_enabled"] and \
-      self.account["username"] != None and \
-      self.account["password"] != None
-
-  def receive_enabled(self):
-    return self.account["receive_enabled"] and \
-      self.account["username"] != None and \
-      self.account["password"] != None
-
   def get_auth(self):
     return "Basic %s" % base64.encodestring(
       ("%s:%s" % (self.account["username"], self.account["password"]))).strip()
@@ -61,34 +65,35 @@ class Client:
     return urllib2.urlopen(urllib2.Request(
       url, data, {"Authorization": self.get_auth()})).read()
 
-  def get_reply_data(self, msg):
-    return support.simplejson.loads(self.connect(
+  def get_thread_data(self, msg):
+    return simplejson.loads(self.connect(
       "http://api.pownce.com/2.0/notes/%s.json?app_key=%s&show_replies=true" % (msg.id, API_KEY)))
 
-  def get_replies(self, msg):
+  def get_thread(self, msg):
     yield msg
     messages = self.get_reply_data(msg)
     if messages.has_key("replies"):
       for data in messages["replies"]:
         yield Comment(self, data)
 
-  def transmit_reply(self, msg, message):
+  def reply(self, msg, message):
     return self.connect("http://api.pownce.com/2.0/send/reply.json",
         urllib.urlencode({"note_body": message, "app_key": API_KEY, "reply_to": msg.id}))
     
   def get_data(self):
-    return support.simplejson.loads(self.connect(
+    return simplejson.loads(self.connect(
       "http://api.pownce.com/2.0/note_lists/%s.json?app_key=%s" % (self.account["username"], API_KEY)))
 
-  def get_messages(self):
+  def receive(self):
     for data in self.get_data()["notes"]:
       if data["type"] == "message": yield Message(self, data)
       else: yield Comment(self, data)
 
-  def transmit_status(self, message):
+  def send(self, message):
     return self.connect("http://api.pownce.com/2.0/send/message.json",
         urllib.urlencode({"note_body":message, "app_key": API_KEY, "note_to": "public"}))
 
-  def transmit_link(self, message):
+  def send_link(self, message):
     return self.connect("http://api.pownce.com/2.0/send/message.json",
         urllib.urlencode({"note_body":message, "app_key": API_KEY, "note_to": "public"}))
+

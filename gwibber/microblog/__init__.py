@@ -1,6 +1,6 @@
 
-import operator, traceback
-import twitter, jaiku, facebook, digg, flickr, pownce, identica
+import operator, traceback, can
+import twitter, jaiku, facebook, digg, flickr, pownce, identica, brightkite
 
 PROTOCOLS = {
   "jaiku": jaiku,
@@ -10,7 +10,11 @@ PROTOCOLS = {
   "flickr": flickr,
   "pownce": pownce,
   "identica": identica,
+  #"brightkite": brightkite,
 }
+
+def supports(a, feature):
+  return feature in PROTOCOLS[a["protocol"]].PROTOCOL_INFO["features"]
 
 class Client:
   def __init__(self, accounts):
@@ -22,31 +26,52 @@ class Client:
   def post_process_message(self, message):
     return message
 
-  def get_message_data(self, filter=PROTOCOLS.keys()):
+  def get_data(self, test, method, name, filter=PROTOCOLS.keys(), return_value=True):
     for acct in self.accounts:
       if acct["protocol"] in PROTOCOLS.keys() and \
          acct["protocol"] in filter:
         try:
           client = PROTOCOLS[acct["protocol"]].Client(acct)
-          if client.receive_enabled():
-            for message in client.get_messages():
-              yield self.post_process_message(message)
-        except: self.handle_error(acct, traceback.format_exc(),
-          "Failed to retrieve messages")
+          if test(acct):
+            if return_value:
+              for message in method(client):
+                yield self.post_process_message(message)
+            else: yield method(client)
+        except: self.handle_error(acct, traceback.format_exc(), name)
 
-  def get_messages(self, filter=PROTOCOLS.keys()):
-    data = list(self.get_message_data(filter))
+  def perform_operation(self, test, method, name, filter=PROTOCOLS.keys()):
+    data = list(self.get_data(test, method, name, filter))
     data.sort(key=operator.attrgetter("time"), reverse=True)
-
     return data
 
-  def transmit_status(self, message, filter=PROTOCOLS.keys()):
-    for acct in self.accounts:
-      if acct["protocol"] in PROTOCOLS.keys() and \
-         acct["protocol"] in filter:
-        try:
-          client = PROTOCOLS[acct["protocol"]].Client(acct)
-          if client.can_send() and client.send_enabled():
-            client.transmit_status(message)
-        except: self.handle_error(acct, traceback.format_exc(),
-          "Failed to send messages")
+  def send(self, message, filter=PROTOCOLS.keys()):
+    return list(self.get_data(
+      lambda a: a["send_enabled"] and supports(a, can.SEND),
+      lambda c: c.send(message), "send message", filter, False))
+
+  def thread(self, query):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and supports(a, can.THREAD) and \
+        a.id == query.account.id,
+      lambda c: c.responses(query), "retrieve thread", filter)
+  
+  def responses(self, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and supports(a, can.RESPONSES),
+      lambda c: c.responses(), "retrieve responses", filter)
+
+  def receive(self, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and supports(a, can.RECEIVE),
+      lambda c: c.receive(), "retrieve messages", filter)
+
+  def friend_positions(self, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and supports(a, can.GEO_FRIEND_POSITIONS),
+      lambda c: c.friend_positions(), "retrieve positions", filter)
+
+  def search(self, query, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and supports(a, can.SEARCH),
+      lambda c: c.search(query), "perform search query", filter)
+

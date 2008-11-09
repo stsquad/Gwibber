@@ -1,8 +1,7 @@
-
 """
 
-Identi.ca interface for Gwibber
-SegPhault (Ryan Paul) - 07/18/2008
+BrightKite interface for Gwibber
+SegPhault (Ryan Paul) - 10/19/2008
 
 """
 
@@ -10,7 +9,7 @@ import urllib2, urllib, base64, re, support, can, simplejson
 from xml.dom import minidom
 
 PROTOCOL_INFO = {
-  "name": "Identi.ca",
+  "name": "BrightKite",
   "version": 0.1,
   
   "config": [
@@ -22,13 +21,14 @@ PROTOCOL_INFO = {
   ],
 
   "features": [
-    can.SEND,
-    can.RECEIVE,
-    can.SEARCH,
-    can.REPLY,
-    can.RESPONSES,
-    can.DELETE,
+    #can.SEND,
+    #can.RECEIVE,
+    #can.SEARCH,
+    #can.REPLY,
+    #can.RESPONSES,
+    #can.DELETE,
     #can.THREAD,
+    can.GEO_FRIEND_POSITIONS
   ],
 }
 
@@ -52,33 +52,36 @@ class Message:
     self.url = "http://identi.ca/notice/%s" % data["id"] # % (data["user"]["screen_name"], data["id"])
     self.profile_url = "http://identi.ca/%s" % data["user"]["screen_name"]
     self.html_string = '<span class="text">%s</span>' % \
-        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:search/#\\1">\\1</a>',
+      HASH_PARSE.sub('#<a class="inlinehash" href="http://identi.ca/tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>',
           support.linkify(self.text)))
     self.is_reply = ("@%s" % self.username) in self.text
 
-class SearchResult:
-  def __init__(self, client, data, query = None):
+class FriendPosition:
+  def __init__(self, client, data):
     self.client = client
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
     self.data = data
-    self.sender = data.getElementsByTagName("dc:creator")[0].firstChild.nodeValue
-    self.sender_nick = data.getElementsByTagName("title")[0].firstChild.nodeValue.split(":")[0]
+    self.sender = data["fullname"]
+    self.sender_nick = data["login"]
     self.sender_id = self.sender_nick
-    self.time = support.parse_time(data.getElementsByTagName("dc:date")[0].firstChild.nodeValue)
-    self.text = data.getElementsByTagName("title")[0].firstChild.nodeValue.split(":", 1)[1].strip()
-    self.image = data.getElementsByTagName("laconica:postIcon")[0].getAttribute("rdf:resource").replace("-96-", "-48-")
+    self.time = support.parse_time(data["last_checked_in"])
+    self.text = data["place"]["display_location"]
+    self.image = data["small_avatar_url"]
+    self.image_small = data["smaller_avatar_url"]
     self.bgcolor = "message_color"
-    self.url = data.getAttribute("rdf:about")
-    self.profile_url = data.getElementsByTagName("sioc:has_creator")[0].getAttribute("rdf:resource")
+    self.url = "http://brightkite.com" # TODO
+    self.profile_url = "http://brightkite.com" # TODO
+    self.is_reply = False
 
-    self.html_string = '<span class="text">%s</span>' % \
-        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:search/#\\1">\\1</a>',
-        NICK_PARSE.sub('@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>',
-          support.linkify(self.text)))
-    self.is_reply = ("@%s" % self.username) in self.text
+    # Geolocation
+    self.location_longitude = data["place"]["longitude"]
+    self.location_latitude = data["place"]["latitude"]
+    self.location_id = data["place"]["id"]
+    self.location_name = data["place"]["name"]
+    self.location_fullname = data["place"]["display_location"]
 
 class Client:
   def __init__(self, acct):
@@ -92,6 +95,10 @@ class Client:
     return urllib2.urlopen(urllib2.Request(
       url, data, {"Authorization": self.get_auth()})).read()
 
+  def get_friend_positions(self):
+    return simplejson.loads(self.connect(
+      "http://brightkite.com/me/friends.json"))
+
   def get_messages(self):
     return simplejson.loads(self.connect(
       "http://identi.ca/api/statuses/friends_timeline.json"))
@@ -104,6 +111,10 @@ class Client:
     return minidom.parseString(urllib2.urlopen(
       urllib2.Request("http://identi.ca/search/notice/rss",
         urllib.urlencode({"q": query}))).read()).getElementsByTagName("item")
+
+  def friend_positions(self):
+    for data in self.get_friend_positions():
+      yield FriendPosition(self, data)
 
   def search(self, query):
     for data in self.get_search(query):

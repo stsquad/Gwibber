@@ -2,7 +2,7 @@
 try: import gconf
 except: from gnome import gconf
 
-import gwp
+import gwp, microblog
 
 GCONF_DIR = "/apps/gwibber"
 GCONF_PREFERENCES_DIR = GCONF_DIR + "/preferences"
@@ -61,6 +61,15 @@ class Account(Wrapper):
   def notify(self, key, method):
     Wrapper.notify(self, "%s/%s" % (self.id, key), method)
 
+  def get_protocol(self):
+    return microblog.PROTOCOLS[self["protocol"]]
+
+  def get_client(self):
+    return self.get_protocol().Client(self)
+
+  def supports(self, feature):
+    return feature in self.get_protocol().PROTOCOL_INFO["features"]
+
 class Accounts:
   def __init__(self, path = GCONF_ACCOUNTS_DIR):
     self.path = path
@@ -83,7 +92,9 @@ class Accounts:
 
   def __iter__(self):
     for i in GCONF.get_list("%s/index" % self.path, gconf.VALUE_STRING):
-      yield Account(i)
+      a = Account(i)
+      if a["protocol"] in microblog.PROTOCOLS:
+        yield Account(i)
 
 class Preferences(Wrapper):
   def __init__(self, path = GCONF_PREFERENCES_DIR):

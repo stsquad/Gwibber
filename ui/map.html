@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+   <head>
+      <title></title>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+      <script type="text/javascript" src="http://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2"></script>
+
+      <script type="text/javascript">
+         var map = null;
+
+         function LoadMap(lat, lon)
+         {
+            map = new VEMap('myMap');
+            map.HideDashboard();
+            map.LoadMap(new VELatLong(lat, lon), 8, VEMapStyle.Road, false);
+         }
+
+         function AddPin(lat, lon, title, description, icon)
+         {
+            var position = new VELatLong(lat, lon);
+            var pin = map.AddPushpin(position);
+
+            pin.SetTitle(title);
+            pin.SetDescription('<img src="'+icon+'" />' + description);
+            pin.SetCustomIcon(icon);
+         }
+      </script>
+   </head>
+   <body style="margin:0px; padding:0px;">
+      <div id='myMap' style="width:900px; height:900px"></div>
+   </body>
+ </html>
