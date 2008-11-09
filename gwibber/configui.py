@@ -89,8 +89,13 @@ class AccountManager(config.Accounts):
     col_receive = gtk.CellRendererToggle()
     col_send = gtk.CellRendererToggle()
 
+    def generate_account_name(acct):
+      if hasattr(acct.get_protocol(), "account_name"):
+        return acct.get_protocol().account_name(acct)
+      elif acct["username"]: return acct["username"]
+
     data = table.generate([
-      ["username", lambda a: a["username"] or "None"],
+      ["username", lambda a: generate_account_name(a)],
       ["Receive", (col_receive, {
         "active": lambda a: a["receive_enabled"],
         "visible": lambda a: a.supports(microblog.can.RECEIVE)})],

@@ -407,8 +407,12 @@ class GwibberClient(gtk.Window):
         mi.connect("activate", lambda w, a: self.accounts.show_properties_dialog(a), acct)
         sm.append(mi)
 
-        mi = gtk.MenuItem("%s (%s)" % (acct["username"] or "None",
-          microblog.PROTOCOLS[acct["protocol"]].PROTOCOL_INFO["name"]))
+        if hasattr(acct.get_protocol(), "account_name"):
+          aname = acct.get_protocol().account_name(acct)
+        elif acct["username"]: aname = acct["username"]
+        else: aname = None
+
+        mi = gtk.MenuItem("%s (%s)" % (aname, acct.get_protocol().PROTOCOL_INFO["name"]))
         mi.set_submenu(sm)
         menu.append(mi)
     menu.show_all()

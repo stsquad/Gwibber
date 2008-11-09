@@ -6,7 +6,7 @@ SegPhault (Ryan Paul) - 11/08/2008
 
 """
 
-import urllib2, feedparser, can, support
+import urlparse, feedparser, can, support
 
 PROTOCOL_INFO = {
   "name": "RSS",
@@ -24,6 +24,9 @@ PROTOCOL_INFO = {
 }
 
 feedparser._HTMLSanitizer.acceptable_elements = []
+
+def account_name(acct):
+  return urlparse.urlparse(acct["feed_url"])[1]
 
 class Message:
   def __init__(self, client, data):
