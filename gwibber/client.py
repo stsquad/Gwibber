@@ -627,7 +627,8 @@ class GwibberClient(gtk.Window):
         data = {"id": acct.id, "username": acct["username"], "protocol": acct["protocol"]}
         for c in acct.get_protocol().PROTOCOL_INFO["config"]:
           if "color" in c:
-            color = gtk.gdk.color_parse(acct[c])
+            if acct[c]: color = gtk.gdk.color_parse(acct[c])
+            else: color = gtk.gdk.color_parse("#72729f9fcfcf")
             data[c] = {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
         yield data
 
