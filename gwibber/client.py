@@ -433,20 +433,35 @@ class GwibberClient(gtk.Window):
     menuHelp = gtk.Menu()
     menuTray = gtk.Menu()
 
+    accelGroup = gtk.AccelGroup()
+    self.add_accel_group(accelGroup)
+
     actRefresh = gtk.Action("gwibberRefresh", "_Refresh", None, gtk.STOCK_REFRESH)
     actRefresh.connect("activate", self.on_refresh)
+    gtk.accel_map_add_entry("<Gwibber>/Refresh", *gtk.accelerator_parse("<ctrl>R"))
+    actRefresh.set_accel_group(accelGroup)
+    actRefresh.set_accel_path("<Gwibber>/Refresh")
     menuGwibber.append(actRefresh.create_menu_item())
 
     actSearch = gtk.Action("gwibberSearch", "_Search", None, gtk.STOCK_FIND)
     actSearch.connect("activate", self.on_search)
+    gtk.accel_map_add_entry("<Gwibber>/Search", *gtk.accelerator_parse("<ctrl>S"))
+    actSearch.set_accel_group(accelGroup)
+    actSearch.set_accel_path("<Gwibber>/Search")
     menuGwibber.append(actSearch.create_menu_item())
 
     actPreferences = gtk.Action("gwibberPreferences", "_Preferences", None, gtk.STOCK_PREFERENCES)
     actPreferences.connect("activate", self.on_preferences)
+    gtk.accel_map_add_entry("<Gwibber>/Preferences", *gtk.accelerator_parse("<ctrl>P"))
+    actPreferences.set_accel_group(accelGroup)
+    actPreferences.set_accel_path("<Gwibber>/Preferences")
     menuGwibber.append(actPreferences.create_menu_item())
 
     actQuit  = gtk.Action("gwibberQuit", "_Quit", None, gtk.STOCK_QUIT)
     actQuit.connect("activate", self.on_quit)
+    gtk.accel_map_add_entry("<Gwibber>/Quit", *gtk.accelerator_parse("<ctrl>Q"))
+    actQuit.set_accel_group(accelGroup)
+    actQuit.set_accel_path("<Gwibber>/Quit")
     menuGwibber.append(actQuit.create_menu_item())
 
     #actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
@@ -506,10 +521,10 @@ class GwibberClient(gtk.Window):
     menubar.append(menuSpinner)
     return menubar
 
-  def on_quit(self, mi):
+  def on_quit(self, *a):
     gtk.main_quit()
 
-  def on_refresh(self, mi):
+  def on_refresh(self, *a):
     self.update()
 
   def on_about(self, mi):
