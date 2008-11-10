@@ -26,7 +26,8 @@ PROTOCOL_INFO = {
 feedparser._HTMLSanitizer.acceptable_elements = []
 
 def account_name(acct):
-  return urlparse.urlparse(acct["feed_url"])[1]
+  if acct["feed_url"]:
+    return urlparse.urlparse(acct["feed_url"])[1]
 
 class Message:
   def __init__(self, client, data):

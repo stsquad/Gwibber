@@ -32,7 +32,7 @@ PROTOCOL_INFO = {
   ],
 }
 
-NICK_PARSE = re.compile("@([A-Za-z0-9]+)")
+NICK_PARSE = re.compile("@([A-Za-z0-9_]+)")
 HASH_PARSE = re.compile("#([A-Za-z0-9_\-.]+)")
 
 class Message:

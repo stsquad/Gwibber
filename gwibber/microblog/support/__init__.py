@@ -15,8 +15,8 @@ def parse_time(t):
   locale.setlocale(locale.LC_ALL, loc)
   return result 
 
-LINK_PARSE = re.compile("(https?://[^ )\n]+)")
-
+LINK_PARSE = re.compile("(([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}|(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+)(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\),\\\" ])")
+    
 def linkify(t):
   return LINK_PARSE.sub('<a href="\\1">\\1</a>', t)
 
