@@ -10,7 +10,8 @@ try:
     return notifier.Notify("Gwibber", 0, icon, title, text, actions, {}, timer)
 
   can_notify = True
-except: can_notify = False
+except:
+  can_notify = False
 
 try:
   import sexy
@@ -36,3 +37,13 @@ def create_tomboy_note(text, display = True):
   n = tomboy.CreateNote()
   tomboy.SetNoteContents(n, text)
   if display: tomboy.DisplayNote(n)
+
+def set_pidgin_status_text(message):
+  bus = dbus.SessionBus()
+  obj = bus.get_object("im.pidgin.purple.PurpleService", "/im/pidgin/purple/PurpleObject")
+  purple = dbus.Interface(obj, "im.pidgin.purple.PurpleInterface")
+  
+  current = purple.PurpleSavedstatusGetType(purple.PurpleSavedstatusGetCurrent())
+  status = purple.PurpleSavedstatusNew("", current)
+  purple.PurpleSavedstatusSetMessage(status, message)
+  purple.PurpleSavedstatusActivate(status)

@@ -10,6 +10,10 @@ import sys, time, os, threading, mx.DateTime, hashlib
 import gtk, gtk.glade, gobject, table, webkit, simplejson
 import microblog, gwui, config, gintegration, configui
 
+# Setup Pidgin
+import pidgin
+microblog.PROTOCOLS["pidgin"] = pidgin
+
 gtk.gdk.threads_init()
 
 MAX_MESSAGE_LENGTH = 140
