@@ -54,7 +54,7 @@ class Message:
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:search/#\\1">\\1</a>',
       NICK_PARSE.sub('@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>',
         support.linkify(self.text)))
-    self.is_reply = re.compile("@%s[\W]+" % self.username).search(self.text)
+    self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
 
 class SearchResult:
   def __init__(self, client, data, query = None):
