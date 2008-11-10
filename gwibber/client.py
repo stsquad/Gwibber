@@ -24,6 +24,7 @@ DEFAULT_PREFERENCES = {
   "refresh_interval": 2,
   "minimize_to_tray": False,
   "hide_taskbar_entry": False,
+  "spellcheck_enabled": True,
 }
 
 for i in CONFIGURABLE_UI_ELEMENTS:
@@ -90,6 +91,7 @@ class GwibberClient(gtk.Window):
 
     if gintegration.SPELLCHECK_ENABLED:
       self.input = gintegration.sexy.SpellEntry()
+      self.input.set_checked(self.preferences["spellcheck_enabled"])
     else: self.input = gtk.Entry()
     self.input.connect("populate-popup", self.on_input_context_menu)
     self.input.connect("activate", self.on_input_activate)
@@ -146,6 +148,9 @@ class GwibberClient(gtk.Window):
     self.preferences.notify("hide_taskbar_entry",
       lambda *a: self.apply_ui_element_settings())
 
+    self.preferences.notify("spellcheck_enabled",
+      lambda *a: self.apply_ui_element_settings())
+    
     #for i in CONFIGURABLE_UI_SETTINGS:
     #  config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/%s" % i,
     #    lambda *a: self.apply_ui_drawing_settings())
@@ -297,6 +302,9 @@ class GwibberClient(gtk.Window):
     
     self.set_property("skip-taskbar-hint",
       self.preferences["hide_taskbar_entry"])
+
+    if gintegration.SPELLCHECK_ENABLED:
+      self.input.set_checked(self.preferences["spellcheck_enabled"])
 
   def on_refresh_interval_changed(self, *a):
     gobject.source_remove(self.timer)
@@ -454,7 +462,12 @@ class GwibberClient(gtk.Window):
       self.preferences.bind(mi, "show_%s" % i)
       menuView.append(mi)
 
-    mi = gtk.MenuItem("_Errors")
+    if gintegration.SPELLCHECK_ENABLED:
+      mi = gtk.CheckMenuItem("S_pellcheck", True)
+      self.preferences.bind(mi, "spellcheck_enabled")
+      menuView.append(mi)
+
+    mi = gtk.MenuItem("E_rrors")
     mi.connect("activate", self.on_errors_show)
     menuView.append(gtk.SeparatorMenuItem())
     menuView.append(mi)
