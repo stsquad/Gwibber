@@ -39,6 +39,7 @@ class GwibberClient(gtk.Window):
     self.preferences = config.Preferences()
     self.ui_dir = ui_dir
     self.last_update = None
+    self.last_clear = None
     layout = gtk.VBox()
 
     gtk.rc_parse_string("""
@@ -436,34 +437,21 @@ class GwibberClient(gtk.Window):
     accelGroup = gtk.AccelGroup()
     self.add_accel_group(accelGroup)
 
-    actRefresh = gtk.Action("gwibberRefresh", "_Refresh", None, gtk.STOCK_REFRESH)
-    actRefresh.connect("activate", self.on_refresh)
-    gtk.accel_map_add_entry("<Gwibber>/Refresh", *gtk.accelerator_parse("<ctrl>R"))
-    actRefresh.set_accel_group(accelGroup)
-    actRefresh.set_accel_path("<Gwibber>/Refresh")
-    menuGwibber.append(actRefresh.create_menu_item())
+    def create_action(name, accel, stock, fn, parent = menuGwibber):
+      mi = gtk.Action("gwibber%s" % name, "_%s" % name, None, stock)
+      gtk.accel_map_add_entry("<Gwibber>/%s" % name, *gtk.accelerator_parse(accel))
+      mi.set_accel_group(accelGroup)
+      mi.set_accel_path("<Gwibber>/%s" % name)
+      mi.connect("activate", fn)
+      parent.append(mi.create_menu_item())
+      return mi
 
-    actSearch = gtk.Action("gwibberSearch", "_Search", None, gtk.STOCK_FIND)
-    actSearch.connect("activate", self.on_search)
-    gtk.accel_map_add_entry("<Gwibber>/Search", *gtk.accelerator_parse("<ctrl>S"))
-    actSearch.set_accel_group(accelGroup)
-    actSearch.set_accel_path("<Gwibber>/Search")
-    menuGwibber.append(actSearch.create_menu_item())
-
-    actPreferences = gtk.Action("gwibberPreferences", "_Preferences", None, gtk.STOCK_PREFERENCES)
-    actPreferences.connect("activate", self.on_preferences)
-    gtk.accel_map_add_entry("<Gwibber>/Preferences", *gtk.accelerator_parse("<ctrl>P"))
-    actPreferences.set_accel_group(accelGroup)
-    actPreferences.set_accel_path("<Gwibber>/Preferences")
-    menuGwibber.append(actPreferences.create_menu_item())
-
-    actQuit  = gtk.Action("gwibberQuit", "_Quit", None, gtk.STOCK_QUIT)
-    actQuit.connect("activate", self.on_quit)
-    gtk.accel_map_add_entry("<Gwibber>/Quit", *gtk.accelerator_parse("<ctrl>Q"))
-    actQuit.set_accel_group(accelGroup)
-    actQuit.set_accel_path("<Gwibber>/Quit")
-    menuGwibber.append(actQuit.create_menu_item())
-
+    actRefresh = create_action("Refresh", "<ctrl>R", gtk.STOCK_REFRESH, self.on_refresh) 
+    actSearch = create_action("Search", "<ctrl>F", gtk.STOCK_FIND, self.on_search) 
+    actClear = create_action("Clear", "<ctrl>L", gtk.STOCK_CLEAR, self.on_clear) 
+    actPreferences = create_action("Preferences", "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
+    actQuit = create_action("Quit", "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
+    
     #actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
     #actThemeTest.connect("activate", self.theme_preview_test)
     #menuHelp.append(actThemeTest.create_menu_item())
@@ -528,12 +516,16 @@ class GwibberClient(gtk.Window):
     self.update()
 
   def on_about(self, mi):
-    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
-    dialog = glade.get_widget("about_dialog")
+    dialog = self.glade.get_widget("about_dialog")
     dialog.set_version(str(VERSION_NUMBER))
     dialog.connect("response", lambda *a: dialog.hide())
-
     dialog.show_all()
+
+  def on_clear(self, mi):
+    self.last_clear = mx.DateTime.gmt()
+    for tab in self.tabs.get_children():
+      view = tab.get_child()
+      view.execute_script("clearMessages()")
   
   def on_errors_show(self, mi):
     errorwin = gtk.Window()
@@ -671,7 +663,8 @@ class GwibberClient(gtk.Window):
 
         for tab in self.tabs.get_children():
           view = tab.get_child()
-          view.message_store = view.data_retrieval_handler()
+          view.message_store = [m for m in
+            view.data_retrieval_handler() if m.time > self.last_clear]
           self.flag_duplicates(view.message_store)
           self.show_notification_bubbles(view.message_store)
 
