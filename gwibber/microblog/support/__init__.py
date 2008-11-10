@@ -9,10 +9,11 @@ SegPhault (Ryan Paul) - 07/25/2008
 import re, os, facelib, locale, mx.DateTime
 
 def parse_time(t):
-  loc = locale.getlocale(locale.LC_ALL)
-  locale.setlocale(locale.LC_ALL, 'C')
+
+  loc = locale.getlocale(locale.LC_TIME)
+  locale.setlocale(locale.LC_TIME, 'C')
   result = mx.DateTime.Parser.DateTimeFromString(t)
-  locale.setlocale(locale.LC_ALL, loc)
+  locale.setlocale(locale.LC_TIME, loc)
   return result 
 
 LINK_PARSE = re.compile("(([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}|(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+)(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\),\\\" ])")
