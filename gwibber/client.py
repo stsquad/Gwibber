@@ -185,6 +185,8 @@ class GwibberClient(gtk.Window):
     view = self.add_tab(
       lambda: self.client.search(query), query, True, gtk.STOCK_FIND)
     
+    self.update([view.get_parent()])
+    
   def add_tab(self, data_handler, text, show_close = False, show_icon = None):
     view = gwui.MessageView(self.ui_dir, "default")
     view.link_handler = self.on_link_clicked
@@ -520,7 +522,8 @@ class GwibberClient(gtk.Window):
     self.update()
 
   def on_about(self, mi):
-    dialog = self.glade.get_widget("about_dialog")
+    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
+    dialog = glade.get_widget("about_dialog")
     dialog.set_version(str(VERSION_NUMBER))
     dialog.connect("response", lambda *a: dialog.hide())
     dialog.show_all()
@@ -659,13 +662,17 @@ class GwibberClient(gtk.Window):
       message.is_duplicate = message.gId in seen
       if not message.is_duplicate: seen.append(message.gId)
   
-  def update(self):
+  def update(self, tabs = None):
     self.throbber.set_from_animation(gtk.gdk.PixbufAnimation("%s/progress.gif" % self.ui_dir))
+    self.target_tabs = tabs
 
     def process():
       try:
 
-        for tab in self.tabs.get_children():
+        if not self.target_tabs:
+          self.target_tabs = self.tabs.get_children()
+
+        for tab in self.target_tabs:
           view = tab.get_child()
           view.message_store = [m for m in
             view.data_retrieval_handler() if m.time > self.last_clear]
@@ -673,7 +680,7 @@ class GwibberClient(gtk.Window):
           self.show_notification_bubbles(view.message_store)
 
         gtk.gdk.threads_enter()
-        for tab in self.tabs.get_children():
+        for tab in self.target_tabs:
           view = tab.get_child()
           view.load_messages()
           view.load_preferences(self.get_account_config())
