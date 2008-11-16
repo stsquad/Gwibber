@@ -116,8 +116,14 @@ class GwibberClient(gtk.Window):
     vb.pack_start(self.tabs, True, True)
     vb.pack_start(self.editor, False, False)
     vb.set_border_width(5)
-    
+
+    warning_icon = gtk.image_new_from_stock(gtk.STOCK_DIALOG_WARNING, gtk.ICON_SIZE_MENU)
+    self.status_icon = gtk.EventBox()
+    self.status_icon.add(warning_icon)
+    self.status_icon.connect("button-press-event", self.on_errors_show)
+
     self.statusbar = gtk.Statusbar()
+    self.statusbar.pack_start(self.status_icon, False, False)
 
     layout.pack_start(self.setup_menus(), False)
     layout.pack_start(vb, True, True)
@@ -182,6 +188,7 @@ class GwibberClient(gtk.Window):
     self.show_all()
     self.apply_ui_element_settings()
     self.cancel_button.hide()
+    self.status_icon.hide()
 
     if not self.preferences["inhibit_startup_refresh"]:
       self.update()
@@ -556,7 +563,8 @@ class GwibberClient(gtk.Window):
       view = tab.get_child()
       view.execute_script("clearMessages()")
   
-  def on_errors_show(self, mi):
+  def on_errors_show(self, *args):
+    self.status_icon.hide()
     errorwin = gtk.Window()
     errorwin.set_title("Errors")
     errorwin.set_border_width(10)
@@ -617,6 +625,7 @@ class GwibberClient(gtk.Window):
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
   
   def handle_error(self, acct, err, msg = None):
+    self.status_icon.show()
     self.errors += {
       "time": mx.DateTime.gmt(),
       "username": acct["username"],
