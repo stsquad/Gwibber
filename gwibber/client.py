@@ -159,6 +159,23 @@ class GwibberClient(gtk.Window):
     #for i in CONFIGURABLE_UI_SETTINGS:
     #  config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/%s" % i,
     #    lambda *a: self.apply_ui_drawing_settings())
+
+    def on_key_press(w, e):
+      if e.keyval == gtk.keysyms.Tab and e.state & gtk.gdk.CONTROL_MASK:
+        if len(self.tabs) == self.tabs.get_current_page() + 1:
+          self.tabs.set_current_page(0)
+        else: self.tabs.next_page()
+        return True
+      elif e.keyval in [ord(str(x)) for x in range(10)]:
+        self.tabs.set_current_page(int(gtk.gdk.keyval_name(e.keyval))-1)
+        return True
+      else:
+        if not self.input.is_focus():
+          self.input.grab_focus()
+          self.input.set_position(-1)
+        return False
+
+    self.connect("key_press_event", on_key_press)
     
     self.show_all()
     self.apply_ui_element_settings()
@@ -288,7 +305,7 @@ class GwibberClient(gtk.Window):
       return True
     else: gtk.main_quit()
   
-  def on_cancel_reply(self, w):
+  def on_cancel_reply(self, w, *args):
     self.cancel_button.hide()
     self.message_target = None
     self.input.set_text("")
@@ -442,6 +459,9 @@ class GwibberClient(gtk.Window):
 
     accelGroup = gtk.AccelGroup()
     self.add_accel_group(accelGroup)
+
+    key, mod = gtk.accelerator_parse("Escape")
+    accelGroup.connect_group(key, mod, gtk.ACCEL_VISIBLE, self.on_cancel_reply)
 
     def create_action(name, accel, stock, fn, parent = menuGwibber):
       mi = gtk.Action("gwibber%s" % name, "_%s" % name, None, stock)
