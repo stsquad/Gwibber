@@ -26,7 +26,7 @@ def highlight_search_results(t, q):
   return re.sub(pattern, ' <span class="searchresult">&nbsp;%s </span> ' % q, t)
 
 def xml_escape(t):
-  return t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+  return str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 def generate_time_string(t):
   if isinstance(t, str): return t

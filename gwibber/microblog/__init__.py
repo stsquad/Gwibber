@@ -1,7 +1,7 @@
 
 import operator, traceback, can
-import twitter, jaiku, identica, pownce, facebook
-import digg, flickr, brightkite, rss, pingfm
+import twitter, jaiku, identica, laconica, pownce
+import digg, flickr, brightkite, rss, pingfm, facebook
 
 PROTOCOLS = {
   "jaiku": jaiku,
@@ -11,6 +11,7 @@ PROTOCOLS = {
   "flickr": flickr,
   "pownce": pownce,
   "identica": identica,
+  "laconica": laconica,
   "rss": rss,
   "pingfm": pingfm,
   #"brightkite": brightkite,
