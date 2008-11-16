@@ -20,7 +20,7 @@ MAX_MESSAGE_LENGTH = 140
 
 CONFIGURABLE_UI_ELEMENTS = ["editor", "statusbar", "tray_icon"]
 IMAGE_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
-VERSION_NUMBER = 0.7
+VERSION_NUMBER = "0.7.1"
 
 DEFAULT_PREFERENCES = {
   "version": VERSION_NUMBER,
@@ -77,6 +77,8 @@ class GwibberClient(gtk.Window):
 
     for key, value in DEFAULT_PREFERENCES.items():
       if self.preferences[key] == None: self.preferences[key] = value
+
+    self.preferences["version"] = VERSION_NUMBER
 
     self.timer = gobject.timeout_add(60000 * int(self.preferences["refresh_interval"]), self.update)
     self.preferences.notify("refresh_interval", self.on_refresh_interval_changed)
@@ -315,7 +317,7 @@ class GwibberClient(gtk.Window):
       self.last_position = self.get_position()
       self.hide()
     else:
-      self.show()
+      self.present()
       self.move(*self.last_position)
 
   def apply_ui_element_settings(self):
