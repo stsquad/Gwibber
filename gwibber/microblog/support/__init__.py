@@ -28,6 +28,9 @@ def highlight_search_results(t, q):
 def xml_escape(t):
   return str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
+def truncate(text, count=10):
+  return len(text) > count and "%s..." % text[:count+1] or text
+
 def generate_time_string(t):
   if isinstance(t, str): return t
 

@@ -67,6 +67,11 @@
         display: none;
       }
 
+      .replybutton img
+      {
+        padding-left: 5px;
+      }
+
       .diggbox {
         -webkit-border-radius: 7px; 
         margin-right: 5px;
@@ -146,8 +151,9 @@
           </table> \
           <div class="toggledupe"><img src="add.png" /></div> \
           <div class="dupes"></div> \
-          <div class="replybutton"> \
-            <a href="gwibber:reply/'+ data.message_index +'"><img src="reply.png" /></a> \
+          <div class="replybutton">' +
+            (data.can_thread ? '<a href="gwibber:thread/' + data.message_index + '"><img src="thread.png" /></a>' : '') +
+            '<a href="gwibber:reply/'+ data.message_index +'"><img src="reply.png" /></a> \
           </div> \
         </div>'
 

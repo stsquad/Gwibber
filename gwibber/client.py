@@ -91,6 +91,7 @@ class GwibberClient(gtk.Window):
     self.tray_icon.connect("activate", self.on_toggle_window_visibility)
 
     self.tabs = gtk.Notebook()
+    self.tabs.set_property("homogeneous", False)
     self.tabs.set_scrollable(True)
     self.add_tab(self.client.receive, "Messages", show_icon = "go-home")
     self.add_tab(self.client.responses, "Replies", show_icon = "mail-reply-all")
@@ -376,6 +377,14 @@ class GwibberClient(gtk.Window):
       elif uri.startswith("gwibber:search"):
         query = uri.split("/")[-1]
         self.add_tab(lambda: self.client.search(query), query, True, gtk.STOCK_FIND)
+        return True
+      elif uri.startswith("gwibber:thread"):
+        msg = view.message_store[int(uri.split("/")[-1])]
+        if hasattr(msg, "original_title"): tab_label = msg.original_title
+        else: tab_label = msg.text
+        t = self.add_tab(lambda: self.client.thread(msg),
+          microblog.support.truncate(tab_label), True, "mail-reply-all")
+        self.update([t.get_parent()])
         return True
     else: return False
 

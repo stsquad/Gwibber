@@ -25,6 +25,7 @@ PROTOCOL_INFO = {
     can.SEND,
     can.RECEIVE,
     can.REPLY,
+    can.THREAD,
   ],
 }
 
@@ -42,19 +43,32 @@ class Message:
     self.sender_nick = data["user"]["nick"]
     self.sender_id = data["user"]["nick"]
     self.time = support.parse_time(data["created_at"])
+    self.text = ""
     if data.has_key("title"):
-      self.text = data["title"].replace('"', "&quot;").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+      self.text = data["title"]
+      self.html = data["title"].replace('"', "&quot;").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     self.image = data["user"]["avatar"]
     self.bgcolor = "message_color"
     self.url = data["url"]
     self.profile_url = "http://%s.jaiku.com" % data["user"]["nick"]
     if data.has_key("icon") and data["icon"] != "": self.icon = data["icon"]
+    self.can_thread = True
 
 class Comment(Message):
   def __init__(self, client, data):
     Message.__init__(self, client, data)
     self.text = data["content"]
     self.bgcolor = "comment_color"
+    self.is_comment = True
+
+    if data.has_key("entry_title"):
+      self.original_title = data["entry_title"]
+      self.title = "<small>Comment by</small> %s <small>on %s</small>" % (
+        self.sender, support.truncate(data["entry_title"], 10))
+
+    if data.has_key("comment_id"):
+      self.id = data["comment_id"]
+    else: self.id = data["id"]
 
 class Client:
   def __init__(self, acct):
@@ -78,13 +92,14 @@ class Client:
 
   def get_thread_data(self, msg):
     return simplejson.loads(urllib2.urlopen(urllib2.Request(
-      "http://%s.jaiku.com/presence/%s/json" % (msg.sender_nick, msg.id),
+      "%s/json" % ("#" in msg.url and msg.url.split("#")[0] or msg.url),
         urllib.urlencode({"user": self.account["username"],
           "personal_key":self.account["password"]}))).read())
 
   def get_thread(self, msg):
-    yield msg
-    for data in self.get_reply_data(msg)["comments"]:
+    thread_content = self.get_thread_data(msg)
+    yield Message(self, thread_content)
+    for data in thread_content["comments"]:
       yield Comment(self, data)
 
   def receive(self):
