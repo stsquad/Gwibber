@@ -410,7 +410,7 @@ class GwibberClient(gtk.Window):
       if acct["protocol"] in microblog.PROTOCOLS.keys():
         sm = gtk.Menu()
         
-        for i in ["receive", "send"]:
+        for i in ["receive", "send", "search"]:
           if acct.supports(getattr(microblog.can, i.upper())):
             mi = gtk.CheckMenuItem("_%s Messages" % i.capitalize())
             acct.bind(mi, "%s_enabled" % i)

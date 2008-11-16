@@ -88,6 +88,7 @@ class AccountManager(config.Accounts):
 
     col_receive = gtk.CellRendererToggle()
     col_send = gtk.CellRendererToggle()
+    col_search = gtk.CellRendererToggle()
 
     def generate_account_name(acct):
       if hasattr(acct.get_protocol(), "account_name"):
@@ -102,11 +103,16 @@ class AccountManager(config.Accounts):
       ["Send", (col_send, {
         "active": lambda a: a["send_enabled"],
         "visible": lambda a: a.supports(microblog.can.SEND)})],
+      ["Search", (col_search, {
+        "active": lambda a: a["search_enabled"],
+        "visible": lambda a: a.supports(microblog.can.SEARCH)})],
+
       ["protocol", lambda a: a.get_protocol().PROTOCOL_INFO["name"]],
     ])
 
     col_receive.connect("toggled", toggle_table_checkbox, "receive_enabled", data)
     col_send.connect("toggled", toggle_table_checkbox, "send_enabled", data)
+    col_search.connect("toggled", toggle_table_checkbox, "search_enabled", data)
 
     for a in self.accounts: data += a
     

@@ -18,7 +18,8 @@ PROTOCOL_INFO = {
     "username",
     "message_color",
     "receive_enabled",
-    "send_enabled"
+    "send_enabled",
+    "search_enabled",
   ],
 
   "features": [

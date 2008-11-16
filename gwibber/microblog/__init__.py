@@ -76,6 +76,6 @@ class Client:
 
   def search(self, query, filter=PROTOCOLS.keys()):
     return self.perform_operation(
-      lambda a: a["receive_enabled"] and supports(a, can.SEARCH),
+      lambda a: a["search_enabled"] and supports(a, can.SEARCH),
       lambda c: c.search(query), "perform search query", filter)
 
