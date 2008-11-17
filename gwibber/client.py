@@ -175,7 +175,7 @@ class GwibberClient(gtk.Window):
           self.tabs.set_current_page(0)
         else: self.tabs.next_page()
         return True
-      elif e.keyval in [ord(str(x)) for x in range(10)]:
+      elif e.keyval in [ord(str(x)) for x in range(10)] and e.state & gtk.gdk.MOD1_MASK:
         self.tabs.set_current_page(int(gtk.gdk.keyval_name(e.keyval))-1)
         return True
       else:
