@@ -29,7 +29,7 @@ SECRET_KEY = "41e43c90f429a21e55c7ff67aa0dc201"
 LINK_PARSE =  re.compile("<a[^>]+href=\"(https?://[^\"]+)\">[^<]+</a>")
 
 def sanitize_text(t):
-  return LINK_PARSE.sub("\\1", t.strip()).replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")
+  return LINK_PARSE.sub("\\1", t.strip()) #.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")
 
 class Message:
   def __init__(self, client, data):
