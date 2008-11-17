@@ -707,6 +707,7 @@ class GwibberClient(gtk.Window):
     seen = []
     for message in data:
       message.is_duplicate = message.gId in seen
+      message.first_seen = False
       if not message.is_duplicate:
         message.first_seen = True
         seen.append(message.gId)
