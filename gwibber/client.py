@@ -694,7 +694,8 @@ class GwibberClient(gtk.Window):
 
   def show_notification_bubbles(self, data):
     for message in data:
-      if message.is_new and self.preferences["show_notifications"] and gintegration.can_notify:
+      if message.is_new and self.preferences["show_notifications"] and \
+        message.first_seen and gintegration.can_notify:
         gtk.gdk.threads_enter()
         n = gintegration.notify(message.sender, message.text, hasattr(message,
           "image_path") and message.image_path or None, ["reply", "Reply"])
@@ -706,7 +707,9 @@ class GwibberClient(gtk.Window):
     seen = []
     for message in data:
       message.is_duplicate = message.gId in seen
-      if not message.is_duplicate: seen.append(message.gId)
+      if not message.is_duplicate:
+        message.first_seen = True
+        seen.append(message.gId)
   
   def update(self, tabs = None):
     self.throbber.set_from_animation(gtk.gdk.PixbufAnimation("%s/progress.gif" % self.ui_dir))
