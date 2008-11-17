@@ -6,7 +6,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import urllib2, urllib, support, re, can, simplejson
+import urllib2, urllib, support, re, can, simplejson, urlparse
 
 PROTOCOL_INFO = {
   "name": "Jaiku",
@@ -26,10 +26,12 @@ PROTOCOL_INFO = {
     can.RECEIVE,
     can.REPLY,
     can.THREAD,
+    can.THREAD_REPLY,
   ],
 }
 
 NONCE_PARSE = re.compile('.*_nonce" value="([^"]+)".*', re.M | re.S)
+LINK_MARKUP_PARSE = re.compile("\[([^\]]+)\]\(([^)]+)\)")
 
 class Message:
   def __init__(self, client, data):
@@ -46,13 +48,17 @@ class Message:
     self.text = ""
     if data.has_key("title"):
       self.text = data["title"]
-      self.html = data["title"].replace('"', "&quot;").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+      #self.html_string = LINK_MARKUP_PARSE.sub('<a href="\\2">\\1</a>', self.text.replace(
+      #  "&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
     self.image = data["user"]["avatar"]
     self.bgcolor = "message_color"
     self.url = data["url"]
     self.profile_url = "http://%s.jaiku.com" % data["user"]["nick"]
     if data.has_key("icon") and data["icon"] != "": self.icon = data["icon"]
     self.can_thread = True
+    self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text) or \
+      (urlparse.urlparse(self.url)[1].split(".")[0].strip() == self.username and \
+        self.sender_nick != self.username)
 
 class Comment(Message):
   def __init__(self, client, data):
@@ -60,6 +66,10 @@ class Comment(Message):
     self.text = data["content"]
     self.bgcolor = "comment_color"
     self.is_comment = True
+
+    self.text = data["content"]
+    #self.html_string = support.LINK_PARSE.sub('<a href="\\1">\\1</a>', LINK_MARKUP_PARSE.sub('<a href="\\2">\\1</a>', self.text.replace(
+    #  "&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")))
 
     if data.has_key("entry_title"):
       self.original_title = data["entry_title"]
@@ -110,18 +120,18 @@ class Client:
   def get_nonce(self, msg):
     try:
       page = urllib2.urlopen(urllib2.Request(
-        "http://%s.jaiku.com/presence/%s" % (msg.sender_nick, msg.id),
+        ("#" in msg.url and msg.url.split("#")[0] or msg.url),
           urllib.urlencode({"user": self.account["username"], 
             "personal_key":self.account["password"]}))).read()
       
       return NONCE_PARSE.match(page, 1).group(1)
     except: return None
 
-  def transmit_reply(self, msg, message):
+  def send_thread(self, msg, message):
     nonce = self.get_nonce(msg)
     if nonce:
       return urllib2.urlopen(urllib2.Request(
-        "http://%s.jaiku.com/presence/%s" % (msg.sender_nick, msg.id),
+        ("#" in msg.url and msg.url.split("#")[0] or msg.url),
           urllib.urlencode({"user": self.account["username"], "_nonce": nonce, 
             "personal_key":self.account["password"], "comment": message}))).read()
 

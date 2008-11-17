@@ -358,7 +358,7 @@ class GwibberClient(gtk.Window):
       self.input.set_text("@%s: " % message.sender_nick)
       self.input.set_position(-1)
 
-      self.message_target = message.account
+      self.message_target = message
       self.cancel_button.show()
 
     """
@@ -645,14 +645,20 @@ class GwibberClient(gtk.Window):
 
   def on_input_activate(self, e):
     if self.input.get_text().strip():
+      
       if self.message_target:
-        protocols = [self.message_target["protocol"]]
+        if self.message_target.account.supports(microblog.can.THREAD_REPLY):
+          self.message_target.account.get_client().send_thread(
+            self.message_target, self.input.get_text().strip())
+          self.on_cancel_reply(None)
+          return
+
+      if self.message_target:
+        protocols = [self.message_target.account["protocol"]]
       else: protocols = microblog.PROTOCOLS.keys()
     
       self.client.send(self.input.get_text().strip(), protocols)
       self.on_cancel_reply(None)
-
-      self.input.set_text("")
 
   def post_process_message(self, message):
     if hasattr(message, "image"):
