@@ -31,12 +31,13 @@ PROTOCOL_INFO = {
     can.REPLY,
     can.RESPONSES,
     can.DELETE,
+    can.TAG,
     #can.THREAD,
   ],
 }
 
 NICK_PARSE = re.compile("@([A-Za-z0-9_]+)")
-HASH_PARSE = re.compile("#([A-Za-z0-9_\-.]+)")
+HASH_PARSE = re.compile("#([A-Za-z0-9_\-]+)")
 
 class Message:
   def __init__(self, client, data):
@@ -55,7 +56,7 @@ class Message:
     self.url = "http://%s/notice/%s" % (self.account["domain"], data["id"])
     self.profile_url = "http://%s/%s" % (self.account["domain"], data["user"]["screen_name"])
     self.html_string = '<span class="text">%s</span>' % \
-        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:search/#\\1">\\1</a>',
+        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://%s/\\1">\\1</a>' % self.account["domain"],
           support.linkify(self.text)))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
@@ -78,7 +79,7 @@ class SearchResult:
     self.profile_url = data.getElementsByTagName("sioc:has_creator")[0].getAttribute("rdf:resource")
 
     self.html_string = '<span class="text">%s</span>' % \
-        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:search/#\\1">\\1</a>',
+        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://%s/\\1">\\1</a>' % self.account["domain"],
           support.linkify(self.text)))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
@@ -107,9 +108,18 @@ class Client:
     return minidom.parseString(urllib2.urlopen(
       urllib2.Request("http://%s/search/notice/rss" % self.account["domain"],
         urllib.urlencode({"q": query}))).read()).getElementsByTagName("item")
+  def get_tag(self, query):
+    return minidom.parseString(urllib2.urlopen(
+      urllib2.Request("http://%s/index.php" % self.account["domain"],
+        urllib.urlencode({"action": "tagrss", "tag":
+          query}))).read()).getElementsByTagName("item")
 
   def search(self, query):
     for data in self.get_search(query):
+      yield SearchResult(self, data, query)
+
+  def tag(self, query):
+    for data in self.get_tag(query):
       yield SearchResult(self, data, query)
 
   def responses(self):

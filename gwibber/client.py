@@ -209,8 +209,13 @@ class GwibberClient(gtk.Window):
     dialog.hide()
 
     query = entry.get_text()
-    view = self.add_tab(
-      lambda: self.client.search(query), query, True, gtk.STOCK_FIND)
+    
+    if query.startswith("#"):
+      view = self.add_tab(lambda: self.client.tag(query),
+        query.replace("#", ""), True, gtk.STOCK_INFO)
+    else:
+      view = self.add_tab(lambda: self.client.search(query),
+        query, True, gtk.STOCK_FIND)
     
     self.update([view.get_parent()])
     
@@ -376,7 +381,14 @@ class GwibberClient(gtk.Window):
         return True
       elif uri.startswith("gwibber:search"):
         query = uri.split("/")[-1]
-        self.add_tab(lambda: self.client.search(query), query, True, gtk.STOCK_FIND)
+        view = self.add_tab(lambda: self.client.search(query), query, True, gtk.STOCK_FIND)
+        self.update([view.get_parent()])
+        return True
+      elif uri.startswith("gwibber:tag"):
+        query = uri.split("/")[-1]
+        view = self.add_tab(lambda: self.client.tag(query),
+          query, True, gtk.STOCK_INFO)
+        self.update([view.get_parent()])
         return True
       elif uri.startswith("gwibber:thread"):
         msg = view.message_store[int(uri.split("/")[-1])]

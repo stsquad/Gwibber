@@ -25,6 +25,7 @@ PROTOCOL_INFO = {
     can.SEND,
     can.RECEIVE,
     can.SEARCH,
+    can.TAG,
     can.REPLY,
     can.RESPONSES,
     can.DELETE,
@@ -33,7 +34,7 @@ PROTOCOL_INFO = {
 }
 
 NICK_PARSE = re.compile("@([A-Za-z0-9_]+)")
-HASH_PARSE = re.compile("#([A-Za-z0-9_.\-]+)")
+HASH_PARSE = re.compile("#([A-Za-z0-9_\-]+)")
 
 class Message:
   def __init__(self, client, data):
@@ -52,7 +53,7 @@ class Message:
     self.url = "http://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
     self.profile_url = "http://twitter.com/%s" % data["user"]["screen_name"]
     self.html_string = '<span class="text">%s</span>' % \
-        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:search/#\\1">\\1</a>',
+        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
       NICK_PARSE.sub('@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>',
         support.linkify(self.text)))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
@@ -78,7 +79,7 @@ class SearchResult:
     else: html = self.text
     
     self.html_string = '<span class="text">%s</span>' % \
-      HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:search/#\\1">\\1</a>',
+      HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
       NICK_PARSE.sub('@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>',
         support.linkify(self.text)))
 
@@ -118,6 +119,10 @@ class Client:
   def search(self, query):
     for data in self.get_search_data(query)["results"]:
       yield SearchResult(self, data, query)
+
+  def tag(self, query):
+    for data in self.get_search_data("#%s" % query)["results"]:
+      yield SearchResult(self, data, "#%s" % query)
 
   def responses(self):
     for data in self.get_search_data(

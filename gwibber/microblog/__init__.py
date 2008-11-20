@@ -79,3 +79,9 @@ class Client:
       lambda a: a["search_enabled"] and supports(a, can.SEARCH),
       lambda c: c.search(query), "perform search query", filter)
 
+  def tag(self, query, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and supports(a, can.TAG),
+      lambda c: c.tag(query.lower().replace("#", "")), "perform tag query", filter)
+
+
