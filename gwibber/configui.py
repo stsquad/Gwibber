@@ -41,11 +41,11 @@ class AccountManager(config.Accounts):
     glade.get_widget("button_apply_auth").connect("clicked", on_validate_click)
     glade.get_widget("button_close_facebook_auth").connect("clicked", lambda w: dialog.destroy())
 
-  def show_properties_dialog(self, acct):
+  def show_properties_dialog(self, acct, create = False):
     glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
     dialog = glade.get_widget("dialog_%s" % acct["protocol"])
     dialog.show_all()
-    
+
     for widget in microblog.PROTOCOLS[acct["protocol"]].PROTOCOL_INFO["config"]:
       w = glade.get_widget("%s_%s" % (acct["protocol"], widget))
       if isinstance(w, gtk.ColorButton): acct.bind(w, widget, default="#729FCF")
@@ -54,8 +54,11 @@ class AccountManager(config.Accounts):
     glade.get_widget("%s_btnclose" % acct["protocol"]).connect("clicked",
       lambda a: dialog.destroy())
 
+    if create:
+      glade.get_widget("%s_btndelete" % acct["protocol"]).set_label("Cancel")
+      
     glade.get_widget("%s_btndelete" % acct["protocol"]).connect("clicked",
-      lambda a: self.on_account_delete(acct, dialog))
+      lambda a: self.on_account_delete(acct, dialog, create = create))
 
     if acct["protocol"] == "facebook":
       glade.get_widget("btnAuthorize").connect("clicked",
@@ -64,11 +67,16 @@ class AccountManager(config.Accounts):
   def on_account_create(self, w, protocol):
     a = self.accounts.new_account()
     a["protocol"] = protocol
-    self.show_properties_dialog(a)
+    self.show_properties_dialog(a, create=True)
 
-  def on_account_delete(self, acct, dialog = None):
+  def on_account_delete(self, acct, dialog = None, create = False):
+    if create:
+      msg = "Are you sure you want to cancel the creation of this account?"
+    else:
+      msg = "Are you sure you want to delete this account?"  
+    
     d = gtk.MessageDialog(dialog, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,
-      gtk.BUTTONS_YES_NO, "Are you sure you want to delete this account?")
+      gtk.BUTTONS_YES_NO, msg)
     
     if d.run() == gtk.RESPONSE_YES:
       if dialog: dialog.destroy()
