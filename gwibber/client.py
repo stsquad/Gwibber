@@ -679,7 +679,8 @@ class GwibberClient(gtk.Window):
       message.image = "file://%s" % message.image_path
     
     def remove_url(s):
-      return ' '.join([x for x in s.strip('.').split() if not x.startswith('http://')])
+      return ' '.join([x for x in s.strip('.').split()
+        if not x.startswith('http://') and not x.startswith("https://") ])
 
     message.gId = hashlib.sha1(remove_url(message.text)[:128]).hexdigest()
     message.aId = message.account.id
