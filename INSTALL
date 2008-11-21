@@ -4,13 +4,16 @@ Installing Gwibber
   Requirements
   ------------
 
-    Please note that the version numbers listed below only reflect my test environment. Gwibber is known to work with those specific versions, but will probably work fine on most current desktop distributions that include Python GTK packages.
+    Please note that the version numbers listed below only reflect my test environment. Gwibber is known to work with those specific versions, but will probably work fine on most current desktop distributions that include Python's WebKit GTK+ bindings.
 
     * python (2.5)
     * python-dbus (0.80.2)
     * python-gtk2 (2.10.4)
     * python-gconf (2.18.0)
     * python-notify (0.1.1)
+    * python-webkitgtk (1.0.1)
+    * python-simplejson (1.9.1)
+    * python-egenix-mxdatetime (3.0.0)
 
   Installation
   ------------
