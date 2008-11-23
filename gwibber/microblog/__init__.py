@@ -30,7 +30,7 @@ class Client:
   def post_process_message(self, message):
     return message
 
-  def get_data(self, test, method, name, filter=PROTOCOLS.keys(), return_value=True):
+  def get_data(self, test, method, name, filter=PROTOCOLS.keys(), return_value=True, first_only=False):
     for acct in self.accounts:
       if acct["protocol"] in PROTOCOLS.keys() and \
          acct["protocol"] in filter:
@@ -40,7 +40,9 @@ class Client:
             if return_value:
               for message in method(client):
                 yield self.post_process_message(message)
-            else: yield method(client)
+            else:
+              if first_only: return method(client)
+              else: yield method(client)
         except: self.handle_error(acct, traceback.format_exc(), name)
 
   def perform_operation(self, test, method, name, filter=PROTOCOLS.keys()):
