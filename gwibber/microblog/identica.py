@@ -20,6 +20,7 @@ PROTOCOL_INFO = {
     "receive_enabled",
     "send_enabled",
     "search_enabled",
+    "receive_count",
   ],
 
   "features": [
@@ -96,7 +97,8 @@ class Client:
 
   def get_messages(self):
     return simplejson.loads(self.connect(
-      "http://identi.ca/api/statuses/friends_timeline.json"))
+      "http://identi.ca/api/statuses/friends_timeline.json",
+        urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
   def get_responses(self):
     return simplejson.loads(self.connect(
@@ -111,7 +113,7 @@ class Client:
     return minidom.parseString(urllib2.urlopen(
       urllib2.Request("http://identi.ca/index.php",
         urllib.urlencode({"action": "tagrss", "tag":
-          query.replace("#", "")}))).read()).getElementsByTagName("item")
+          query}))).read()).getElementsByTagName("item")
 
   def search(self, query):
     for data in self.get_search(query):

@@ -395,3 +395,18 @@ def _persistency_link_range(range, key, *args, **kwargs):
   return PersistencyLink(range, lambda: int(range.get_value()), range.set_value, "value-changed", GConfValue(key, Spec.INT, *args, **kwargs))
 
 create_persistency_link.append_handler(gtk.HScale, _persistency_link_range)
+
+def _persistency_link_combobox(combo, key, data_spec = Spec.STRING, *args, **kwargs):
+  return PersistencyLink(combo, combo.get_active_text, lambda val: combo.set_active_iter([x.iter for x in combo.get_model() if x[0].strip() == val][0]), "changed", GConfValue(key, data_spec, *args, **kwargs))
+
+create_persistency_link.append_handler(gtk.ComboBox, _persistency_link_combobox) 
+
+def _persistency_link_combobox_entry(entry, key, data_spec = Spec.STRING, *args, **kwargs):
+  """
+  Associates to a U{gtk.ComboBoxEntry <http://pygtk.org/pygtk2reference/class-gtkcomboboxentry.html>}
+
+  @rtype: L{gwp.PersistencyLink}
+  """
+  return PersistencyLink(entry, entry.child.get_text, entry.child.set_text, "changed", GConfValue(key, data_spec, *args, **kwargs))
+
+create_persistency_link.append_handler(gtk.ComboBoxEntry, _persistency_link_combobox_entry) 

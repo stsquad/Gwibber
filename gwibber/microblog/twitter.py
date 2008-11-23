@@ -19,6 +19,7 @@ PROTOCOL_INFO = {
     "receive_enabled",
     "send_enabled",
     "search_enabled",
+    "receive_count",
   ],
 
   "features": [
@@ -107,9 +108,10 @@ class Client:
     return urllib2.urlopen(urllib2.Request(
       url, data, {"Authorization": self.get_auth()})).read()
 
-  def get_message_data(self):
+  def get_messages(self):
     return simplejson.loads(self.connect(
-      "http://twitter.com/statuses/friends_timeline.json"))
+      "http://twitter.com/statuses/friends_timeline.json",
+        urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
   def get_search_data(self, query):
     return simplejson.loads(urllib2.urlopen(
@@ -130,7 +132,7 @@ class Client:
       yield SearchResult(self, data)
 
   def receive(self):
-    for data in self.get_message_data():
+    for data in self.get_messages():
       yield Message(self, data)
 
   def send(self, message):

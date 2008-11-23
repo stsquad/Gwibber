@@ -10,7 +10,5 @@ SegPhault (Ryan Paul) - 05/29/2007
 import sys, gtk, os
 from gwibber.client import GwibberClient
 
-ui_dir = os.path.abspath(sys.path[0])
-
-GwibberClient("%s/ui" % ui_dir)
+GwibberClient()
 gtk.main()

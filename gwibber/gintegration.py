@@ -1,5 +1,5 @@
 
-import dbus, gobject, dbus.glib, os
+import dbus, gobject, dbus.glib, os, sys
 
 try:
   notifier = dbus.Interface(dbus.SessionBus().get_object(

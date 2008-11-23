@@ -1,16 +1,15 @@
 
-import gtk, config, gtk.glade, microblog, table, gintegration
+import gtk, config, gtk.glade, microblog, table, gintegration, resources
 
 class AccountManager(config.Accounts):
-  def __init__(self, path = config.GCONF_ACCOUNTS_DIR, ui_dir="ui"):
+  def __init__(self, path = config.GCONF_ACCOUNTS_DIR):
     self.accounts = self
-    self.ui_dir = ui_dir
     self.path = path
 
   def facebook_authorize(self, account):
     from gwibber.microblog.support import facelib
 
-    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
+    glade = gtk.glade.XML(resources.get_ui_asset("preferences.glade"))
     dialog = glade.get_widget("facebook_config")
     dialog.show_all()
 
@@ -42,7 +41,7 @@ class AccountManager(config.Accounts):
     glade.get_widget("button_close_facebook_auth").connect("clicked", lambda w: dialog.destroy())
 
   def show_properties_dialog(self, acct, create = False):
-    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
+    glade = gtk.glade.XML(resources.get_ui_asset("preferences.glade"))
     dialog = glade.get_widget("dialog_%s" % acct["protocol"])
     dialog.show_all()
 

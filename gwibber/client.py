@@ -9,6 +9,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 import sys, time, os, threading, mx.DateTime, hashlib
 import gtk, gtk.glade, gobject, table, webkit, simplejson
 import microblog, gwui, config, gintegration, configui
+import xdg.BaseDirectory, resources
 
 # Setup Pidgin
 import pidgin
@@ -29,19 +30,19 @@ DEFAULT_PREFERENCES = {
   "minimize_to_tray": False,
   "hide_taskbar_entry": False,
   "spellcheck_enabled": True,
+  "theme": "default",
 }
 
 for i in CONFIGURABLE_UI_ELEMENTS:
   DEFAULT_PREFERENCES["show_%s" % i] = True
 
 class GwibberClient(gtk.Window):
-  def __init__(self, ui_dir="ui"):
+  def __init__(self):
     gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
     self.set_title("Gwibber")
     self.set_default_size(330, 500)
     config.GCONF.add_dir(config.GCONF_PREFERENCES_DIR, config.gconf.CLIENT_PRELOAD_NONE)
     self.preferences = config.Preferences()
-    self.ui_dir = ui_dir
     self.last_update = None
     self.last_clear = None
     layout = gtk.VBox()
@@ -56,7 +57,7 @@ class GwibberClient(gtk.Window):
      widget "*.tab-close-button" style "tab-close-button-style"
      """)
 
-    self.accounts = configui.AccountManager(ui_dir=ui_dir)
+    self.accounts = configui.AccountManager()
     self.client = microblog.Client(self.accounts)
     self.client.handle_error = self.handle_error
     self.client.post_process_message = self.post_process_message
@@ -82,9 +83,11 @@ class GwibberClient(gtk.Window):
 
     self.timer = gobject.timeout_add(60000 * int(self.preferences["refresh_interval"]), self.update)
     self.preferences.notify("refresh_interval", self.on_refresh_interval_changed)
+    self.preferences.notify("theme", self.on_theme_change)
 
     gtk.icon_theme_add_builtin_icon("gwibber", 22,
-      gtk.gdk.pixbuf_new_from_file_at_size("%s/gwibber.svg" % ui_dir, 24, 24))
+      gtk.gdk.pixbuf_new_from_file_at_size(
+        resources.get_ui_asset("gwibber.svg"), 24, 24))
 
     self.set_icon_name("gwibber")
     self.tray_icon = gtk.status_icon_new_from_icon_name("gwibber")
@@ -220,7 +223,7 @@ class GwibberClient(gtk.Window):
     self.update([view.get_parent()])
     
   def add_tab(self, data_handler, text, show_close = False, show_icon = None):
-    view = gwui.MessageView(self.ui_dir, "default")
+    view = gwui.MessageView(self.preferences["theme"])
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
@@ -251,7 +254,7 @@ class GwibberClient(gtk.Window):
     return view
 
   def add_map_tab(self, data_handler, text, show_close = True, show_icon = "applications-internet"):
-    view = gwui.MapView(self.ui_dir)
+    view = gwui.MapView()
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
@@ -280,32 +283,6 @@ class GwibberClient(gtk.Window):
 
     btn.connect("clicked", lambda w: self.tabs.remove_page(self.tabs.page_num(view)))
     return view
-
-  def theme_preview_test(self, *a):
-    themes = [gwui.ThemeSelector(self.ui_dir, t) for t in ["default", "funkatron"]]
-
-    hb = gtk.HBox(spacing=5)
-    for t in themes: hb.pack_start(t.widgets)
-    for t in themes[1:]: t.selector.set_group(themes[0].selector)
-    
-    def testit(*a):
-      for t in themes:
-        t.content.load_messages(self.message_store)
-        t.content.load_preferences(self.get_account_config())
-
-    b = gtk.Button("Test")
-    b.connect("clicked", testit)
-
-    w = gtk.Window()
-    w.set_title("Theme Selector")
-    w.set_border_width(5)
-
-    vb = gtk.VBox(spacing=5)
-    vb.pack_start(hb)
-    vb.pack_start(b, False, False)
-    w.add(vb)
-
-    w.show_all()
 
   def on_account_change(self, client, junk, entry, *args):
     if "color" in entry.get_key():
@@ -425,12 +402,27 @@ class GwibberClient(gtk.Window):
     view.execute_script("addMessages(%s)" % msgs)
     self.set_account_colors(view)
 
-  def on_theme_change(self, w):
-    def on_load_finished(*a):
-      self.load_messages_into_view(self.content)      
+  def on_theme_change(self, *args):
+    def on_load_finished(view, frame):
+      if len(view.message_store) > 0:
+        view.load_messages()
+        view.load_preferences(self.get_account_config())
 
-    self.content.connect("load-finished", on_load_finished)
-    self.content.load_theme("funkatron")
+    for tab in self.tabs:
+      view = tab.get_child()
+      view.connect("load-finished", on_load_finished)
+      view.load_theme(self.preferences["theme"])
+
+  def get_themes(self):
+    for base in xdg.BaseDirectory.xdg_data_dirs:
+      theme_root = os.path.join(base, "gwibber", "ui", "themes")
+      if os.path.exists(theme_root):
+
+        for p in os.listdir(theme_root):
+          if not p.startswith('.'):
+            theme_dir = os.path.join(theme_root, p)
+            if os.path.isdir(theme_dir):
+              yield theme_dir
 
   def on_accounts_menu(self, amenu):
     amenu.emit_stop_by_name("select")
@@ -572,7 +564,7 @@ class GwibberClient(gtk.Window):
     self.update()
 
   def on_about(self, mi):
-    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
+    glade = gtk.glade.XML(resources.get_ui_asset("preferences.glade"))
     dialog = glade.get_widget("about_dialog")
     dialog.set_version(str(VERSION_NUMBER))
     dialog.connect("response", lambda *a: dialog.hide())
@@ -636,14 +628,19 @@ class GwibberClient(gtk.Window):
     errorwin.show_all()
 
   def on_preferences(self, mi):
-    glade = gtk.glade.XML("%s/preferences.glade" % self.ui_dir)
+    glade = gtk.glade.XML(resources.get_ui_asset("preferences.glade"))
     dialog = glade.get_widget("pref_dialog")
-    dialog.show_all()
 
     for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry"]:
       self.preferences.bind(glade.get_widget("pref_%s" % widget), widget)
 
+    theme_selector = gtk.combo_box_new_text()
+    for theme_name in resources.get_themes(): theme_selector.append_text(theme_name)
+    glade.get_widget("containerThemeSelector").pack_start(theme_selector, True, True)
+    self.preferences.bind(theme_selector, "theme")
+
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
+    dialog.show_all()
   
   def handle_error(self, acct, err, msg = None):
     self.status_icon.show()
@@ -729,7 +726,8 @@ class GwibberClient(gtk.Window):
         seen.append(message.gId)
   
   def update(self, tabs = None):
-    self.throbber.set_from_animation(gtk.gdk.PixbufAnimation("%s/progress.gif" % self.ui_dir))
+    self.throbber.set_from_animation(
+      gtk.gdk.PixbufAnimation(resources.get_ui_asset("progress.gif")))
     self.target_tabs = tabs
 
     def process():

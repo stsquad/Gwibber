@@ -6,19 +6,18 @@ SegPhault (Ryan Paul) - 05/26/2007
 
 """
 
-import webkit, gintegration, microblog, gtk
+import webkit, gintegration, microblog, gtk, resources
 import urllib2, hashlib, time, os, simplejson
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
 IMG_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
 
 class MapView(webkit.WebView):
-  def __init__(self, ui_dir):
+  def __init__(self):
     webkit.WebView.__init__(self)
-    self.ui_dir = ui_dir
     self.message_store = []
     self.data_retrieval_handler = None
-    self.open("file://%s/map.html" % self.ui_dir)
+    self.open("file://%s" % resources.get_ui_asset(map.html))
 
   def load_theme(self, theme):
     self.theme = theme
@@ -33,9 +32,8 @@ class MapView(webkit.WebView):
     pass
 
 class MessageView(webkit.WebView):
-  def __init__(self, ui_dir, theme):
+  def __init__(self, theme):
     webkit.WebView.__init__(self)
-    self.ui_dir = ui_dir
     self.load_externally = True
     self.connect("navigation-requested", self.on_click_link)
     self.load_theme(theme)
@@ -44,7 +42,7 @@ class MessageView(webkit.WebView):
 
   def load_theme(self, theme):
     self.theme = theme
-    self.open("file://%s/themes/%s/theme.html" % (self.ui_dir, theme))
+    self.open(os.path.join("file:/", resources.get_theme_path(theme), "theme.html"))
 
   def load_messages(self, message_store = None):
     msgs = simplejson.dumps([dict(m.__dict__, message_index=n)
@@ -67,20 +65,6 @@ class MessageView(webkit.WebView):
 
   def link_handler(self, uri):
     pass
-
-class ThemeSelector:
-  def __init__(self, ui_dir, theme):
-    self.theme = theme
-
-    self.widgets = gtk.VBox()
-    self.content = MessageView(ui_dir, theme)
-    self.selector = gtk.RadioButton(None, theme.capitalize())
-
-    self.widgets.pack_start(self.content)
-    self.widgets.pack_start(self.selector, False, False)
-
-    self.content.set_full_content_zoom(True)
-    self.content.set_zoom_level(0.2)
 
 def image_cache(url, cache_dir = IMG_CACHE_DIR):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)
