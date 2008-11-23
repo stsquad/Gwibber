@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <style>
+      body {
+        padding: 0px;
+        margin: 0px;
+      }
+
+      .message {
+        border-bottom: 1px solid #7D7D7D;
+      }
+      
+      .content {
+        padding-left: 15px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+
+      .heading {
+        background: #729FCF -webkit-gradient(linear, left top, left bottom,
+          from(rgba(255, 255, 255, 0.45)), to(rgba(255, 255, 255, 0.50)),
+          color-stop(0.4, rgba(255, 255, 255, 0.25)),
+          color-stop(0.6, rgba(255, 255, 255, 0.0)),
+          color-stop(0.9, rgba(255, 255, 255, 0.10)));
+        color: white;
+        height: 42px;
+        padding: 0px;
+        margin: 0px;
+        border-top: 2px solid #729FCF;
+        border-bottom: 1px solid #729FCF;
+      }
+      
+      .heading h1 {
+        padding: 5px;
+        text-shadow: 1px 1px black;
+        font-size: 14px;
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis;
+      }
+
+      .bottom {
+        padding-left: 15px;
+        padding-right: 5px;
+        padding-bottom: 5px;
+      }
+
+      .time a {
+        font-size: small;
+        text-decoration: none;
+        color: black;
+        padding-left: 10px;
+      }
+
+      .imgbox {
+        height: 35px;
+        width: 35px;
+        float: left;
+      }
+
+      .toggledupe {
+        float: left;
+      }
+
+      .replybutton {
+        float: right;
+      }
+    </style>
+    <script src="jquery.js"></script>
+    <script>
+    </script>
+  </head>
+  <body>
+    <div class="messages">
+      <div id="messageId" class="message">
+        <div class="heading">
+          <span>This is a message title</span>
+        </div>
+        <div class="content">
+          <span class="text">So, @KoryeLogan Pickens plan is a great way for Pickens to make money, by having govt invest in business he's uniquely positioned to exploit</span>
+        </div>
+        <div class="bottom">
+          <span class="time"><a href="#">18 minutes ago</a></span>
+          <div class="toggledupe"><img src="add.png" /></div>
+          <div class="replybutton">
+            <a href="gwibber:/reply/#"><img src="reply.png" /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
