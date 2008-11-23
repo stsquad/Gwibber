@@ -702,6 +702,15 @@ class GwibberClient(gtk.Window):
             data[c] = {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
         yield data
 
+  def color_to_dict(self, c):
+    color = gtk.gdk.color_parse(c)
+    return {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
+
+  def get_gtk_theme_prefs(self):
+    return dict((i, self.color_to_dict(
+      getattr(self.get_style(), i)[gtk.STATE_NORMAL].to_string()))
+        for i in ["base", "text", "fg", "bg"])
+
   def show_notification_bubbles(self, data):
     for message in data:
       if message.is_new and self.preferences["show_notifications"] and \
@@ -744,7 +753,7 @@ class GwibberClient(gtk.Window):
         for tab in self.target_tabs:
           view = tab.get_child()
           view.load_messages()
-          view.load_preferences(self.get_account_config())
+          view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
         gtk.gdk.threads_leave()
 
         self.statusbar.pop(0)

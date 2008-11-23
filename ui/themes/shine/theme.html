@@ -16,7 +16,6 @@
       }
 
       .message {
-        background: -webkit-gradient(linear, left top, left 300%, from(#F7F7F7), to(#9A9A9A));
         padding-bottom: 5px;
       }
         
@@ -103,6 +102,10 @@
               setMessageColor(this.id, conf, this[conf].red, this[conf].green, this[conf].blue, 1);
           }
           });
+      }
+
+      function setGtkConfig(data) {
+        $('.message').css('background', 'rgba('+ data.bg.red + ',' + data.bg.green + ',' + data.bg.blue + ', 1)');
       }
 
       function addMessage(data) {

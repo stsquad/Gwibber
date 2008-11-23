@@ -50,10 +50,13 @@ class MessageView(webkit.WebView):
         indent=4, default=str)
     self.execute_script("addMessages(%s)" % msgs)
 
-  def load_preferences(self, preferences):
-    json = simplejson.dumps(
-      list(preferences), indent=4, default=str)
-    self.execute_script("setAccountConfig(%s)" % json)
+  def load_preferences(self, acct_prefs, theme_prefs=None):
+    if theme_prefs:
+      theme = simplejson.dumps(theme_prefs, indent=4, default=str)
+      self.execute_script("setGtkConfig(%s)" % theme)
+    
+    acct = simplejson.dumps(list(acct_prefs), indent=4, default=str)
+    self.execute_script("setAccountConfig(%s)" % acct)
 
   def on_click_link(self, view, frame, req):
     uri = req.get_uri()
