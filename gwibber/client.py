@@ -181,6 +181,9 @@ class GwibberClient(gtk.Window):
       elif e.keyval in [ord(str(x)) for x in range(10)] and e.state & gtk.gdk.MOD1_MASK:
         self.tabs.set_current_page(int(gtk.gdk.keyval_name(e.keyval))-1)
         return True
+      elif e.keyval == gtk.keysyms.T and e.state & gtk.gdk.CONTROL_MASK:
+        self.on_theme_change()
+        return True
       else:
         if not self.input.is_focus():
           self.input.grab_focus()
@@ -394,13 +397,6 @@ class GwibberClient(gtk.Window):
     if len(widget.get_text()) > 0:
       self.statusbar.push(1, "Characters remaining: %s" % (
         widget.get_max_length() - len(unicode(widget.get_text(), "utf-8"))))
-
-  def load_messages_into_view(self, view):
-    msgs = simplejson.dumps([dict(m.__dict__, message_index=n)
-      for n, m in enumerate(view.message_store)], indent=4, default=str)
-
-    view.execute_script("addMessages(%s)" % msgs)
-    self.set_account_colors(view)
 
   def on_theme_change(self, *args):
     def on_load_finished(view, frame):
@@ -630,6 +626,7 @@ class GwibberClient(gtk.Window):
   def on_preferences(self, mi):
     glade = gtk.glade.XML(resources.get_ui_asset("preferences.glade"))
     dialog = glade.get_widget("pref_dialog")
+    dialog.show_all()
 
     for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry"]:
       self.preferences.bind(glade.get_widget("pref_%s" % widget), widget)
@@ -638,9 +635,9 @@ class GwibberClient(gtk.Window):
     for theme_name in resources.get_themes(): theme_selector.append_text(theme_name)
     glade.get_widget("containerThemeSelector").pack_start(theme_selector, True, True)
     self.preferences.bind(theme_selector, "theme")
+    theme_selector.show_all()
 
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
-    dialog.show_all()
   
   def handle_error(self, acct, err, msg = None):
     self.status_icon.show()
