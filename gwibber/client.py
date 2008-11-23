@@ -21,7 +21,7 @@ MAX_MESSAGE_LENGTH = 140
 
 CONFIGURABLE_UI_ELEMENTS = ["editor", "statusbar", "tray_icon"]
 IMAGE_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
-VERSION_NUMBER = "0.7.1"
+VERSION_NUMBER = "0.7.2"
 
 DEFAULT_PREFERENCES = {
   "version": VERSION_NUMBER,
@@ -291,7 +291,7 @@ class GwibberClient(gtk.Window):
     if "color" in entry.get_key():
       for tab in self.tabs.get_children():
         view = tab.get_child()
-        view.load_preferences(self.get_account_config())
+        view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
 
   def on_window_close(self, w, e):
     if self.preferences["minimize_to_tray"]:
