@@ -661,9 +661,11 @@ class GwibberClient(gtk.Window):
 
       if self.message_target:
         protocols = [self.message_target.account["protocol"]]
-      else: protocols = microblog.PROTOCOLS.keys()
+        self.client.reply(self.input.get_text().strip(), protocols)
+      else:
+        protocols = microblog.PROTOCOLS.keys()
+        self.client.send(self.input.get_text().strip(), protocols)
     
-      self.client.send(self.input.get_text().strip(), protocols)
       self.on_cancel_reply(None)
 
   def post_process_message(self, message):

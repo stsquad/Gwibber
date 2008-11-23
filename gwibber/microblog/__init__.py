@@ -53,6 +53,11 @@ class Client:
       lambda a: a["send_enabled"] and supports(a, can.SEND),
       lambda c: c.send(message), "send message", filter, False))
 
+  def reply(self, message, filter=PROTOCOLS.keys()):
+    return list(self.get_data(
+      lambda a: supports(a, can.SEND),
+      lambda c: c.send(message), "send message", filter, False))
+
   def thread(self, query, filter=PROTOCOLS.keys()):
     return self.perform_operation(
       lambda a: a["receive_enabled"] and supports(a, can.THREAD) and \
