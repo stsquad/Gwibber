@@ -41,8 +41,8 @@ class Client:
               for message in method(client):
                 yield self.post_process_message(message)
             else:
-              if first_only: return method(client)
-              else: yield method(client)
+              yield method(client)
+              if first_only: break
         except: self.handle_error(acct, traceback.format_exc(), name)
 
   def perform_operation(self, test, method, name, filter=PROTOCOLS.keys()):
@@ -58,7 +58,7 @@ class Client:
   def reply(self, message, filter=PROTOCOLS.keys()):
     return list(self.get_data(
       lambda a: supports(a, can.SEND),
-      lambda c: c.send(message), "send message", filter, False))
+      lambda c: c.send(message), "send message", filter, False, True))
 
   def thread(self, query, filter=PROTOCOLS.keys()):
     return self.perform_operation(
