@@ -34,8 +34,8 @@ PROTOCOL_INFO = {
   ],
 }
 
-NICK_PARSE = re.compile("@([A-Za-z0-9_]+)")
-HASH_PARSE = re.compile("#([A-Za-z0-9_\-]+)")
+NICK_PARSE = re.compile("\B@([A-Za-z0-9_]+|@[A-Za-z0-9_]$)")
+HASH_PARSE = re.compile("\B#([A-Za-z0-9_\-]+|@[A-Za-z0-9_\-]$)")
 
 class Message:
   def __init__(self, client, data):

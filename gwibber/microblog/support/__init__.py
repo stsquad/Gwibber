@@ -16,7 +16,17 @@ def parse_time(t):
   locale.setlocale(locale.LC_TIME, loc)
   return result 
 
-LINK_PARSE = re.compile("((www\\.|(http|https|ftp|news|file)+\\:\\/\\/)[.a-z0-9-]+\\.[a-z0-9\\/:@=.+?,##%&~-]*[^.|\\'|\\# |!|\\(|?|,| |>|<|;|\\)]+)")
+SCHEMES = ('http', 'https', 'ftp', 'mailto', 'news', 'gopher',
+                'nntp', 'telnet', 'wais', 'prospero', 'aim', 'webcal')
+URL_FORMAT = (r'(?<!\w)((?:%s):' # protocol + :
+    '/*(?!/)(?:' # get any starting /'s
+    '[\w$\+\*@&=\-/]' # reserved | unreserved
+    '|%%[a-fA-F0-9]{2}' # escape
+    '|[\?\.:\(\),;!\'](?!(?:\s|$))' # punctuation
+    '|(?:(?<=[^/:]{2})#)' # fragment id
+    '){2,}' # at least two characters in the main url part
+    ')') % ('|'.join(SCHEMES),)
+LINK_PARSE = re.compile(URL_FORMAT)
 
 def linkify(t):
   return LINK_PARSE.sub('<a href="\\1">\\1</a>', t)
