@@ -185,10 +185,13 @@ class GwibberClient(gtk.Window):
         self.on_theme_change()
         return True
       else:
-        if not self.input.is_focus():
-          self.input.grab_focus()
-          self.input.set_position(-1)
         return False
+
+      #else:
+      #  if not self.input.is_focus():
+      #    self.input.grab_focus()
+      #    self.input.set_position(-1)
+      #  return False
 
     self.connect("key_press_event", on_key_press)
     
