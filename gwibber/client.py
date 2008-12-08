@@ -219,14 +219,16 @@ class GwibberClient(gtk.Window):
 
     query = entry.get_text()
     
+    view = None
     if query.startswith("#"):
       view = self.add_tab(lambda: self.client.tag(query),
         query.replace("#", ""), True, gtk.STOCK_INFO)
-    else:
+    elif len(query) > 0:
       view = self.add_tab(lambda: self.client.search(query),
         query, True, gtk.STOCK_FIND)
     
-    self.update([view.get_parent()])
+    if view:
+      self.update([view.get_parent()])
     
   def add_tab(self, data_handler, text, show_close = False, show_icon = None):
     view = gwui.MessageView(self.preferences["theme"])
