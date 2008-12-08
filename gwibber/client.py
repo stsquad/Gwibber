@@ -256,7 +256,7 @@ class GwibberClient(gtk.Window):
     self.tabs.set_tab_reorderable(scroll, True)
     self.tabs.show_all()
 
-    btn.connect("clicked", lambda w: self.tabs.remove_page(self.tabs.page_num(view)))
+    btn.connect("clicked", self.on_tab_close, scroll)
     return view
 
   def add_map_tab(self, data_handler, text, show_close = True, show_icon = "applications-internet"):
@@ -287,8 +287,13 @@ class GwibberClient(gtk.Window):
     self.tabs.set_tab_reorderable(scroll, True)
     self.tabs.show_all()
 
-    btn.connect("clicked", lambda w: self.tabs.remove_page(self.tabs.page_num(view)))
+    btn.connect("clicked", self.on_tab_close, scroll)
     return view
+
+  def on_tab_close(self, w, e):
+    pagenum = self.tabs.page_num(e)
+    self.tabs.remove_page(pagenum)
+    e.destroy()
 
   def on_account_change(self, client, junk, entry, *args):
     if "color" in entry.get_key():
