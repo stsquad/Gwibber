@@ -31,6 +31,7 @@ PROTOCOL_INFO = {
     can.RESPONSES,
     can.DELETE,
     #can.THREAD,
+    can.THREAD_REPLY,
   ],
 }
 
@@ -39,6 +40,7 @@ HASH_PARSE = re.compile("\B#([A-Za-z0-9_\-]+|@[A-Za-z0-9_\-]$)")
 
 class Message:
   def __init__(self, client, data):
+    self.id = data["id"]
     self.client = client
     self.account = client.account
     self.protocol = client.account["protocol"]
@@ -144,4 +146,10 @@ class Client:
   def send(self, message):
     return self.connect("http://twitter.com/statuses/update.json",
         urllib.urlencode({"status":message}))
+
+  def send_thread(self, msg, message):
+    print "sending reply " + message + " to " + str(msg.id)
+    return self.connect("http://twitter.com/statuses/update.json",
+        urllib.urlencode({"status":message,
+            "in_reply_to_status_id":msg.id}))
 
