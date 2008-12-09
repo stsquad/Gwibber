@@ -114,7 +114,9 @@
             (data.image ? '<img class="imgbox" src="'+ data.image +'" />' : '') +
             '<p class="title">'+ (data.title == undefined ? data.sender : data.title) +'</p> \
             <div class="bottom"> \
-              <span class="time"><a href="'+ data.url +'">'+ data.time_string +'</a></span> \
+              <span class="time"><a href="'+ data.url +'">'+ data.time_string +'</a>' +
+                  (data.reply_nick ? ' in reply to <a href="'+ data.reply_url +'">' + data.reply_nick +'</a>' : '') +
+                    '</a></span> \
               <div class="toggledupe"><img src="add.png" /></div> \
               <div class="replybutton">' +
                 (data.can_thread ? '<a href="gwibber:thread/' + data.message_index + '"><img src="thread.png" /></a>' : '') +
