@@ -148,7 +148,6 @@ class Client:
         urllib.urlencode({"status":message}))
 
   def send_thread(self, msg, message):
-    print "sending reply " + message + " to " + str(msg.id)
     return self.connect("http://twitter.com/statuses/update.json",
         urllib.urlencode({"status":message,
             "in_reply_to_status_id":msg.id}))
