@@ -9,7 +9,7 @@ SegPhault (Ryan Paul) - 11/08/2008
 import urlparse, feedparser, can, support
 
 PROTOCOL_INFO = {
-  "name": "RSS",
+  "name": "RSS/Atom",
   "version": 0.1,
   
   "config": [
