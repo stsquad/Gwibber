@@ -74,7 +74,8 @@ class Comment(Message):
     if data.has_key("entry_title"):
       self.original_title = data["entry_title"]
       self.title = "<small>Comment by</small> %s <small>on %s</small>" % (
-        self.sender, support.truncate(data["entry_title"], 10))
+        self.sender, support.truncate(data["entry_title"],
+          client.account["comment_title_length"] or 20))
 
     if data.has_key("comment_id"):
       self.id = data["comment_id"]
