@@ -206,7 +206,7 @@ class GwibberClient(gtk.Window):
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
       gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION,
-      gtk.BUTTONS_OK, None)
+      gtk.BUTTONS_OK_CANCEL, None)
 
     entry = gtk.Entry()
     entry.connect("activate", lambda *a: dialog.response(gtk.RESPONSE_OK))
@@ -217,18 +217,18 @@ class GwibberClient(gtk.Window):
     ret = dialog.run()
     dialog.hide()
 
-    query = entry.get_text()
-    
-    view = None
-    if query.startswith("#"):
-      view = self.add_tab(lambda: self.client.tag(query),
-        query.replace("#", ""), True, gtk.STOCK_INFO)
-    elif len(query) > 0:
-      view = self.add_tab(lambda: self.client.search(query),
-        query, True, gtk.STOCK_FIND)
-    
-    if view:
-      self.update([view.get_parent()])
+    if ret == gtk.RESPONSE_OK:
+      query = entry.get_text()
+      view = None
+      if query.startswith("#"):
+        view = self.add_tab(lambda: self.client.tag(query),
+          query.replace("#", ""), True, gtk.STOCK_INFO)
+      elif len(query) > 0:
+        view = self.add_tab(lambda: self.client.search(query),
+          query, True, gtk.STOCK_FIND)
+      
+      if view:
+        self.update([view.get_parent()])
     
   def add_tab(self, data_handler, text, show_close = False, show_icon = None):
     view = gwui.MessageView(self.preferences["theme"])
