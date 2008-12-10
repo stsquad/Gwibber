@@ -219,14 +219,16 @@ class GwibberClient(gtk.Window):
 
     query = entry.get_text()
     
+    view = None
     if query.startswith("#"):
       view = self.add_tab(lambda: self.client.tag(query),
         query.replace("#", ""), True, gtk.STOCK_INFO)
-    else:
+    elif len(query) > 0:
       view = self.add_tab(lambda: self.client.search(query),
         query, True, gtk.STOCK_FIND)
     
-    self.update([view.get_parent()])
+    if view:
+      self.update([view.get_parent()])
     
   def add_tab(self, data_handler, text, show_close = False, show_icon = None):
     view = gwui.MessageView(self.preferences["theme"])
@@ -256,7 +258,7 @@ class GwibberClient(gtk.Window):
     self.tabs.set_tab_reorderable(scroll, True)
     self.tabs.show_all()
 
-    btn.connect("clicked", lambda w: self.tabs.remove_page(self.tabs.page_num(view)))
+    btn.connect("clicked", self.on_tab_close, scroll)
     return view
 
   def add_map_tab(self, data_handler, text, show_close = True, show_icon = "applications-internet"):
@@ -287,8 +289,13 @@ class GwibberClient(gtk.Window):
     self.tabs.set_tab_reorderable(scroll, True)
     self.tabs.show_all()
 
-    btn.connect("clicked", lambda w: self.tabs.remove_page(self.tabs.page_num(view)))
+    btn.connect("clicked", self.on_tab_close, scroll)
     return view
+
+  def on_tab_close(self, w, e):
+    pagenum = self.tabs.page_num(e)
+    self.tabs.remove_page(pagenum)
+    e.destroy()
 
   def on_account_change(self, client, junk, entry, *args):
     if "color" in entry.get_key():
@@ -721,8 +728,8 @@ class GwibberClient(gtk.Window):
       if message.is_new and self.preferences["show_notifications"] and \
         message.first_seen and gintegration.can_notify:
         gtk.gdk.threads_enter()
-        n = gintegration.notify(message.sender, message.text, hasattr(message,
-          "image_path") and message.image_path or None, ["reply", "Reply"])
+        n = gintegration.notify(message.sender, microblog.support.linkify(message.text),
+          hasattr(message, "image_path") and message.image_path or None, ["reply", "Reply"])
         gtk.gdk.threads_leave()
 
         self.notification_bubbles[n] = message

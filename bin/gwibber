@@ -8,7 +8,19 @@ SegPhault (Ryan Paul) - 05/29/2007
 """
 
 import sys, gtk
-from gwibber.client import GwibberClient
+from os.path import join, dirname, exists, realpath
+
+# use the local ../gwibber/client.py if we are in the source tree
+source_tree_gwibber = join(dirname(__file__), "..", "gwibber")
+if exists(join(source_tree_gwibber, "client.py")):
+    sys.path.insert(0, realpath(dirname(source_tree_gwibber)))
+    try:
+        from gwibber.client import GwibberClient
+    finally:
+        del sys.path[0]
+else:
+    from gwibber.client import GwibberClient
 
 GwibberClient()
 gtk.main()
+

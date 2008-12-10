@@ -31,6 +31,7 @@ PROTOCOL_INFO = {
     can.RESPONSES,
     can.DELETE,
     #can.THREAD,
+    can.THREAD_REPLY,
   ],
 }
 
@@ -39,6 +40,7 @@ HASH_PARSE = re.compile("\B#([A-Za-z0-9_\-]+|@[A-Za-z0-9_\-]$)")
 
 class Message:
   def __init__(self, client, data):
+    self.id = data["id"]
     self.client = client
     self.account = client.account
     self.protocol = client.account["protocol"]
@@ -53,6 +55,8 @@ class Message:
     self.bgcolor = "message_color"
     self.url = "http://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
     self.profile_url = "http://twitter.com/%s" % data["user"]["screen_name"]
+    self.reply_nick = data["in_reply_to_screen_name"]
+    self.reply_url = "http://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
       NICK_PARSE.sub('@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>',
@@ -113,6 +117,11 @@ class Client:
       "http://twitter.com/statuses/friends_timeline.json",
         urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
+  def get_replies(self):
+    return simplejson.loads(self.connect(
+      "http://twitter.com/statuses/replies.json",
+        urllib.urlencode({"count": self.account["receive_count"] or "20"})))
+
   def get_search_data(self, query):
     return simplejson.loads(urllib2.urlopen(
       urllib2.Request("http://search.twitter.com/search.json",
@@ -127,9 +136,8 @@ class Client:
       yield SearchResult(self, data, "#%s" % query)
 
   def responses(self):
-    for data in self.get_search_data(
-      "@%s" % self.account["username"])["results"]:
-      yield SearchResult(self, data)
+    for data in self.get_replies():
+      yield Message(self, data)
 
   def receive(self):
     for data in self.get_messages():
@@ -138,4 +146,9 @@ class Client:
   def send(self, message):
     return self.connect("http://twitter.com/statuses/update.json",
         urllib.urlencode({"status":message}))
+
+  def send_thread(self, msg, message):
+    return self.connect("http://twitter.com/statuses/update.json",
+        urllib.urlencode({"status":message,
+            "in_reply_to_status_id":msg.id}))
 
