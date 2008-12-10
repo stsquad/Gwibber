@@ -62,6 +62,9 @@ class AccountManager(config.Accounts):
     if acct["protocol"] == "facebook":
       glade.get_widget("btnAuthorize").connect("clicked",
         lambda a: self.facebook_authorize(acct))
+    
+    dialog.set_title("%s %s account" % (
+      "Create" if create else "Edit", acct["protocol"]))
 
   def on_account_create(self, w, protocol):
     a = self.accounts.new_account()

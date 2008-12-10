@@ -206,7 +206,7 @@ class GwibberClient(gtk.Window):
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
       gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION,
-      gtk.BUTTONS_OK, None)
+      gtk.BUTTONS_OK_CANCEL, None)
 
     entry = gtk.Entry()
     entry.connect("activate", lambda *a: dialog.response(gtk.RESPONSE_OK))
@@ -217,20 +217,20 @@ class GwibberClient(gtk.Window):
     ret = dialog.run()
     dialog.hide()
 
-    query = entry.get_text()
+    if ret == gtk.RESPONSE_OK:
+      query = entry.get_text()
+      view = None
+      if query.startswith("#"):
+        view = self.add_tab(lambda: self.client.tag(query),
+          query.replace("#", ""), True, gtk.STOCK_INFO, True)
+      elif len(query) > 0:
+        view = self.add_tab(lambda: self.client.search(query),
+          query, True, gtk.STOCK_FIND, True)
+      
+      if view:
+        self.update([view.get_parent()])
     
-    view = None
-    if query.startswith("#"):
-      view = self.add_tab(lambda: self.client.tag(query),
-        query.replace("#", ""), True, gtk.STOCK_INFO)
-    elif len(query) > 0:
-      view = self.add_tab(lambda: self.client.search(query),
-        query, True, gtk.STOCK_FIND)
-    
-    if view:
-      self.update([view.get_parent()])
-    
-  def add_tab(self, data_handler, text, show_close = False, show_icon = None):
+  def add_tab(self, data_handler, text, show_close=False, show_icon=None, make_active=False):
     view = gwui.MessageView(self.preferences["theme"])
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
@@ -257,6 +257,7 @@ class GwibberClient(gtk.Window):
     self.tabs.append_page(scroll, hb)
     self.tabs.set_tab_reorderable(scroll, True)
     self.tabs.show_all()
+    if make_active: self.tabs.set_current_page(self.tabs.page_num(scroll))
 
     btn.connect("clicked", self.on_tab_close, scroll)
     return view
@@ -371,13 +372,13 @@ class GwibberClient(gtk.Window):
         return True
       elif uri.startswith("gwibber:search"):
         query = uri.split("/")[-1]
-        view = self.add_tab(lambda: self.client.search(query), query, True, gtk.STOCK_FIND)
+        view = self.add_tab(lambda: self.client.search(query), query, True, gtk.STOCK_FIND, True)
         self.update([view.get_parent()])
         return True
       elif uri.startswith("gwibber:tag"):
         query = uri.split("/")[-1]
         view = self.add_tab(lambda: self.client.tag(query),
-          query, True, gtk.STOCK_INFO)
+          query, True, gtk.STOCK_INFO, True)
         self.update([view.get_parent()])
         return True
       elif uri.startswith("gwibber:thread"):
@@ -385,7 +386,7 @@ class GwibberClient(gtk.Window):
         if hasattr(msg, "original_title"): tab_label = msg.original_title
         else: tab_label = msg.text
         t = self.add_tab(lambda: self.client.thread(msg),
-          microblog.support.truncate(tab_label), True, "mail-reply-all")
+          microblog.support.truncate(tab_label), True, "mail-reply-all", True)
         self.update([t.get_parent()])
         return True
     else: return False
