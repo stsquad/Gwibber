@@ -351,7 +351,15 @@ class GwibberClient(gtk.Window):
 
     if acct.supports(microblog.can.REPLY):
       self.input.grab_focus()
-      self.input.set_text("@%s: " % message.sender_nick)
+      # Allow replying to more than one person by clicking on the reply
+      # button. 
+      current_text = self.input.get_text()
+      # If the current text ends with ": ", strip the ":", it's only
+      # taking up space
+      text = current_text[:-2] + " " if current_text.endswith(": ") else current_text
+      # do not add the nick if it's already in the list
+      if not text.count("@%s" % message.sender_nick):
+        self.input.set_text("%s@%s: " % (text, message.sender_nick))
       self.input.set_position(-1)
 
       self.message_target = message
