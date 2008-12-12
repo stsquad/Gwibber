@@ -91,4 +91,8 @@ class Client:
       lambda a: a["receive_enabled"] and supports(a, can.TAG),
       lambda c: c.tag(query.lower().replace("#", "")), "perform tag query", filter)
 
+  def user_messages(self, screen_name, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and supports(a, can.USER_MESSAGES),
+      lambda c: c.user_messages(screen_name), "perform user_messages query", filter)
 

@@ -32,6 +32,7 @@ PROTOCOL_INFO = {
     can.DELETE,
     #can.THREAD,
     can.THREAD_REPLY,
+    can.USER_MESSAGES,
   ],
 }
 
@@ -54,7 +55,7 @@ class Message:
     self.image = data["user"]["profile_image_url"]
     self.bgcolor = "message_color"
     self.url = "http://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
-    self.profile_url = "http://twitter.com/%s" % data["user"]["screen_name"]
+    self.profile_url = "gwibber:user/%s" % data["user"]["screen_name"]
     self.reply_nick = data["in_reply_to_screen_name"]
     self.reply_url = "http://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
     self.html_string = '<span class="text">%s</span>' % \
@@ -117,6 +118,11 @@ class Client:
       "http://twitter.com/statuses/friends_timeline.json",
         urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
+  def get_user_messages(self, screen_name):
+    return simplejson.loads(self.connect(
+      "http://twitter.com/statuses/user_timeline/"+ screen_name +".json",
+        urllib.urlencode({"count": self.account["receive_count"] or "20"})))
+
   def get_replies(self):
     return simplejson.loads(self.connect(
       "http://twitter.com/statuses/replies.json",
@@ -141,6 +147,10 @@ class Client:
 
   def receive(self):
     for data in self.get_messages():
+      yield Message(self, data)
+
+  def user_messages(self, screen_name):
+    for data in self.get_user_messages(screen_name):
       yield Message(self, data)
 
   def send(self, message):

@@ -389,6 +389,12 @@ class GwibberClient(gtk.Window):
           microblog.support.truncate(tab_label), True, "mail-reply-all", True)
         self.update([t.get_parent()])
         return True
+      elif uri.startswith("gwibber:user"):
+        query = uri.split("/")[-1]
+        view = self.add_tab(lambda: self.client.user_messages(query),
+          query, True, gtk.STOCK_INFO, True)
+        self.update([view.get_parent()])
+        return True
     else: return False
 
   def on_input_context_menu(self, obj, menu):
