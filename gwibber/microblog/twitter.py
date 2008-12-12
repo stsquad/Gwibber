@@ -60,7 +60,7 @@ class Message:
     self.reply_url = "http://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
-      NICK_PARSE.sub('@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>',
+        NICK_PARSE.sub('@<a class="inlinenick" href="gwibber:user/\\1">\\1</a>',
         support.linkify(self.text)))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
 
