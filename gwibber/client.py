@@ -664,7 +664,8 @@ class GwibberClient(gtk.Window):
     if self.input.get_text().strip():
       
       if self.message_target:
-        if self.message_target.account.supports(microblog.can.THREAD_REPLY):
+        if self.message_target.account.supports(microblog.can.THREAD_REPLY) \
+            and hasattr(self.message_target, "id"):
           self.message_target.account.get_client().send_thread(
             self.message_target, self.input.get_text().strip())
           self.on_cancel_reply(None)
