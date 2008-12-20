@@ -40,6 +40,7 @@ class GwibberClient(gtk.Window):
   def __init__(self):
     gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
     self.set_title("Gwibber")
+    self.connect("destroy", self.on_quit)
     self.set_default_size(330, 500)
     config.GCONF.add_dir(config.GCONF_PREFERENCES_DIR, config.gconf.CLIENT_PRELOAD_NONE)
     self.preferences = config.Preferences()
@@ -98,6 +99,20 @@ class GwibberClient(gtk.Window):
     self.tabs.set_scrollable(True)
     self.add_tab(self.client.receive, "Messages", show_icon = "go-home")
     self.add_tab(self.client.responses, "Replies", show_icon = "mail-reply-all")
+
+    saved_queries = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_searches"),
+      config.gconf.VALUE_STRING)
+
+    if saved_queries:
+      for query in saved_queries:
+        if query.startswith("#"):
+          self.add_tab(lambda: self.client.tag(query),
+            query.replace("#", ""), True, gtk.STOCK_INFO, False, query)
+        elif len(query) > 0:
+          self.add_tab(lambda: self.client.search(query),
+            query, True, gtk.STOCK_FIND, False, query)
+
+
     #self.add_map_tab(self.client.friend_positions, "Location")
 
     if gintegration.SPELLCHECK_ENABLED:
@@ -222,15 +237,15 @@ class GwibberClient(gtk.Window):
       view = None
       if query.startswith("#"):
         view = self.add_tab(lambda: self.client.tag(query),
-          query.replace("#", ""), True, gtk.STOCK_INFO, True)
+          query.replace("#", ""), True, gtk.STOCK_INFO, True, query)
       elif len(query) > 0:
         view = self.add_tab(lambda: self.client.search(query),
-          query, True, gtk.STOCK_FIND, True)
+          query, True, gtk.STOCK_FIND, True, query)
       
       if view:
         self.update([view.get_parent()])
     
-  def add_tab(self, data_handler, text, show_close=False, show_icon=None, make_active=False):
+  def add_tab(self, data_handler, text, show_close=False, show_icon=None, make_active=False, save=None):
     view = gwui.MessageView(self.preferences["theme"])
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
@@ -239,6 +254,7 @@ class GwibberClient(gtk.Window):
     scroll = gtk.ScrolledWindow()
     scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
     scroll.add(view)
+    scroll.saved_query = save
 
     img = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
 
@@ -372,13 +388,13 @@ class GwibberClient(gtk.Window):
         return True
       elif uri.startswith("gwibber:search"):
         query = uri.split("/")[-1]
-        view = self.add_tab(lambda: self.client.search(query), query, True, gtk.STOCK_FIND, True)
+        view = self.add_tab(lambda: self.client.search(query), query, True, gtk.STOCK_FIND, True, query)
         self.update([view.get_parent()])
         return True
       elif uri.startswith("gwibber:tag"):
         query = uri.split("/")[-1]
         view = self.add_tab(lambda: self.client.tag(query),
-          query, True, gtk.STOCK_INFO, True)
+          query, True, gtk.STOCK_INFO, True, query)
         self.update([view.get_parent()])
         return True
       elif uri.startswith("gwibber:thread"):
@@ -565,6 +581,8 @@ class GwibberClient(gtk.Window):
     return menubar
 
   def on_quit(self, *a):
+    config.GCONF.set_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_searches"),
+      config.gconf.VALUE_STRING, [t.saved_query for t in self.tabs if t.saved_query])
     gtk.main_quit()
 
   def on_refresh(self, *a):
@@ -787,6 +805,5 @@ class GwibberClient(gtk.Window):
 
 if __name__ == '__main__':
   w = GwibberClient()
-  w.connect("destroy", gtk.main_quit)
   gtk.main()
 
