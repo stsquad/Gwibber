@@ -690,7 +690,9 @@ class GwibberClient(gtk.Window):
       return ' '.join([x for x in s.strip('.').split()
         if not x.startswith('http://') and not x.startswith("https://") ])
 
-    message.gId = hashlib.sha1(remove_url(message.text)[:128]).hexdigest()
+    if message.text.strip() == "": message.gId = None
+    else: message.gId = hashlib.sha1(remove_url(message.text)[:128]).hexdigest()
+    
     message.aId = message.account.id
 
     if self.last_update:
@@ -739,11 +741,12 @@ class GwibberClient(gtk.Window):
   def flag_duplicates(self, data):
     seen = []
     for message in data:
-      message.is_duplicate = message.gId in seen
-      message.first_seen = False
-      if not message.is_duplicate:
-        message.first_seen = True
-        seen.append(message.gId)
+      if message.gId:
+        message.is_duplicate = message.gId in seen
+        message.first_seen = False
+        if not message.is_duplicate:
+          message.first_seen = True
+          seen.append(message.gId)
   
   def update(self, tabs = None):
     self.throbber.set_from_animation(
