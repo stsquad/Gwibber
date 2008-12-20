@@ -170,6 +170,18 @@
                             <property name="position">1</property>
                           </packing>
                         </child>
+                        <child>
+                          <widget class="GtkCheckButton" id="show_tray_icon">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="label" translatable="yes">Show tray icon</property>
+                            <property name="response_id">0</property>
+                            <property name="draw_indicator">True</property>
+                          </widget>
+                          <packing>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
                       </widget>
                     </child>
                   </widget>

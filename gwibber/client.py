@@ -660,6 +660,8 @@ class GwibberClient(gtk.Window):
     for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry"]:
       self.preferences.bind(glade.get_widget("pref_%s" % widget), widget)
 
+    self.preferences.bind(glade.get_widget("show_tray_icon"), "show_tray_icon")
+
     theme_selector = gtk.combo_box_new_text()
     for theme_name in resources.get_themes(): theme_selector.append_text(theme_name)
     glade.get_widget("containerThemeSelector").pack_start(theme_selector, True, True)
