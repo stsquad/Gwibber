@@ -54,7 +54,8 @@ class AccountManager(config.Accounts):
       lambda a: dialog.destroy())
 
     if create:
-      glade.get_widget("%s_btndelete" % acct["protocol"]).set_label("Cancel")
+      glade.get_widget("%s_btndelete" % acct["protocol"]).props.label = gtk.STOCK_CANCEL
+      glade.get_widget("%s_btnclose" % acct["protocol"]).props.label = gtk.STOCK_OK
       
     glade.get_widget("%s_btndelete" % acct["protocol"]).connect("clicked",
       lambda a: self.on_account_delete(acct, dialog, create = create))
