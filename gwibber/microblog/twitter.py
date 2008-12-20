@@ -145,10 +145,10 @@ class Client:
 
   def send(self, message):
     return self.connect("http://twitter.com/statuses/update.json",
-        urllib.urlencode({"status":message}))
+        urllib.urlencode({"status":message, "source": "gwibbernet"}))
 
   def send_thread(self, msg, message):
     return self.connect("http://twitter.com/statuses/update.json",
         urllib.urlencode({"status":message,
-            "in_reply_to_status_id":msg.id}))
+          "in_reply_to_status_id":msg.id, "source": "gwibbernet"}))
 
