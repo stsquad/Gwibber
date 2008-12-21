@@ -9,7 +9,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 import sys, time, os, threading, mx.DateTime, hashlib
 import gtk, gtk.glade, gobject, table, webkit, simplejson
 import microblog, gwui, config, gintegration, configui
-import xdg.BaseDirectory, resources
+import xdg.BaseDirectory, resources, urllib2
 
 # Setup Pidgin
 import pidgin
@@ -118,6 +118,7 @@ class GwibberClient(gtk.Window):
       self.input = gintegration.sexy.SpellEntry()
       self.input.set_checked(self.preferences["spellcheck_enabled"])
     else: self.input = gtk.Entry()
+    self.input.connect("insert-text", self.on_add_text)
     self.input.connect("populate-popup", self.on_input_context_menu)
     self.input.connect("activate", self.on_input_activate)
     self.input.connect("changed", self.on_input_change)
@@ -217,6 +218,13 @@ class GwibberClient(gtk.Window):
     if not self.preferences["inhibit_startup_refresh"]:
       self.update()
 
+  def on_add_text(self, entry, text, txtlen, pos):
+    if self.preferences["shorten_urls"]:
+      if text and text.startswith("http") and not " " in text and not "http://is.gd" in text:
+        entry.stop_emission("insert-text")
+        short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % text).read()
+        entry.insert_text(short, entry.get_position())
+  
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
       gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION,
@@ -656,7 +664,7 @@ class GwibberClient(gtk.Window):
     dialog = glade.get_widget("pref_dialog")
     dialog.show_all()
 
-    for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry"]:
+    for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry", "shorten_urls"]:
       self.preferences.bind(glade.get_widget("pref_%s" % widget), widget)
 
     self.preferences.bind(glade.get_widget("show_tray_icon"), "show_tray_icon")
