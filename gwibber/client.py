@@ -40,7 +40,6 @@ class GwibberClient(gtk.Window):
   def __init__(self):
     gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
     self.set_title("Gwibber")
-    self.connect("destroy", self.on_quit)
     self.set_default_size(330, 500)
     config.GCONF.add_dir(config.GCONF_PREFERENCES_DIR, config.gconf.CLIENT_PRELOAD_NONE)
     self.preferences = config.Preferences()
@@ -325,7 +324,7 @@ class GwibberClient(gtk.Window):
       self.preferences["show_tray_icon"] = True
       self.on_toggle_window_visibility(w)
       return True
-    else: gtk.main_quit()
+    else: self.on_quit()
   
   def on_cancel_reply(self, w, *args):
     self.cancel_button.hide()
