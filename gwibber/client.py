@@ -6,8 +6,8 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import sys, time, os, threading, mx.DateTime, hashlib
-import gtk, gtk.glade, gobject, table, webkit, simplejson
+import time, os, threading, mx.DateTime, hashlib
+import gtk, gtk.glade, gobject, table
 import microblog, gwui, config, gintegration, configui
 import xdg.BaseDirectory, resources, urllib2
 
@@ -33,8 +33,8 @@ DEFAULT_PREFERENCES = {
   "theme": "default",
 }
 
-for i in CONFIGURABLE_UI_ELEMENTS:
-  DEFAULT_PREFERENCES["show_%s" % i] = True
+for _i in CONFIGURABLE_UI_ELEMENTS:
+  DEFAULT_PREFERENCES["show_%s" % _i] = True
 
 class GwibberClient(gtk.Window):
   def __init__(self):
