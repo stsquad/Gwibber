@@ -99,6 +99,14 @@ class GwibberClient(gtk.Window):
     self.add_tab(self.client.receive, "Messages", show_icon = "go-home")
     self.add_tab(self.client.responses, "Replies", show_icon = "mail-reply-all")
 
+    saved_position = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_position"), config.gconf.VALUE_INT)
+    if saved_position:
+      apply(self.move, saved_position)
+
+    saved_size = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_size"), config.gconf.VALUE_INT)
+    if saved_size:
+      apply(self.resize, saved_size)
+
     saved_queries = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_searches"),
       config.gconf.VALUE_STRING)
 
@@ -588,6 +596,10 @@ class GwibberClient(gtk.Window):
     return menubar
 
   def on_quit(self, *a):
+    config.GCONF.set_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_position"),
+       config.gconf.VALUE_INT, list(self.get_position()))
+    config.GCONF.set_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_size"),
+       config.gconf.VALUE_INT, list(self.get_size()))
     config.GCONF.set_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_searches"),
       config.gconf.VALUE_STRING, [t.saved_query for t in self.tabs if t.saved_query])
     gtk.main_quit()
