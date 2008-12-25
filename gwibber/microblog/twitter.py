@@ -144,11 +144,15 @@ class Client:
       yield Message(self, data)
 
   def send(self, message):
-    return self.connect("http://twitter.com/statuses/update.json",
-        urllib.urlencode({"status":message, "source": "gwibbernet"}))
+    data = simplejson.loads(self.connect(
+      "http://twitter.com/statuses/update.json",
+	    urllib.urlencode({"status":message, "source": "gwibbernet"})))
+    return Message(self, data)
 
   def send_thread(self, msg, message):
-    return self.connect("http://twitter.com/statuses/update.json",
+    data = simplejson.loads(self.connect(
+      "http://twitter.com/statuses/update.json",
         urllib.urlencode({"status":message,
-          "in_reply_to_status_id":msg.id, "source": "gwibbernet"}))
+          "in_reply_to_status_id":msg.id, "source": "gwibbernet"})))
+    return Message(self, data)
 
