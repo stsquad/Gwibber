@@ -1,0 +1,4 @@
+gwibber.desktop.in
+gwibber/client.py
+gwibber/configui.py
+ui/preferences.glade

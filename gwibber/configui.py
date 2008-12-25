@@ -1,6 +1,10 @@
 
 import gtk, config, gtk.glade, microblog, table, gintegration, resources
 
+import gettext
+
+_ = gettext.lgettext()
+
 class AccountManager(config.Accounts):
   def __init__(self, path = config.GCONF_ACCOUNTS_DIR):
     self.accounts = self
@@ -23,10 +27,10 @@ class AccountManager(config.Accounts):
         account["session_key"] = str(data["session_key"])
         
         m = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK,
-          "Keys obtained successfully.")
+          _("Keys obtained successfully."))
       else:
         m = gtk.MessageDialog(None, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK,
-          "Failed to obtain key.") 
+          _("Failed to obtain key."))
 
       m.run()
       m.destroy()
@@ -63,9 +67,14 @@ class AccountManager(config.Accounts):
     if acct["protocol"] == "facebook":
       glade.get_widget("btnAuthorize").connect("clicked",
         lambda a: self.facebook_authorize(acct))
-    
-    dialog.set_title("%s %s account" % (
-      "Create" if create else "Edit", acct["protocol"]))
+
+    # FIXME: better way to handle the different titles?
+    # For the moment, translators comment
+    dialog.set_title(_("%s %s account") % (
+      # Translators: these words end up in a dialog title like:
+      # Create ... account
+      # The same for Edit
+      _("Create") if create else _("Edit"), acct["protocol"]))
 
   def on_account_create(self, w, protocol):
     a = self.accounts.new_account()
@@ -74,10 +83,10 @@ class AccountManager(config.Accounts):
 
   def on_account_delete(self, acct, dialog = None, create = False):
     if create:
-      msg = "Are you sure you want to cancel the creation of this account?"
+      msg = _("Are you sure you want to cancel the creation of this account?")
     else:
-      msg = "Are you sure you want to delete this account?"  
-    
+      msg = _("Are you sure you want to delete this account?")
+              
     d = gtk.MessageDialog(dialog, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,
       gtk.BUTTONS_YES_NO, msg)
     
@@ -89,7 +98,7 @@ class AccountManager(config.Accounts):
 
   def show_account_list(self):
     manager = gtk.Window()
-    manager.set_title("Manage Accounts")
+    manager.set_title(_("Manage Accounts"))
     manager.set_border_width(10)
     manager.resize(390,240)
 
