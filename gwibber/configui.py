@@ -3,7 +3,7 @@ import gtk, config, gtk.glade, microblog, table, gintegration, resources
 
 import gettext
 
-_ = gettext.lgettext()
+_ = gettext.lgettext
 
 class AccountManager(config.Accounts):
   def __init__(self, path = config.GCONF_ACCOUNTS_DIR):

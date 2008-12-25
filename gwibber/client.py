@@ -1,4 +1,3 @@
-
 """
 
 Gwibber Client v1.0
@@ -19,15 +18,17 @@ microblog.PROTOCOLS["pidgin"] = pidgin
 import gettext
 import locale
 
+# Set this way as in setup.cfg it's that way... don't know how to change it
+# in setup.cfg
 LOCALEDIR = "/usr/local/share/locale"
 DOMAIN = "gwibber"
 
 locale.setlocale(locale.LC_ALL, "")
 
+_ = gettext.lgettext
+
 gettext.bindtextdomain(DOMAIN, LOCALEDIR)
 gettext.textdomain(DOMAIN)
-
-_ = gettext.lgettext
 
 gtk.gdk.threads_init()
 
