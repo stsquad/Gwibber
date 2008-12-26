@@ -2,16 +2,9 @@
 #
 # setup.py for gnuConcept
 
-import subprocess
 from distutils.core import setup
 from DistUtilsExtra.command import *
 from glob import glob
-
-# Need this to create .desktop file otherwise it will not find it
-# during install
-cmd = "intltool-merge -d -u po/ gwibber.desktop.in gwibber.desktop".split(" ")
-proc = subprocess.Popen(cmd)
-proc.wait()
 
 setup(name="gwibber",
       version="0.7",
@@ -27,8 +20,7 @@ setup(name="gwibber",
     ('share/gwibber/ui/themes/shine', glob("ui/themes/shine/*")),
     ('share/gwibber/ui', ['ui/progress.gif']),
     ('share/gwibber/ui', ['ui/gwibber.svg']),
-    ('share/pixmaps', ['ui/gwibber.svg']),
-    ('share/applications/',['gwibber.desktop'])
+    ('share/pixmaps', ['ui/gwibber.svg'])
     ],
       scripts=['bin/gwibber'],
       cmdclass = { "build" :  build_extra.build_extra,

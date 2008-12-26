@@ -18,8 +18,7 @@ microblog.PROTOCOLS["pidgin"] = pidgin
 import gettext
 import locale
 
-# Set this way as in setup.cfg it's that way... don't know how to change it
-# in setup.cfg
+# Set this way as in setup.cfg we have prefix=/usr/local
 LOCALEDIR = "/usr/local/share/locale"
 DOMAIN = "gwibber"
 
