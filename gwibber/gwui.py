@@ -63,7 +63,7 @@ class MessageView(webkit.WebView):
     uri = req.get_uri()
     if uri.startswith("file:///"): return False
     
-    if not self.link_handler(uri) and self.load_externally:
+    if not self.link_handler(uri, self) and self.load_externally:
       gintegration.load_url(uri)
     return self.load_externally
 
