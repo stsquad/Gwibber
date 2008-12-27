@@ -5,8 +5,8 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import sys, time, os, threading, mx.DateTime, hashlib
-import gtk, gtk.glade, gobject, table, webkit, simplejson
+import time, os, threading, mx.DateTime, hashlib
+import gtk, gtk.glade, gobject, table
 import microblog, gwui, config, gintegration, configui
 import xdg.BaseDirectory, resources, urllib2
 
@@ -47,8 +47,8 @@ DEFAULT_PREFERENCES = {
   "theme": "default",
 }
 
-for i in CONFIGURABLE_UI_ELEMENTS:
-  DEFAULT_PREFERENCES["show_%s" % i] = True
+for _i in CONFIGURABLE_UI_ELEMENTS:
+  DEFAULT_PREFERENCES["show_%s" % _i] = True
 
 class GwibberClient(gtk.Window):
   def __init__(self):
@@ -112,6 +112,14 @@ class GwibberClient(gtk.Window):
     self.tabs.set_scrollable(True)
     self.add_tab(self.client.receive, _("Messages"), show_icon = "go-home")
     self.add_tab(self.client.responses, _("Replies"), show_icon = "mail-reply-all")
+
+    saved_position = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_position"), config.gconf.VALUE_INT)
+    if saved_position:
+      apply(self.move, saved_position)
+
+    saved_size = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_size"), config.gconf.VALUE_INT)
+    if saved_size:
+      apply(self.resize, saved_size)
 
     saved_queries = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_searches"),
       config.gconf.VALUE_STRING)
@@ -602,6 +610,10 @@ class GwibberClient(gtk.Window):
     return menubar
 
   def on_quit(self, *a):
+    config.GCONF.set_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_position"),
+       config.gconf.VALUE_INT, list(self.get_position()))
+    config.GCONF.set_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_size"),
+       config.gconf.VALUE_INT, list(self.get_size()))
     config.GCONF.set_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_searches"),
       config.gconf.VALUE_STRING, [t.saved_query for t in self.tabs if t.saved_query])
     gtk.main_quit()
