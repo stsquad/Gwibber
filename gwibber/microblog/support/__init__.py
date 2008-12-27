@@ -22,7 +22,7 @@ URL_FORMAT = (r'(?<!\w)((?:%s):' # protocol + :
     '/*(?!/)(?:' # get any starting /'s
     '[\w$\+\*@&=\-/]' # reserved | unreserved
     '|%%[a-fA-F0-9]{2}' # escape
-    '|[\?\.:\(\),;!\'](?!(?:\s|$))' # punctuation
+    '|[\?\.:\(\),;!\'\~](?!(?:\s|$))' # punctuation
     '|(?:(?<=[^/:]{2})#)' # fragment id
     '){2,}' # at least two characters in the main url part
     ')') % ('|'.join(SCHEMES),)
