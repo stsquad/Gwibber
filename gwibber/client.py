@@ -35,7 +35,7 @@ MAX_MESSAGE_LENGTH = 140
 
 CONFIGURABLE_UI_ELEMENTS = ["editor", "statusbar", "tray_icon"]
 IMAGE_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
-VERSION_NUMBER = "0.7.2"
+VERSION_NUMBER = "0.7.3"
 
 DEFAULT_PREFERENCES = {
   "version": VERSION_NUMBER,

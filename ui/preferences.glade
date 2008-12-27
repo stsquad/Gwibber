@@ -351,7 +351,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 </property>
-    <property name="authors">Ryan Paul</property>
+    <property name="authors">Ryan Paul
+Dominic Evans</property>
+    <property name="translator_credits" translatable="yes">Milo Casagrande</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
