@@ -132,5 +132,7 @@ class Client:
       yield Message(self, data)
 
   def send(self, message):
-    return self.connect("http://identi.ca/api/statuses/update.json",
-        urllib.urlencode({"status":message}))
+    data = simplejson.loads(self.connect(
+      "http://identi.ca/api/statuses/update.json",
+	    urllib.urlencode({"status":message})))
+    return Message(self, data)
