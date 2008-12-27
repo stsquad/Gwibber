@@ -246,6 +246,7 @@ class GwibberClient(gtk.Window):
         entry.stop_emission("insert-text")
         short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % text).read()
         entry.insert_text(short, entry.get_position())
+        gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(short)))
   
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
