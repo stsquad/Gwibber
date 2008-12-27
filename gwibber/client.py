@@ -110,7 +110,7 @@ class GwibberClient(gtk.Window):
     self.tabs = gtk.Notebook()
     self.tabs.set_property("homogeneous", False)
     self.tabs.set_scrollable(True)
-    self.add_tab(self.client.receive, _("Messages"), show_icon = "go-home")
+    self.messages_view = self.add_tab(self.client.receive, _("Messages"), show_icon = "go-home")
     self.add_tab(self.client.responses, _("Replies"), show_icon = "mail-reply-all")
 
     saved_position = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_position"), config.gconf.VALUE_INT)
@@ -726,10 +726,19 @@ class GwibberClient(gtk.Window):
 
       if self.message_target:
         protocols = [self.message_target.account["protocol"]]
-        self.client.reply(self.input.get_text().strip(), protocols)
+        result = self.client.reply(self.input.get_text().strip(), protocols)
       else:
         protocols = microblog.PROTOCOLS.keys()
-        self.client.send(self.input.get_text().strip(), protocols)
+        result = self.client.send(self.input.get_text().strip(), protocols)
+
+      if result: 
+        for msg in result:
+          if hasattr(msg, 'client'):
+            self.post_process_message(msg)
+            msg.is_new = False
+            self.messages_view.message_store = [msg] + self.messages_view.message_store
+        self.messages_view.load_messages()
+        self.messages_view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
     
       self.on_cancel_reply(None)
 
@@ -783,7 +792,8 @@ class GwibberClient(gtk.Window):
   def show_notification_bubbles(self, data):
     for message in data:
       if message.is_new and self.preferences["show_notifications"] and \
-        message.first_seen and gintegration.can_notify:
+        message.first_seen and gintegration.can_notify and \
+          message.username != message.sender_nick:
         gtk.gdk.threads_enter()
         n = gintegration.notify(message.sender, microblog.support.linkify(message.text),
           hasattr(message, "image_path") and message.image_path or None, ["reply", "Reply"])
