@@ -65,5 +65,3 @@ def generate_time_string(t):
     return gettext.ngettext("%(day)d day ago", "%(day)d days ago", days) % {"day": days}
   else:
     return _("BUG: %s") % str(d)
-
-
