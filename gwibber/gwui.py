@@ -6,8 +6,8 @@ SegPhault (Ryan Paul) - 05/26/2007
 
 """
 
-import webkit, gintegration, microblog, gtk, resources
-import urllib2, hashlib, time, os, simplejson
+import webkit, gintegration, resources
+import urllib2, hashlib, os, simplejson
 import Image
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
@@ -63,7 +63,7 @@ class MessageView(webkit.WebView):
     uri = req.get_uri()
     if uri.startswith("file:///"): return False
     
-    if not self.link_handler(uri, self) and self.load_externally:
+    if not self.link_handler(uri) and self.load_externally:
       gintegration.load_url(uri)
     return self.load_externally
 
