@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gwibber 0.7.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-12-27 23:19+0100\n"
-"PO-Revision-Date: 2008-12-27 23:21+0100\n"
+"PO-Revision-Date: 2008-12-28 00:11+0100\n"
 "Last-Translator: Milo Casagrande <milo@ubuntu.com>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -65,6 +65,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"%s messaggio da %s presso %s\n"
+"\n"
+"%s"
 
 #: ../gwibber/client.py:454
 #, python-format
@@ -80,9 +83,9 @@ msgid "_Create"
 msgstr "_Crea"
 
 #: ../gwibber/client.py:506
-#, fuzzy, python-format
+#, python-format
 msgid "_%s Messages"
-msgstr "Messaggi"
+msgstr "Messaggi di _%s"
 
 #: ../gwibber/client.py:549
 msgid "Refresh"
@@ -157,14 +160,14 @@ msgid "Failed to obtain key."
 msgstr "Chiave non ricevuta."
 
 #: ../gwibber/configui.py:72
-#, fuzzy, python-format
+#, python-format
 msgid "Create %s account"
-msgstr "%s account %s"
+msgstr "Crea l'account %s"
 
 #: ../gwibber/configui.py:74
-#, fuzzy, python-format
+#, python-format
 msgid "Edit %s account"
-msgstr "%s account %s"
+msgstr "Modifica l'account %s"
 
 #: ../gwibber/configui.py:83
 msgid "Are you sure you want to cancel the creation of this account?"
@@ -280,7 +283,6 @@ msgid "App Key:"
 msgstr "Chiave applicazione:"
 
 #: ../ui/preferences.glade.h:16
-#, fuzzy
 msgid "Authorize Status Changes"
 msgstr "Autorizza modifica stato"
 
@@ -302,7 +304,7 @@ msgstr "Colore Digg:"
 
 #: ../ui/preferences.glade.h:21
 msgid "Display bubbles"
-msgstr ""
+msgstr "Visualizzare notifiche"
 
 #: ../ui/preferences.glade.h:22
 msgid "Domain:"
@@ -325,11 +327,11 @@ msgid ""
 "Gwibber is an open source microblogging client for GNOME that supports "
 "Twitter, Jaiku, Facebook, Pownce, Identi.ca and other popular social web "
 "services."
-msgstr ""
+msgstr "Gwibber è un client open source per GNOME per micro-blog che supporta Twitter, Jaiku, Facebook, Pownce, Identi.ca e altri famosi servizi di web sociale."
 
 #: ../ui/preferences.glade.h:27
 msgid "Hide taskbar entry"
-msgstr ""
+msgstr "Nascondere la finestra dall'elenco finestre"
 
 #: ../ui/preferences.glade.h:28
 msgid "Message Color:"
@@ -372,6 +374,20 @@ msgid ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, "
 "USA.\n"
 msgstr ""
+"Qeusto è software libero; è possibile ridistribuirlo o modificarlo\n"
+"secondo i termini della licenza GNU General Public License, come \n"
+"pubblicata dalla Free Software Foundation; versione 2 della licenza, \n"
+"o (a scelta) una versione più recente.\n"
+"\n"
+"Qeusto software è distribuito nella speranza che possa risultare utile, \n"
+"ma SENZA ALCUNA GARANZIA, nemmeno la garanzia implicita di COMMERCIABILITÀ\n"
+"o APPLICABILITÀ PER UNO SCOPO PARTICOLARE. Per maggiori dettagli consultare\n"
+"la GNU General Public License.\n"
+"\n"
+"Una copia della GNU General Public License dovrebbe essere stata fornita con\n"
+"questo programma. In caso contrario scrivere a:\n"
+"Free Software Foundation, Inc. 51 Franklin Street, Fifth Floor, Boston\n"
+"MA 02111-1301, USA\n"
 
 #: ../ui/preferences.glade.h:49
 msgid "Username:"
@@ -388,15 +404,3 @@ msgstr "_Ricevi messaggi"
 #: ../ui/preferences.glade.h:52
 msgid "_Send Messages"
 msgstr "_Invia messaggi"
-
-#~ msgid "1 hour ago"
-#~ msgstr "Un'ora fa"
-
-#~ msgid "1 day ago"
-#~ msgstr "Un giorno fa"
-
-#~ msgid "Create"
-#~ msgstr "Crea"
-
-#~ msgid "Edit"
-#~ msgstr "Modifica"
