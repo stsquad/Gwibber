@@ -1,4 +1,3 @@
-
 """
 
 Gwibber Client v1.0
@@ -14,6 +13,21 @@ import xdg.BaseDirectory, resources, urllib2
 # Setup Pidgin
 import pidgin
 microblog.PROTOCOLS["pidgin"] = pidgin
+
+# i18n magic
+import gettext
+import locale
+
+# Set this way as in setup.cfg we have prefix=/usr/local
+LOCALEDIR = "/usr/local/share/locale"
+DOMAIN = "gwibber"
+
+locale.setlocale(locale.LC_ALL, "")
+
+_ = gettext.lgettext
+
+gettext.bindtextdomain(DOMAIN, LOCALEDIR)
+gettext.textdomain(DOMAIN)
 
 gtk.gdk.threads_init()
 
@@ -39,7 +53,7 @@ for i in CONFIGURABLE_UI_ELEMENTS:
 class GwibberClient(gtk.Window):
   def __init__(self):
     gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
-    self.set_title("Gwibber")
+    self.set_title(_("Gwibber"))
     self.set_default_size(330, 500)
     config.GCONF.add_dir(config.GCONF_PREFERENCES_DIR, config.gconf.CLIENT_PRELOAD_NONE)
     self.preferences = config.Preferences()
@@ -66,8 +80,8 @@ class GwibberClient(gtk.Window):
     self.message_target = None
     
     self.errors = table.generate([
-      ["date", lambda t: t.time.strftime("%Y-%m-%d")],
-      ["time", lambda t: t.time.strftime("%I:%M:%S %p")],
+      ["date", lambda t: t.time.strftime(_("%Y-%m-%d"))],
+      ["time", lambda t: t.time.strftime(_("%I:%M:%S %p"))],
       ["username"],
       ["protocol"],
       ["message", (gtk.CellRendererText(), {
@@ -96,8 +110,8 @@ class GwibberClient(gtk.Window):
     self.tabs = gtk.Notebook()
     self.tabs.set_property("homogeneous", False)
     self.tabs.set_scrollable(True)
-    self.add_tab(self.client.receive, "Messages", show_icon = "go-home")
-    self.add_tab(self.client.responses, "Replies", show_icon = "mail-reply-all")
+    self.add_tab(self.client.receive, _("Messages"), show_icon = "go-home")
+    self.add_tab(self.client.responses, _("Replies"), show_icon = "mail-reply-all")
 
     saved_queries = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_searches"),
       config.gconf.VALUE_STRING)
@@ -124,7 +138,7 @@ class GwibberClient(gtk.Window):
     self.input.connect("changed", self.on_input_change)
     self.input.set_max_length(140)
 
-    self.cancel_button = gtk.Button("Cancel")
+    self.cancel_button = gtk.Button(_("Cancel"))
     self.cancel_button.connect("clicked", self.on_cancel_reply)
 
     self.editor = gtk.HBox()
@@ -233,7 +247,7 @@ class GwibberClient(gtk.Window):
     entry = gtk.Entry()
     entry.connect("activate", lambda *a: dialog.response(gtk.RESPONSE_OK))
 
-    dialog.set_markup("Enter a search query:")
+    dialog.set_markup(_("Enter a search query:"))
     dialog.vbox.pack_end(entry, True, True, 0)
     dialog.show_all()
     ret = dialog.run()
@@ -365,7 +379,7 @@ class GwibberClient(gtk.Window):
       60000 * int(self.preferences["refresh_interval"]), self.update)
 
   def copy_to_tomboy(self, message):
-    gintegration.create_tomboy_note("%s message from %s at %s\n\n%s" % (
+    gintegration.create_tomboy_note(_("%s message from %s at %s\n\n%s") % (
       message.account["protocol"].capitalize(),
       message.sender, message.time, message.text))
   
@@ -429,7 +443,7 @@ class GwibberClient(gtk.Window):
   def on_input_change(self, widget):
     self.statusbar.pop(1)
     if len(widget.get_text()) > 0:
-      self.statusbar.push(1, "Characters remaining: %s" % (
+      self.statusbar.push(1, _("Characters remaining: %s") % (
         widget.get_max_length() - len(unicode(widget.get_text(), "utf-8"))))
 
   def on_theme_change(self, *args):
@@ -459,11 +473,11 @@ class GwibberClient(gtk.Window):
     menu = amenu.get_submenu()
     for c in menu: menu.remove(c)
     
-    menuAccountsManage = gtk.MenuItem("_Manage")
+    menuAccountsManage = gtk.MenuItem(_("_Manage"))
     menuAccountsManage.connect("activate", lambda *a: self.accounts.show_account_list())
     menu.append(menuAccountsManage)
    
-    menuAccountsCreate = gtk.MenuItem("_Create")
+    menuAccountsCreate = gtk.MenuItem(_("_Create"))
     menu.append(menuAccountsCreate)
     mac = gtk.Menu()
 
@@ -481,7 +495,7 @@ class GwibberClient(gtk.Window):
         
         for i in ["receive", "send", "search"]:
           if acct.supports(getattr(microblog.can, i.upper())):
-            mi = gtk.CheckMenuItem("_%s Messages" % i.capitalize())
+            mi = gtk.CheckMenuItem(_("_%s Messages") % i.capitalize())
             acct.bind(mi, "%s_enabled" % i)
             sm.append(mi)
         
@@ -524,17 +538,17 @@ class GwibberClient(gtk.Window):
       parent.append(mi.create_menu_item())
       return mi
 
-    actRefresh = create_action("Refresh", "<ctrl>R", gtk.STOCK_REFRESH, self.on_refresh) 
-    actSearch = create_action("Search", "<ctrl>F", gtk.STOCK_FIND, self.on_search) 
-    actClear = create_action("Clear", "<ctrl>L", gtk.STOCK_CLEAR, self.on_clear) 
-    actPreferences = create_action("Preferences", "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
-    actQuit = create_action("Quit", "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
+    actRefresh = create_action(_("Refresh"), "<ctrl>R", gtk.STOCK_REFRESH, self.on_refresh) 
+    actSearch = create_action(_("Search"), "<ctrl>F", gtk.STOCK_FIND, self.on_search) 
+    actClear = create_action(_("Clear"), "<ctrl>L", gtk.STOCK_CLEAR, self.on_clear) 
+    actPreferences = create_action(_("Preferences"), "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
+    actQuit = create_action(_("Quit"), "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
     
     #actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
     #actThemeTest.connect("activate", self.theme_preview_test)
     #menuHelp.append(actThemeTest.create_menu_item())
 
-    actAbout = gtk.Action("gwibberAbout", "_About", None, gtk.STOCK_ABOUT)
+    actAbout = gtk.Action("gwibberAbout", _("_About"), None, gtk.STOCK_ABOUT)
     actAbout.connect("activate", self.on_about)
     menuHelp.append(actAbout.create_menu_item())
 
@@ -544,26 +558,26 @@ class GwibberClient(gtk.Window):
       menuView.append(mi)
 
     if gintegration.SPELLCHECK_ENABLED:
-      mi = gtk.CheckMenuItem("S_pellcheck", True)
+      mi = gtk.CheckMenuItem(_("S_pellcheck"), True)
       self.preferences.bind(mi, "spellcheck_enabled")
       menuView.append(mi)
 
-    mi = gtk.MenuItem("E_rrors")
+    mi = gtk.MenuItem(_("E_rrors"))
     mi.connect("activate", self.on_errors_show)
     menuView.append(gtk.SeparatorMenuItem())
     menuView.append(mi)
 
-    menuGwibberItem = gtk.MenuItem("_Gwibber")
+    menuGwibberItem = gtk.MenuItem(_("_Gwibber"))
     menuGwibberItem.set_submenu(menuGwibber)
 
-    menuViewItem = gtk.MenuItem("_View")
+    menuViewItem = gtk.MenuItem(_("_View"))
     menuViewItem.set_submenu(menuView)
 
-    menuAccountsItem = gtk.MenuItem("_Accounts")
+    menuAccountsItem = gtk.MenuItem(_("_Accounts"))
     menuAccountsItem.set_submenu(menuAccounts)
     menuAccountsItem.connect("select", self.on_accounts_menu)
 
-    menuHelpItem = gtk.MenuItem("_Help")
+    menuHelpItem = gtk.MenuItem(_("_Help"))
     menuHelpItem.set_submenu(menuHelp)
 
     self.throbber = gtk.Image()
@@ -611,13 +625,13 @@ class GwibberClient(gtk.Window):
   def on_errors_show(self, *args):
     self.status_icon.hide()
     errorwin = gtk.Window()
-    errorwin.set_title("Errors")
+    errorwin.set_title(_("Errors"))
     errorwin.set_border_width(10)
     errorwin.resize(600, 300)
 
     def on_row_activate(tree, path, col):
       w = gtk.Window()
-      w.set_title("Debug Output")
+      w.set_title(_("Debug Output"))
       w.resize(800, 800)
       
       text = gtk.TextView()
@@ -801,7 +815,7 @@ class GwibberClient(gtk.Window):
         gtk.gdk.threads_leave()
 
         self.statusbar.pop(0)
-        self.statusbar.push(0, "Last update: %s" % time.strftime("%I:%M:%S %p"))
+        self.statusbar.push(0, _("Last update: %s") % time.strftime(_("%I:%M:%S %p")))
         self.last_update = mx.DateTime.gmt()
         
       finally: gobject.idle_add(self.throbber.clear)
