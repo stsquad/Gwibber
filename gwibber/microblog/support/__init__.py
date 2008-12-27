@@ -7,6 +7,11 @@ SegPhault (Ryan Paul) - 07/25/2008
 """
 
 import re, os, facelib, locale, mx.DateTime
+import math
+
+import gettext
+
+_ = gettext.lgettext
 
 def parse_time(t):
 
@@ -46,13 +51,19 @@ def generate_time_string(t):
 
   d = mx.DateTime.gmt() - t
 
-  if d.seconds < 60: return "%d seconds ago" % d.seconds
-  elif d.seconds < (60 * 60):  return "%d minutes ago" % (d.seconds / 60)
-  elif d.seconds < (60 * 60 * 2): return "1 hour ago"
-  elif d.days < 1: return "%d hours ago" % (d.seconds / 60 / 60)
-  elif d.days == 1: return "1 day ago"
-  elif d.days > 0: return "%d days ago" % d.days
-  else: return "BUG: %s" % str(d)
-
+  # Aliasing the function doesn't work here with intltool...
+  if round(d.seconds) < 60:
+    return gettext.ngettext("%(sec)d second ago", "%(sec)d seconds ago", math.floor(d.seconds)) % {"sec": d.seconds}
+  elif d.seconds < (60 * 60):
+    minutes = math.floor(d.seconds / 60)
+    return gettext.ngettext("%(minute)d minute ago", "%(minute)d minutes ago", minutes) % {"minute": minutes}
+  elif d.seconds >= (60 * 60) and d.days < 1:
+    hours = math.floor(d.seconds / 60 / 60)
+    return gettext.ngettext("%(hour)d hour ago", "%(hour)d hours ago", hours) % {"hour": hours}
+  elif d.days > 0:
+    days = math.floor(d.days)
+    return gettext.ngettext("%(day)d day ago", "%(day)d days ago", days) % {"day": days}
+  else:
+    return _("BUG: %s") % str(d)
 
 
