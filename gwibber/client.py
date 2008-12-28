@@ -36,10 +36,12 @@ MAX_MESSAGE_LENGTH = 140
 IMAGE_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
 VERSION_NUMBER = "0.7.3"
 
+def N_(message): return message
+
 CONFIGURABLE_UI_ELEMENTS = {
-  "editor": "_Editor",
-  "statusbar": "_Statusbar",
-  "tray_icon": "Tray _Icon",
+  "editor": N_("_Editor"),
+  "statusbar": N_("_Statusbar"),
+  "tray_icon": N_("Tray _Icon"),
 }
 
 DEFAULT_PREFERENCES = {
@@ -567,7 +569,7 @@ class GwibberClient(gtk.Window):
     menuHelp.append(actAbout.create_menu_item())
 
     for w, n in CONFIGURABLE_UI_ELEMENTS.items():
-      mi = gtk.CheckMenuItem(n)
+      mi = gtk.CheckMenuItem(_(n))
       self.preferences.bind(mi, "show_%s" % w)
       menuView.append(mi)
 

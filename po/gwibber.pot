@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-28 22:20+0100\n"
+"POT-Creation-Date: 2008-12-28 22:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,35 +29,47 @@ msgstr ""
 msgid "Microblogging client for GNOME"
 msgstr ""
 
-#: ../gwibber/client.py:56
+#: ../gwibber/client.py:42
+msgid "_Editor"
+msgstr ""
+
+#: ../gwibber/client.py:43
+msgid "_Statusbar"
+msgstr ""
+
+#: ../gwibber/client.py:44
+msgid "Tray _Icon"
+msgstr ""
+
+#: ../gwibber/client.py:63
 msgid "Gwibber"
 msgstr ""
 
-#: ../gwibber/client.py:83
+#: ../gwibber/client.py:90
 msgid "%Y-%m-%d"
 msgstr ""
 
-#: ../gwibber/client.py:84 ../gwibber/client.py:841
+#: ../gwibber/client.py:91 ../gwibber/client.py:848
 msgid "%I:%M:%S %p"
 msgstr ""
 
-#: ../gwibber/client.py:113
+#: ../gwibber/client.py:120
 msgid "Messages"
 msgstr ""
 
-#: ../gwibber/client.py:114
+#: ../gwibber/client.py:121
 msgid "Replies"
 msgstr ""
 
-#: ../gwibber/client.py:149
+#: ../gwibber/client.py:156
 msgid "Cancel"
 msgstr ""
 
-#: ../gwibber/client.py:259
+#: ../gwibber/client.py:266
 msgid "Enter a search query:"
 msgstr ""
 
-#: ../gwibber/client.py:391
+#: ../gwibber/client.py:398
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
@@ -65,84 +77,84 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../gwibber/client.py:455
+#: ../gwibber/client.py:462
 #, python-format
 msgid "Characters remaining: %s"
 msgstr ""
 
-#: ../gwibber/client.py:485
+#: ../gwibber/client.py:492
 msgid "_Manage"
 msgstr ""
 
-#: ../gwibber/client.py:489
+#: ../gwibber/client.py:496
 msgid "_Create"
 msgstr ""
 
-#: ../gwibber/client.py:507
+#: ../gwibber/client.py:514
 #, python-format
 msgid "_%s Messages"
 msgstr ""
 
-#: ../gwibber/client.py:550
+#: ../gwibber/client.py:557
 msgid "Refresh"
 msgstr ""
 
-#: ../gwibber/client.py:551
+#: ../gwibber/client.py:558
 msgid "Search"
 msgstr ""
 
-#: ../gwibber/client.py:552
+#: ../gwibber/client.py:559
 msgid "Clear"
 msgstr ""
 
-#: ../gwibber/client.py:553 ../ui/preferences.glade.h:33
+#: ../gwibber/client.py:560 ../ui/preferences.glade.h:33
 msgid "Preferences"
 msgstr ""
 
-#: ../gwibber/client.py:554
+#: ../gwibber/client.py:561
 msgid "Quit"
 msgstr ""
 
 #. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
 #. actThemeTest.connect("activate", self.theme_preview_test)
 #. menuHelp.append(actThemeTest.create_menu_item())
-#: ../gwibber/client.py:560
+#: ../gwibber/client.py:567
 msgid "_About"
 msgstr ""
 
-#: ../gwibber/client.py:570
+#: ../gwibber/client.py:577
 msgid "S_pellcheck"
 msgstr ""
 
-#: ../gwibber/client.py:574
+#: ../gwibber/client.py:581
 msgid "E_rrors"
 msgstr ""
 
-#: ../gwibber/client.py:579
+#: ../gwibber/client.py:586
 msgid "_Gwibber"
 msgstr ""
 
-#: ../gwibber/client.py:582
+#: ../gwibber/client.py:589
 msgid "_View"
 msgstr ""
 
-#: ../gwibber/client.py:585
+#: ../gwibber/client.py:592
 msgid "_Accounts"
 msgstr ""
 
-#: ../gwibber/client.py:589
+#: ../gwibber/client.py:596
 msgid "_Help"
 msgstr ""
 
-#: ../gwibber/client.py:641
+#: ../gwibber/client.py:648
 msgid "Errors"
 msgstr ""
 
-#: ../gwibber/client.py:647
+#: ../gwibber/client.py:654
 msgid "Debug Output"
 msgstr ""
 
-#: ../gwibber/client.py:841
+#: ../gwibber/client.py:848
 #, python-format
 msgid "Last update: %s"
 msgstr ""
