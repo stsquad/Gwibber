@@ -12,7 +12,6 @@ PROTOCOL_INFO = {
   "version": 0.1,
   
   "config": [
-    "feed_url",
     "message_color",
     "receive_enabled",
     "send_enabled"
@@ -85,7 +84,8 @@ class Client:
 
   def receive_enabled(self):
     return self.account["receive_enabled"] and \
-      self.account["feed_url"] != None
+      self.account["session_key"] != None and \
+      self.account["secret_key"] != None
 
   def connect(self, url, data = None):
     return urllib2.urlopen(urllib2.Request(url, data)).read()
