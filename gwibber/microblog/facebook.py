@@ -55,10 +55,10 @@ class Message:
 
     self.bgcolor = "message_color"
     
-    # XXX: optimisation, could get profile image url directly out of FQL query now
-    if self.client.profile_images.has_key(self.sender):
-      self.image = self.client.profile_images[self.sender]
-    else: self.image = "http://digg.com/img/udl.png"
+    if data['pic_square']:
+      self.image = data['pic_square']
+    else:
+      self.image = "http://digg.com/img/udl.png"
    except Exception:
     from traceback import format_exc
     print format_exc()
@@ -66,16 +66,11 @@ class Message:
 class Client:
   def __init__(self, acct):
     self.account = acct
-    self.profile_images = {}
     
     self.facebook = support.facelib.Facebook(APP_KEY, SECRET_KEY)
     self.facebook.session_key = self.account["session_key"]
     self.facebook.uid = self.account["session_key"].split('-')[1]
     self.facebook.secret = self.account["secret_key"]
-
-  def get_images(self):
-    friends = self.facebook.users.getInfo(self.facebook.friends.get(), ['name', 'pic_square'])
-    return dict((f["name"], f["pic_square"]) for f in friends if f["pic_square"])
 
   def send_enabled(self):
     return self.account["send_enabled"] and \
@@ -91,11 +86,10 @@ class Client:
     return urllib2.urlopen(urllib2.Request(url, data)).read()
 
   def get_messages(self):
-    query = "SELECT name, profile_url, status FROM user WHERE uid in (SELECT uid2 FROM friend WHERE uid1 = "+str(self.facebook.uid)+") AND status.message != '' AND status.time > 0 ORDER BY status.time DESC" # LIMIT 1,30"
+    query = "SELECT name, profile_url, status, pic_square FROM user WHERE uid in (SELECT uid2 FROM friend WHERE uid1 = "+str(self.facebook.uid)+") AND status.message != '' AND status.time > 0 ORDER BY status.time DESC" # LIMIT 1,30"
     return self.facebook.fql.query([query])
 
   def receive(self):
-    self.profile_images = self.get_images()
     for data in self.get_messages():
       yield Message(self, data)
 
