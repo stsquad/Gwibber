@@ -45,7 +45,6 @@ class Message:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.data = data
     self.sender = data["user"]["name"]
     self.sender_nick = data["user"]["screen_name"]
     self.sender_id = data["user"]["id"]
@@ -69,7 +68,6 @@ class SearchResult:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.data = data
     self.sender = data["from_user"]
     self.sender_nick = data["from_user"]
     self.sender_id = data["from_user_id"]

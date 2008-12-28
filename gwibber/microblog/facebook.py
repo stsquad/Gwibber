@@ -4,8 +4,7 @@ Facebook interface for Gwibber
 SegPhault (Ryan Paul) - 12/22/2007
 """
 
-import urllib2, urllib, re, support, can
-from xml.dom import minidom
+import urllib2, urllib, re, support, can, feedparser
 
 PROTOCOL_INFO = {
   "name": "Facebook",
@@ -37,17 +36,17 @@ class Message:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.data = data
-    self.sender = data.getElementsByTagName("author")[0].firstChild.nodeValue
+
+    self.sender = data.author
     self.sender_nick = self.sender
     self.sender_id = self.sender.replace(" ","_")
-    self.time = support.parse_time(data.getElementsByTagName("pubDate")[0].firstChild.nodeValue)
-    self.text = sanitize_text(data.getElementsByTagName("title")[0].firstChild.nodeValue)
+    self.time = support.parse_time(data.updated)
+    self.text = sanitize_text(data.title)
 
     if self.text.startswith(self.sender):
       self.text = self.text[len(self.sender)+1:]
 
-    self.url = data.getElementsByTagName("link")[0].firstChild.nodeValue
+    self.url = data.link
     self.bgcolor = "message_color"
     
     if self.client.profile_images.has_key(self.sender):
@@ -79,15 +78,16 @@ class Client:
       self.account["feed_url"] != None
 
   def connect(self, url, data = None):
-    return urllib2.urlopen(urllib2.Request(url, data)).read()
+    return urllib2.urlopen(urllib2.Request(url, data))
 
   def get_messages(self):
-    return minidom.parseString(self.connect(
-      self.account["feed_url"])).getElementsByTagName("item")
+    return feedparser.parse(self.account["feed_url"])
 
   def receive(self):
-    self.profile_images = self.get_images()
-    for data in self.get_messages():
+    if len(self.profile_images) == 0:
+      self.profile_images = self.get_images()
+    
+    for data in self.get_messages().entries:
       yield Message(self, data)
 
   def send(self, message):
