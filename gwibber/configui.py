@@ -68,13 +68,10 @@ class AccountManager(config.Accounts):
       glade.get_widget("btnAuthorize").connect("clicked",
         lambda a: self.facebook_authorize(acct))
 
-    # FIXME: better way to handle the different titles?
-    # For the moment, translators comment
-    dialog.set_title(_("%s %s account") % (
-      # Translators: these words end up in a dialog title like:
-      # Create ... account
-      # The same for Edit
-      _("Create") if create else _("Edit"), acct["protocol"]))
+    if create:
+      dialog.set_title(_("Create %s account") % acct["protocol"])
+    else:
+      dialog.set_title(_("Edit %s account") % acct["protocol"])
 
   def on_account_create(self, w, protocol):
     a = self.accounts.new_account()
