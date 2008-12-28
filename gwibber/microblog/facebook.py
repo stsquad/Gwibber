@@ -4,7 +4,7 @@ Facebook interface for Gwibber
 SegPhault (Ryan Paul) - 12/22/2007
 """
 
-import urllib2, urllib, re, support, can
+import urllib2, urllib, re, support, can, mx.DateTime
 from xml.dom import minidom
 
 PROTOCOL_INFO = {
@@ -33,28 +33,36 @@ def sanitize_text(t):
 
 class Message:
   def __init__(self, client, data):
+   try:
     self.client = client
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
     self.data = data
-    self.sender = data.getElementsByTagName("author")[0].firstChild.nodeValue
+    self.sender = data['name']
     self.sender_nick = self.sender
     self.sender_id = self.sender.replace(" ","_")
-    self.time = support.parse_time(data.getElementsByTagName("pubDate")[0].firstChild.nodeValue)
-    self.text = sanitize_text(data.getElementsByTagName("title")[0].firstChild.nodeValue)
+    self.profile_url = data['profile_url']
+    self.url = data['profile_url']
+    if data['status']:
+      self.id = data['status']['status_id']
+      self.url += '&story_fbid=' + str(self.id)
+      self.time = mx.DateTime.DateTimeFrom(data['status']['time']).gmtime()
 
-    if self.text.startswith(self.sender):
-      self.text = self.text[len(self.sender)+1:]
+      self.text = sanitize_text(data['status']['message'])
 
-    self.url = data.getElementsByTagName("link")[0].firstChild.nodeValue
+      if self.text.startswith(self.sender):
+        self.text = self.text[len(self.sender)+1:]
+
     self.bgcolor = "message_color"
     
+    # XXX: optimisation, could get profile image url directly out of FQL query now
     if self.client.profile_images.has_key(self.sender):
       self.image = self.client.profile_images[self.sender]
     else: self.image = "http://digg.com/img/udl.png"
-
-    self.profile_url = "http://www.facebook.com"
+   except Exception:
+    from traceback import format_exc
+    print format_exc()
 
 class Client:
   def __init__(self, acct):
@@ -63,6 +71,7 @@ class Client:
     
     self.facebook = support.facelib.Facebook(APP_KEY, SECRET_KEY)
     self.facebook.session_key = self.account["session_key"]
+    self.facebook.uid = self.account["session_key"].split('-')[1]
     self.facebook.secret = self.account["secret_key"]
 
   def get_images(self):
@@ -82,8 +91,8 @@ class Client:
     return urllib2.urlopen(urllib2.Request(url, data)).read()
 
   def get_messages(self):
-    return minidom.parseString(self.connect(
-      self.account["feed_url"])).getElementsByTagName("item")
+    query = "SELECT name, profile_url, status FROM user WHERE uid in (SELECT uid2 FROM friend WHERE uid1 = "+str(self.facebook.uid)+") AND status.message != '' AND status.time > 0 ORDER BY status.time DESC" # LIMIT 1,30"
+    return self.facebook.fql.query([query])
 
   def receive(self):
     self.profile_images = self.get_images()
