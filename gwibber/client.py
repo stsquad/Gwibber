@@ -314,6 +314,7 @@ class GwibberClient(gtk.Window):
   def on_cancel_reply(self, w, *args):
     self.cancel_button.hide()
     self.message_target = None
+    self._reply_acct = None
     self.input.set_text("")
 
   def on_toggle_window_visibility(self, w):
@@ -348,8 +349,10 @@ class GwibberClient(gtk.Window):
   
   def reply(self, message):
     acct = message.account
-
-    if acct.supports(microblog.can.REPLY):
+    # store which account we replied to first so we know when not to allow further replies
+    if not self._reply_acct:
+        self._reply_acct = acct
+    if acct.supports(microblog.can.REPLY) and acct==self._reply_acct:
       self.input.grab_focus()
       # Allow replying to more than one person by clicking on the reply
       # button. 
