@@ -33,9 +33,14 @@ gtk.gdk.threads_init()
 
 MAX_MESSAGE_LENGTH = 140
 
-CONFIGURABLE_UI_ELEMENTS = ["editor", "statusbar", "tray_icon"]
 IMAGE_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
 VERSION_NUMBER = "0.7.3"
+
+CONFIGURABLE_UI_ELEMENTS = {
+  "editor": "_Editor",
+  "statusbar": "_Statusbar",
+  "tray_icon": "Tray _Icon",
+}
 
 DEFAULT_PREFERENCES = {
   "version": VERSION_NUMBER,
@@ -47,7 +52,7 @@ DEFAULT_PREFERENCES = {
   "theme": "default",
 }
 
-for _i in CONFIGURABLE_UI_ELEMENTS:
+for _i in CONFIGURABLE_UI_ELEMENTS.keys():
   DEFAULT_PREFERENCES["show_%s" % _i] = True
 
 class GwibberClient(gtk.Window):
@@ -193,7 +198,7 @@ class GwibberClient(gtk.Window):
         dbus_interface="org.freedesktop.Notifications",
         signal_name="ActionInvoked")
 
-    for i in CONFIGURABLE_UI_ELEMENTS:
+    for i in CONFIGURABLE_UI_ELEMENTS.keys():
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
         lambda *a: self.apply_ui_element_settings())
     
@@ -371,7 +376,7 @@ class GwibberClient(gtk.Window):
       self.move(*self.last_position)
 
   def apply_ui_element_settings(self):
-    for i in CONFIGURABLE_UI_ELEMENTS:
+    for i in CONFIGURABLE_UI_ELEMENTS.keys():
       if hasattr(self, i):
         getattr(self, i).set_property(
           "visible", self.preferences["show_%s" % i])
@@ -561,9 +566,9 @@ class GwibberClient(gtk.Window):
     actAbout.connect("activate", self.on_about)
     menuHelp.append(actAbout.create_menu_item())
 
-    for i in CONFIGURABLE_UI_ELEMENTS:
-      mi = gtk.CheckMenuItem("_%s" % " ".join(i.split("_")).capitalize())
-      self.preferences.bind(mi, "show_%s" % i)
+    for w, n in CONFIGURABLE_UI_ELEMENTS.items():
+      mi = gtk.CheckMenuItem(n)
+      self.preferences.bind(mi, "show_%s" % w)
       menuView.append(mi)
 
     if gintegration.SPELLCHECK_ENABLED:
