@@ -122,7 +122,7 @@ class Client:
 
   def get_search_data(self, query):
     return simplejson.loads(urllib2.urlopen(
-      urllib2.Request("https://search.twitter.com/search.json",
+      urllib2.Request("http://search.twitter.com/search.json",
         urllib.urlencode({"q": query}))).read())
 
   def search(self, query):
