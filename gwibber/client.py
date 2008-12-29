@@ -24,10 +24,11 @@ DOMAIN = "gwibber"
 
 locale.setlocale(locale.LC_ALL, "")
 
-_ = gettext.lgettext
+for module in gtk.glade, gettext:
+  module.bindtextdomain(DOMAIN, LOCALEDIR)
+  module.textdomain(DOMAIN)
 
-gettext.bindtextdomain(DOMAIN, LOCALEDIR)
-gettext.textdomain(DOMAIN)
+_ = gettext.lgettext
 
 gtk.gdk.threads_init()
 
@@ -43,6 +44,13 @@ CONFIGURABLE_UI_ELEMENTS = {
   "statusbar": N_("_Statusbar"),
   "tray_icon": N_("Tray _Icon"),
 }
+
+CONFIGURABLE_ACCOUNT_ACTIONS = {
+  # Translators: these are checkbox
+  "receive": N_("_Receive Messages"),
+  "send": N_("_Send Messages"),
+  "search": N_("Search _Messages")
+  }
 
 DEFAULT_PREFERENCES = {
   "version": VERSION_NUMBER,
@@ -508,11 +516,11 @@ class GwibberClient(gtk.Window):
     for acct in self.accounts:
       if acct["protocol"] in microblog.PROTOCOLS.keys():
         sm = gtk.Menu()
-        
-        for i in ["receive", "send", "search"]:
-          if acct.supports(getattr(microblog.can, i.upper())):
-            mi = gtk.CheckMenuItem(_("_%s Messages") % i.capitalize())
-            acct.bind(mi, "%s_enabled" % i)
+
+        for key in CONFIGURABLE_ACCOUNT_ACTIONS.keys():
+          if acct.supports(getattr(microblog.can, key.upper())):
+            mi = gtk.CheckMenuItem(_(CONFIGURABLE_ACCOUNT_ACTIONS[key]))
+            acct.bind(mi, "%s_enabled" % key)
             sm.append(mi)
         
         sm.append(gtk.SeparatorMenuItem())

@@ -41,7 +41,7 @@ class Style:
     for ci, c in enumerate(self.columns):
       
       if len(c) > 2: name = c[2]
-      else: name = c[0].replace("_", " ").title()
+      else: name = c[0].replace("_", " ")
 
       if len(c) > 1 and isinstance(c[1], tuple):
         col = gtk.TreeViewColumn(name, c[1][0])

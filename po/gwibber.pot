@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-28 22:39+0100\n"
+"POT-Creation-Date: 2008-12-29 14:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,47 +29,60 @@ msgstr ""
 msgid "Microblogging client for GNOME"
 msgstr ""
 
-#: ../gwibber/client.py:42
+#: ../gwibber/client.py:43
 msgid "_Editor"
 msgstr ""
 
-#: ../gwibber/client.py:43
+#: ../gwibber/client.py:44
 msgid "_Statusbar"
 msgstr ""
 
-#: ../gwibber/client.py:44
+#: ../gwibber/client.py:45
 msgid "Tray _Icon"
 msgstr ""
 
-#: ../gwibber/client.py:63
+#. Translators: these are checkbox
+#: ../gwibber/client.py:50 ../ui/preferences.glade.h:52
+msgid "_Receive Messages"
+msgstr ""
+
+#: ../gwibber/client.py:51 ../ui/preferences.glade.h:53
+msgid "_Send Messages"
+msgstr ""
+
+#: ../gwibber/client.py:52
+msgid "Search _Messages"
+msgstr ""
+
+#: ../gwibber/client.py:71
 msgid "Gwibber"
 msgstr ""
 
-#: ../gwibber/client.py:90
+#: ../gwibber/client.py:98
 msgid "%Y-%m-%d"
 msgstr ""
 
-#: ../gwibber/client.py:91 ../gwibber/client.py:848
+#: ../gwibber/client.py:99 ../gwibber/client.py:856
 msgid "%I:%M:%S %p"
 msgstr ""
 
-#: ../gwibber/client.py:120
+#: ../gwibber/client.py:128
 msgid "Messages"
 msgstr ""
 
-#: ../gwibber/client.py:121
+#: ../gwibber/client.py:129
 msgid "Replies"
 msgstr ""
 
-#: ../gwibber/client.py:156
+#: ../gwibber/client.py:164
 msgid "Cancel"
 msgstr ""
 
-#: ../gwibber/client.py:266
+#: ../gwibber/client.py:274
 msgid "Enter a search query:"
 msgstr ""
 
-#: ../gwibber/client.py:398
+#: ../gwibber/client.py:406
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
@@ -77,84 +90,79 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../gwibber/client.py:462
+#: ../gwibber/client.py:470
 #, python-format
 msgid "Characters remaining: %s"
 msgstr ""
 
-#: ../gwibber/client.py:492
+#: ../gwibber/client.py:500
 msgid "_Manage"
 msgstr ""
 
-#: ../gwibber/client.py:496
+#: ../gwibber/client.py:504
 msgid "_Create"
 msgstr ""
 
-#: ../gwibber/client.py:514
-#, python-format
-msgid "_%s Messages"
-msgstr ""
-
-#: ../gwibber/client.py:557
+#: ../gwibber/client.py:565
 msgid "Refresh"
 msgstr ""
 
-#: ../gwibber/client.py:558
+#: ../gwibber/client.py:566 ../gwibber/configui.py:123
 msgid "Search"
 msgstr ""
 
-#: ../gwibber/client.py:559
+#: ../gwibber/client.py:567
 msgid "Clear"
 msgstr ""
 
-#: ../gwibber/client.py:560 ../ui/preferences.glade.h:33
+#: ../gwibber/client.py:568 ../ui/preferences.glade.h:33
 msgid "Preferences"
 msgstr ""
 
-#: ../gwibber/client.py:561
+#: ../gwibber/client.py:569
 msgid "Quit"
 msgstr ""
 
 #. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
 #. actThemeTest.connect("activate", self.theme_preview_test)
 #. menuHelp.append(actThemeTest.create_menu_item())
-#: ../gwibber/client.py:567
+#: ../gwibber/client.py:575
 msgid "_About"
 msgstr ""
 
-#: ../gwibber/client.py:577
+#: ../gwibber/client.py:585
 msgid "S_pellcheck"
 msgstr ""
 
-#: ../gwibber/client.py:581
+#: ../gwibber/client.py:589
 msgid "E_rrors"
 msgstr ""
 
-#: ../gwibber/client.py:586
+#: ../gwibber/client.py:594
 msgid "_Gwibber"
 msgstr ""
 
-#: ../gwibber/client.py:589
+#: ../gwibber/client.py:597
 msgid "_View"
 msgstr ""
 
-#: ../gwibber/client.py:592
+#: ../gwibber/client.py:600
 msgid "_Accounts"
 msgstr ""
 
-#: ../gwibber/client.py:596
+#: ../gwibber/client.py:604
 msgid "_Help"
 msgstr ""
 
-#: ../gwibber/client.py:648
+#: ../gwibber/client.py:656
 msgid "Errors"
 msgstr ""
 
-#: ../gwibber/client.py:654
+#: ../gwibber/client.py:662
 msgid "Debug Output"
 msgstr ""
 
-#: ../gwibber/client.py:848
+#: ../gwibber/client.py:856
 #, python-format
 msgid "Last update: %s"
 msgstr ""
@@ -189,13 +197,31 @@ msgstr ""
 msgid "Manage Accounts"
 msgstr ""
 
-#. Translators: this string appears when somebody reply to a message, like '3 minutes ago in reply to angelina'
-#: ../gwibber/gwui.py:54
+#: ../gwibber/configui.py:116
+msgid "Username"
+msgstr ""
+
+#: ../gwibber/configui.py:117
+msgid "Receive"
+msgstr ""
+
+#: ../gwibber/configui.py:120
+msgid "Send"
+msgstr ""
+
+#: ../gwibber/configui.py:127
+msgid "Protocol"
+msgstr ""
+
+#. Translators: this string appears when somebody reply to a message
+#. like '3 minutes ago in reply to angelina'
+#: ../gwibber/gwui.py:55
 msgid "in reply to"
 msgstr ""
 
-#. Translators: this string indicates where the message arrived from, like 'from api', 'from Gwibber'
-#: ../gwibber/gwui.py:56
+#. Translators: this string indicates where the message arrived from
+#. like 'from api', 'from Gwibber'
+#: ../gwibber/gwui.py:58
 msgid "from"
 msgstr ""
 
@@ -397,12 +423,4 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:51
 msgid "_Authorize Gwibber"
-msgstr ""
-
-#: ../ui/preferences.glade.h:52
-msgid "_Receive Messages"
-msgstr ""
-
-#: ../ui/preferences.glade.h:53
-msgid "_Send Messages"
 msgstr ""
