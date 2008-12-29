@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-29 14:16+0100\n"
+"POT-Creation-Date: 2008-12-29 15:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,11 +42,11 @@ msgid "Tray _Icon"
 msgstr ""
 
 #. Translators: these are checkbox
-#: ../gwibber/client.py:50 ../ui/preferences.glade.h:52
+#: ../gwibber/client.py:50 ../ui/preferences.glade.h:51
 msgid "_Receive Messages"
 msgstr ""
 
-#: ../gwibber/client.py:51 ../ui/preferences.glade.h:53
+#: ../gwibber/client.py:51 ../ui/preferences.glade.h:52
 msgid "_Send Messages"
 msgstr ""
 
@@ -59,11 +59,31 @@ msgid "Gwibber"
 msgstr ""
 
 #: ../gwibber/client.py:98
+msgid "Date"
+msgstr ""
+
+#: ../gwibber/client.py:98
 msgid "%Y-%m-%d"
+msgstr ""
+
+#: ../gwibber/client.py:99
+msgid "Time"
 msgstr ""
 
 #: ../gwibber/client.py:99 ../gwibber/client.py:856
 msgid "%I:%M:%S %p"
+msgstr ""
+
+#: ../gwibber/client.py:100 ../gwibber/configui.py:116
+msgid "Username"
+msgstr ""
+
+#: ../gwibber/client.py:101 ../gwibber/configui.py:127
+msgid "Protocol"
+msgstr ""
+
+#: ../gwibber/client.py:102
+msgid "Message"
 msgstr ""
 
 #: ../gwibber/client.py:128
@@ -115,7 +135,7 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: ../gwibber/client.py:568 ../ui/preferences.glade.h:33
+#: ../gwibber/client.py:568 ../ui/preferences.glade.h:32
 msgid "Preferences"
 msgstr ""
 
@@ -197,20 +217,12 @@ msgstr ""
 msgid "Manage Accounts"
 msgstr ""
 
-#: ../gwibber/configui.py:116
-msgid "Username"
-msgstr ""
-
 #: ../gwibber/configui.py:117
 msgid "Receive"
 msgstr ""
 
 #: ../gwibber/configui.py:120
 msgid "Send"
-msgstr ""
-
-#: ../gwibber/configui.py:127
-msgid "Protocol"
 msgstr ""
 
 #. Translators: this string appears when somebody reply to a message
@@ -376,30 +388,26 @@ msgid "Message Color:"
 msgstr ""
 
 #: ../ui/preferences.glade.h:29
-msgid "Milo Casagrande"
-msgstr ""
-
-#: ../ui/preferences.glade.h:30
 msgid "Minimize to tray on close"
 msgstr ""
 
-#: ../ui/preferences.glade.h:31
+#: ../ui/preferences.glade.h:30
 msgid "Minutes between refresh:  "
 msgstr ""
 
-#: ../ui/preferences.glade.h:32
+#: ../ui/preferences.glade.h:31
 msgid "Password:"
 msgstr ""
 
-#: ../ui/preferences.glade.h:34
+#: ../ui/preferences.glade.h:33
 msgid "Request Login Code"
 msgstr ""
 
-#: ../ui/preferences.glade.h:35
+#: ../ui/preferences.glade.h:34
 msgid "Show tray icon"
 msgstr ""
 
-#: ../ui/preferences.glade.h:36
+#: ../ui/preferences.glade.h:35
 msgid ""
 "This program is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -417,10 +425,15 @@ msgid ""
 "USA.\n"
 msgstr ""
 
-#: ../ui/preferences.glade.h:50
+#: ../ui/preferences.glade.h:49
 msgid "Username:"
 msgstr ""
 
-#: ../ui/preferences.glade.h:51
+#: ../ui/preferences.glade.h:50
 msgid "_Authorize Gwibber"
+msgstr ""
+
+#. Translators: insert your name here as Name Surname <email>, year
+#: ../ui/preferences.glade.h:54
+msgid "translator-credits"
 msgstr ""
