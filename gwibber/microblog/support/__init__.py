@@ -53,15 +53,19 @@ def generate_time_string(t):
 
   # Aliasing the function doesn't work here with intltool...
   if round(d.seconds) < 60:
-    return gettext.ngettext("%(sec)d second ago", "%(sec)d seconds ago", math.floor(d.seconds)) % {"sec": d.seconds}
+    seconds = math.floor(d.seconds)
+    return gettext.ngettext("%(sec)d second ago", "%(sec)d seconds ago", seconds) % {"sec": seconds}
   elif d.seconds < (60 * 60):
     minutes = math.floor(d.seconds / 60)
     return gettext.ngettext("%(minute)d minute ago", "%(minute)d minutes ago", minutes) % {"minute": minutes}
   elif d.seconds >= (60 * 60) and d.days < 1:
     hours = math.floor(d.seconds / 60 / 60)
     return gettext.ngettext("%(hour)d hour ago", "%(hour)d hours ago", hours) % {"hour": hours}
-  elif d.days > 0:
+  elif d.days > 0 and d.days < 365:
     days = math.floor(d.days)
     return gettext.ngettext("%(day)d day ago", "%(day)d days ago", days) % {"day": days}
+  elif d.days >= 365:
+    years = d.days / 365
+    return gettext.ngettext("%(year)d year ago", "%(year)d years ago", years) % {"year": years}
   else:
     return _("BUG: %s") % str(d)

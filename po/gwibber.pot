@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-29 15:21+0100\n"
+"POT-Creation-Date: 2009-01-01 12:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -237,35 +237,42 @@ msgstr ""
 msgid "from"
 msgstr ""
 
-#: ../gwibber/microblog/support/__init__.py:56
+#: ../gwibber/microblog/support/__init__.py:57
 #, python-format
 msgid "%(sec)d second ago"
 msgid_plural "%(sec)d seconds ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gwibber/microblog/support/__init__.py:59
+#: ../gwibber/microblog/support/__init__.py:60
 #, python-format
 msgid "%(minute)d minute ago"
 msgid_plural "%(minute)d minutes ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gwibber/microblog/support/__init__.py:62
+#: ../gwibber/microblog/support/__init__.py:63
 #, python-format
 msgid "%(hour)d hour ago"
 msgid_plural "%(hour)d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gwibber/microblog/support/__init__.py:65
+#: ../gwibber/microblog/support/__init__.py:66
 #, python-format
 msgid "%(day)d day ago"
 msgid_plural "%(day)d days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gwibber/microblog/support/__init__.py:67
+#: ../gwibber/microblog/support/__init__.py:69
+#, python-format
+msgid "%(year)d year ago"
+msgid_plural "%(year)d years ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../gwibber/microblog/support/__init__.py:71
 #, python-format
 msgid "BUG: %s"
 msgstr ""
