@@ -11,8 +11,6 @@ import math
 
 import gettext
 
-_ = gettext.lgettext
-
 def parse_time(t):
 
   loc = locale.getlocale(locale.LC_TIME)

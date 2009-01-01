@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-01 12:06+0100\n"
+"POT-Creation-Date: 2009-01-01 14:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -237,42 +237,84 @@ msgstr ""
 msgid "from"
 msgstr ""
 
-#: ../gwibber/microblog/support/__init__.py:57
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../gwibber/microblog/__init__.py:63 ../gwibber/microblog/__init__.py:70
+msgid "send message"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../gwibber/microblog/__init__.py:78
+msgid "retrieve thread"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../gwibber/microblog/__init__.py:85
+msgid "retrieve responses"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../gwibber/microblog/__init__.py:92
+msgid "retrieve messages"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../gwibber/microblog/__init__.py:99
+msgid "retrieve positions"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../gwibber/microblog/__init__.py:106
+msgid "perform search query"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../gwibber/microblog/__init__.py:113
+msgid "perform tag query"
+msgstr ""
+
+#: ../gwibber/microblog/support/__init__.py:55
 #, python-format
 msgid "%(sec)d second ago"
 msgid_plural "%(sec)d seconds ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gwibber/microblog/support/__init__.py:60
+#: ../gwibber/microblog/support/__init__.py:58
 #, python-format
 msgid "%(minute)d minute ago"
 msgid_plural "%(minute)d minutes ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gwibber/microblog/support/__init__.py:63
+#: ../gwibber/microblog/support/__init__.py:61
 #, python-format
 msgid "%(hour)d hour ago"
 msgid_plural "%(hour)d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gwibber/microblog/support/__init__.py:66
+#: ../gwibber/microblog/support/__init__.py:64
 #, python-format
 msgid "%(day)d day ago"
 msgid_plural "%(day)d days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gwibber/microblog/support/__init__.py:69
+#: ../gwibber/microblog/support/__init__.py:67
 #, python-format
 msgid "%(year)d year ago"
 msgid_plural "%(year)d years ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gwibber/microblog/support/__init__.py:71
+#: ../gwibber/microblog/support/__init__.py:69
 #, python-format
 msgid "BUG: %s"
 msgstr ""
