@@ -45,6 +45,7 @@ class GwibberClient(gtk.Window):
     self.preferences = config.Preferences()
     self.last_update = None
     self.last_clear = None
+    self._reply_acct = None
     layout = gtk.VBox()
 
     gtk.rc_parse_string("""
