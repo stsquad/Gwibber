@@ -1,6 +1,10 @@
 
 import gtk, config, gtk.glade, microblog, table, gintegration, resources
 
+import gettext
+
+_ = gettext.lgettext
+
 class AccountManager(config.Accounts):
   def __init__(self, path = config.GCONF_ACCOUNTS_DIR):
     self.accounts = self
@@ -23,10 +27,10 @@ class AccountManager(config.Accounts):
         account["session_key"] = str(data["session_key"])
         
         m = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK,
-          "Keys obtained successfully.")
+          _("Keys obtained successfully."))
       else:
         m = gtk.MessageDialog(None, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK,
-          "Failed to obtain key.") 
+          _("Failed to obtain key."))
 
       m.run()
       m.destroy()
@@ -54,7 +58,8 @@ class AccountManager(config.Accounts):
       lambda a: dialog.destroy())
 
     if create:
-      glade.get_widget("%s_btndelete" % acct["protocol"]).set_label("Cancel")
+      glade.get_widget("%s_btndelete" % acct["protocol"]).props.label = gtk.STOCK_CANCEL
+      glade.get_widget("%s_btnclose" % acct["protocol"]).props.label = gtk.STOCK_OK
       
     glade.get_widget("%s_btndelete" % acct["protocol"]).connect("clicked",
       lambda a: self.on_account_delete(acct, dialog, create = create))
@@ -62,9 +67,11 @@ class AccountManager(config.Accounts):
     if acct["protocol"] == "facebook":
       glade.get_widget("btnAuthorize").connect("clicked",
         lambda a: self.facebook_authorize(acct))
-    
-    dialog.set_title("%s %s account" % (
-      "Create" if create else "Edit", acct["protocol"]))
+
+    if create:
+      dialog.set_title(_("Create %s account") % acct["protocol"])
+    else:
+      dialog.set_title(_("Edit %s account") % acct["protocol"])
 
   def on_account_create(self, w, protocol):
     a = self.accounts.new_account()
@@ -73,10 +80,10 @@ class AccountManager(config.Accounts):
 
   def on_account_delete(self, acct, dialog = None, create = False):
     if create:
-      msg = "Are you sure you want to cancel the creation of this account?"
+      msg = _("Are you sure you want to cancel the creation of this account?")
     else:
-      msg = "Are you sure you want to delete this account?"  
-    
+      msg = _("Are you sure you want to delete this account?")
+              
     d = gtk.MessageDialog(dialog, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,
       gtk.BUTTONS_YES_NO, msg)
     
@@ -88,7 +95,7 @@ class AccountManager(config.Accounts):
 
   def show_account_list(self):
     manager = gtk.Window()
-    manager.set_title("Manage Accounts")
+    manager.set_title(_("Manage Accounts"))
     manager.set_border_width(10)
     manager.resize(390,240)
 

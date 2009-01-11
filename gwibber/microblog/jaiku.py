@@ -39,7 +39,6 @@ class Message:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.data = data
     if data.has_key("id"): self.id = data["id"]
     self.sender = "%s %s" % (data["user"]["first_name"], data["user"]["last_name"])
     self.sender_nick = data["user"]["nick"]

@@ -9,7 +9,7 @@ PROTOCOLS = {
   "twitter": twitter,
   "facebook": facebook,
   "flickr": flickr,
-  "pownce": pownce,
+  #"pownce": pownce,
   "identica": identica,
   "laconica": laconica,
   "rss": rss,

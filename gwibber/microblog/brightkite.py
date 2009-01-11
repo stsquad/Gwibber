@@ -41,7 +41,6 @@ class Message:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.data = data
     self.sender = data["user"]["name"]
     self.sender_nick = data["user"]["screen_name"]
     self.sender_id = data["user"]["id"]
@@ -63,7 +62,6 @@ class FriendPosition:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.data = data
     self.sender = data["fullname"]
     self.sender_nick = data["login"]
     self.sender_id = self.sender_nick

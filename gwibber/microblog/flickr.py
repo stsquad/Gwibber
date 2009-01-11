@@ -36,7 +36,6 @@ class Message:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.data = data
     self.sender = data["username"]
     self.sender_nick = data["ownername"]
     self.sender_id = data["owner"]

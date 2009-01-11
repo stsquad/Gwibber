@@ -1,4 +1,3 @@
-
 """
 
 Gwibber Client Interface Library
@@ -6,8 +5,14 @@ SegPhault (Ryan Paul) - 05/26/2007
 
 """
 
-import webkit, gintegration, microblog, gtk, resources
-import urllib2, hashlib, time, os, simplejson
+import webkit, gintegration, resources
+import urllib2, hashlib, os, simplejson
+import Image
+
+# i18n magic
+import gettext
+
+_ = gettext.lgettext
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
 IMG_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
@@ -45,10 +50,20 @@ class MessageView(webkit.WebView):
     self.open(os.path.join("file:/", resources.get_theme_path(theme), "theme.html"))
 
   def load_messages(self, message_store = None):
+    # Translators: this string appears when somebody reply to a message, like '3 minutes ago in reply to angelina'
+    reply_string = " " + _("in reply to") + " "
+    # Translators: this string indicates where the message arrived from, like 'from api', 'from Gwibber' 
+    from_string = " " + _("from") + " "
+    # Done that way so translators don't have to handle white/empty spaces
+    # and there's no need to handle them in the html too
+    ui_dict = {"reply": reply_string, "from": from_string}
+    
+    strings = simplejson.dumps(ui_dict)
     msgs = simplejson.dumps([dict(m.__dict__, message_index=n)
+                             
       for n, m in enumerate(message_store or self.message_store)],
         indent=4, default=str)
-    self.execute_script("addMessages(%s)" % msgs)
+    self.execute_script("addMessages(%(msg)s, %(rep)s)" % {"msg": msgs, "rep": strings})
 
   def load_preferences(self, acct_prefs, theme_prefs=None):
     if theme_prefs:
@@ -73,11 +88,20 @@ def image_cache(url, cache_dir = IMG_CACHE_DIR):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)
   encoded_url = hashlib.sha1(url).hexdigest()
   if len(encoded_url) > 200: encoded_url = encoded_url[::-1][:200]
-  img_path = os.path.join(cache_dir, encoded_url).replace("\n","")
+  img_path = os.path.join(cache_dir, encoded_url + '.jpg').replace("\n","")
 
   if not os.path.exists(img_path):
     output = open(img_path, "w+")
     output.write(urllib2.urlopen(url).read())
     output.close()
+    try:
+        image = Image.open(img_path)
+        (x, y) = image.size
+        if x != 48 or y != 48:
+            image = image.resize((48, 48), Image.ANTIALIAS)
+            image.save(img_path)
+    except Exception:
+        from traceback import format_exc
+        print format_exc()
 
   return img_path
