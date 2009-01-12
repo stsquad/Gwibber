@@ -88,20 +88,33 @@ def image_cache(url, cache_dir = IMG_CACHE_DIR):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)
   encoded_url = hashlib.sha1(url).hexdigest()
   if len(encoded_url) > 200: encoded_url = encoded_url[::-1][:200]
-  img_path = os.path.join(cache_dir, encoded_url + '.jpg').replace("\n","")
+  fmt = url.split('.')[-1] # jpg/png etc.
+  img_path = os.path.join(cache_dir, encoded_url + '.' + fmt).replace("\n","")
 
   if not os.path.exists(img_path):
     output = open(img_path, "w+")
-    output.write(urllib2.urlopen(url).read())
-    output.close()
     try:
+      output.write(urllib2.urlopen(url).read())
+      output.close()
+      try:
         image = Image.open(img_path)
         (x, y) = image.size
         if x != 48 or y != 48:
-            image = image.resize((48, 48), Image.ANTIALIAS)
-            image.save(img_path)
-    except Exception:
+          if image.mode == 'P': # need to upsample limited palette images before resizing
+            image = image.convert('RGBA') 
+          image = image.resize((48, 48), Image.ANTIALIAS)
+          image.save(img_path)
+      except Exception, e:
         from traceback import format_exc
         print format_exc()
+    except IOError, e:
+      if hasattr(e, 'reason'): # URLError
+        print 'image_cache URL Error: %s whilst fetching %s' % (e.reason, url)
+      elif hasattr(e, 'code') and hasattr(e, 'msg') and hasattr(e, 'url'): # HTTPError
+        print 'image_cache HTTP Error %s: %s whilst fetching %s' % (e.code, e.msg, e.url)
+      else:
+        print e
+      # if there were any problems getting the avatar img then return None
+      return None
 
   return img_path
