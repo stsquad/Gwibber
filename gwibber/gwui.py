@@ -60,7 +60,6 @@ class MessageView(webkit.WebView):
     
     strings = simplejson.dumps(ui_dict)
     msgs = simplejson.dumps([dict(m.__dict__, message_index=n)
-                             
       for n, m in enumerate(message_store or self.message_store)],
         indent=4, default=str)
     self.execute_script("addMessages(%(msg)s, %(rep)s)" % {"msg": msgs, "rep": strings})
@@ -83,6 +82,15 @@ class MessageView(webkit.WebView):
 
   def link_handler(self, uri):
     pass
+
+class UserView(MessageView):
+  def load_messages(self, message_store = None): # override
+    if (self.message_store and len(self.message_store) > 0):
+      # use info from first message to create user header
+      msg = simplejson.dumps(dict(self.message_store[0].__dict__, message_index=0), sort_keys=True, indent=4, default=str)
+      self.execute_script("addUserHeader(%s)" % msg)
+      # display other messages as normal
+      MessageView.load_messages(self, message_store)
 
 def image_cache(url, cache_dir = IMG_CACHE_DIR):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)

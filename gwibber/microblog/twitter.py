@@ -49,12 +49,15 @@ class Message:
     self.sender = data["user"]["name"]
     self.sender_nick = data["user"]["screen_name"]
     self.sender_id = data["user"]["id"]
+    self.sender_location = data["user"]["location"]
+    self.sender_followers_count = data["user"]["followers_count"]
     self.time = support.parse_time(data["created_at"])
     self.text = data["text"]
     self.image = data["user"]["profile_image_url"]
     self.bgcolor = "message_color"
     self.url = "https://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
     self.profile_url = "gwibber:user/%s" % data["user"]["screen_name"]
+    self.external_profile_url = "https://twitter.com/%s" % data["user"]["screen_name"]
     self.reply_nick = data["in_reply_to_screen_name"]
     self.reply_url = "https://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
     self.html_string = '<span class="text">%s</span>' % \
@@ -77,7 +80,8 @@ class SearchResult:
     self.image = data["profile_image_url"]
     self.bgcolor = "message_color"
     self.url = "https://twitter.com/%s/statuses/%s" % (data["from_user"], data["id"])
-    self.profile_url = "https://twitter.com/%s" % data["from_user"]
+    self.profile_url = "gwibber:user/%s" % data["from_user"]
+    self.external_profile_url = "https://twitter.com/%s" % data["from_user"]
 
     if query: html = support.highlight_search_results(self.text, query)
     else: html = self.text
@@ -118,7 +122,7 @@ class Client:
 
   def get_user_messages(self, screen_name):
     return simplejson.loads(self.connect(
-      "http://twitter.com/statuses/user_timeline/"+ screen_name +".json",
+      "https://twitter.com/statuses/user_timeline/"+ screen_name +".json",
         urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
   def get_replies(self):

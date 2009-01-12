@@ -117,8 +117,8 @@ class GwibberClient(gtk.Window):
     self.tabs = gtk.Notebook()
     self.tabs.set_property("homogeneous", False)
     self.tabs.set_scrollable(True)
-    self.messages_view = self.add_tab(self.client.receive, _("Messages"), show_icon = "go-home")
-    self.add_tab(self.client.responses, _("Replies"), show_icon = "mail-reply-all")
+    self.messages_view = self.add_msg_tab(self.client.receive, _("Messages"), show_icon = "go-home")
+    self.add_msg_tab(self.client.responses, _("Replies"), show_icon = "mail-reply-all")
 
     saved_position = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_position"), config.gconf.VALUE_INT)
     if saved_position:
@@ -134,10 +134,10 @@ class GwibberClient(gtk.Window):
     if saved_queries:
       for query in saved_queries:
         if query.startswith("#"):
-          self.add_tab(lambda: self.client.tag(query),
+          self.add_msg_tab(lambda: self.client.tag(query),
             query.replace("#", ""), True, gtk.STOCK_INFO, False, query)
         elif len(query) > 0:
-          self.add_tab(lambda: self.client.search(query),
+          self.add_msg_tab(lambda: self.client.search(query),
             query, True, gtk.STOCK_FIND, False, query)
 
 
@@ -273,21 +273,16 @@ class GwibberClient(gtk.Window):
       query = entry.get_text()
       view = None
       if query.startswith("#"):
-        view = self.add_tab(lambda: self.client.tag(query),
+        view = self.add_msg_tab(lambda: self.client.tag(query),
           query.replace("#", ""), True, gtk.STOCK_INFO, True, query)
       elif len(query) > 0:
-        view = self.add_tab(lambda: self.client.search(query),
+        view = self.add_msg_tab(lambda: self.client.search(query),
           query, True, gtk.STOCK_FIND, True, query)
       
       if view:
         self.update([view.get_parent()])
-    
-  def add_tab(self, data_handler, text, show_close=False, show_icon=None, make_active=False, save=None):
-    view = gwui.MessageView(self.preferences["theme"])
-    view.link_handler = self.on_link_clicked
-    view.data_retrieval_handler = data_handler
-    view.config_retrieval_handler = self.get_account_config
 
+  def add_scrolled_parent(self, view, text, show_close=False, show_icon=None, make_active=False, save=None):
     scroll = gtk.ScrolledWindow()
     scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
     scroll.add(view)
@@ -313,6 +308,23 @@ class GwibberClient(gtk.Window):
     if make_active: self.tabs.set_current_page(self.tabs.page_num(scroll))
 
     btn.connect("clicked", self.on_tab_close, scroll)
+    
+  def add_msg_tab(self, data_handler, text, show_close=False, show_icon=None, make_active=False, save=None):
+    view = gwui.MessageView(self.preferences["theme"])
+    view.link_handler = self.on_link_clicked
+    view.data_retrieval_handler = data_handler
+    view.config_retrieval_handler = self.get_account_config
+
+    self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
+    return view
+
+  def add_user_tab(self, data_handler, text, show_close=False, show_icon=None, make_active=False, save=None):
+    view = gwui.UserView(self.preferences["theme"])
+    view.link_handler = self.on_link_clicked
+    view.data_retrieval_handler = data_handler
+    view.config_retrieval_handler = self.get_account_config
+
+    self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
     return view
 
   def add_map_tab(self, data_handler, text, show_close = True, show_icon = "applications-internet"):
@@ -321,29 +333,7 @@ class GwibberClient(gtk.Window):
     view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
 
-    scroll = gtk.Frame()
-    #scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
-    scroll.add(view)
-
-    img = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
-
-    btn = gtk.Button()
-    btn.set_image(img)
-    btn.set_relief(gtk.RELIEF_NONE)
-    btn.set_name("tab-close-button")
-
-    hb = gtk.HBox(spacing=2)
-    if show_icon:
-      hb.pack_start(gtk.image_new_from_icon_name(show_icon, gtk.ICON_SIZE_MENU))
-    hb.pack_start(gtk.Label(text))
-    if show_close: hb.pack_end(btn, False, False)
-    hb.show_all()
-    
-    self.tabs.append_page(scroll, hb)
-    self.tabs.set_tab_reorderable(scroll, True)
-    self.tabs.show_all()
-
-    btn.connect("clicked", self.on_tab_close, scroll)
+    self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
     return view
 
   def on_tab_close(self, w, e):
@@ -413,7 +403,7 @@ class GwibberClient(gtk.Window):
     """
     if acct["protocol"] in microblog.PROTOCOLS.keys():
       if hasattr(message.client, "can_reply"):
-        view = self.add_tab(lambda: self.client.thread(message), "Jaiku Replies", True)
+        view = self.add_msg_tab(lambda: self.client.thread(message), "Jaiku Replies", True)
         view.load_messages()
         view.load_preferences(self.get_account_config())
     """
@@ -425,12 +415,12 @@ class GwibberClient(gtk.Window):
         return True
       elif uri.startswith("gwibber:search"):
         query = uri.split("/")[-1]
-        view = self.add_tab(lambda: self.client.search(query), query, True, gtk.STOCK_FIND, True, query)
+        view = self.add_msg_tab(lambda: self.client.search(query), query, True, gtk.STOCK_FIND, True, query)
         self.update([view.get_parent()])
         return True
       elif uri.startswith("gwibber:tag"):
         query = uri.split("/")[-1]
-        view = self.add_tab(lambda: self.client.tag(query),
+        view = self.add_msg_tab(lambda: self.client.tag(query),
           query, True, gtk.STOCK_INFO, True, query)
         self.update([view.get_parent()])
         return True
@@ -438,13 +428,13 @@ class GwibberClient(gtk.Window):
         msg = view.message_store[int(uri.split("/")[-1])]
         if hasattr(msg, "original_title"): tab_label = msg.original_title
         else: tab_label = msg.text
-        t = self.add_tab(lambda: self.client.thread(msg),
+        t = self.add_msg_tab(lambda: self.client.thread(msg),
           microblog.support.truncate(tab_label), True, "mail-reply-all", True)
         self.update([t.get_parent()])
         return True
       elif uri.startswith("gwibber:user"):
         query = uri.split("/")[-1]
-        view = self.add_tab(lambda: self.client.user_messages(query),
+        view = self.add_user_tab(lambda: self.client.user_messages(query),
           query, True, gtk.STOCK_INFO, True)
         self.update([view.get_parent()])
         return True
