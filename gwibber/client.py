@@ -827,13 +827,15 @@ class GwibberClient(gtk.Window):
     def process():
       try:
 
+        next_update = mx.DateTime.gmt()
         if not self.target_tabs:
           self.target_tabs = self.tabs.get_children()
 
         for tab in self.target_tabs:
           view = tab.get_child()
           view.message_store = [m for m in
-            view.data_retrieval_handler() if m.time > self.last_clear]
+            view.data_retrieval_handler() if m.time > self.last_clear
+            and m.time <= mx.DateTime.gmt()]
           self.flag_duplicates(view.message_store)
           self.show_notification_bubbles(view.message_store)
 
@@ -846,7 +848,7 @@ class GwibberClient(gtk.Window):
 
         self.statusbar.pop(0)
         self.statusbar.push(0, _("Last update: %s") % time.strftime(_("%I:%M:%S %p")))
-        self.last_update = mx.DateTime.gmt()
+        self.last_update = next_update
         
       finally: gobject.idle_add(self.throbber.clear)
     
