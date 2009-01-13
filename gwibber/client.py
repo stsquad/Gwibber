@@ -416,7 +416,7 @@ class GwibberClient(gtk.Window):
       text = current_text[:-2] + " " if current_text.endswith(": ") else current_text
       # do not add the nick if it's already in the list
       if not text.count("@%s" % message.sender_nick):
-        self.input.set_text("%s@%s: " % (text, message.sender_nick))
+        self.input.set_text("%s@%s%s" % (text, message.sender_nick, self.preferences['reply_append_colon'] and ': ' or ' '))
       self.input.set_position(-1)
 
       self.message_target = message
@@ -710,7 +710,7 @@ class GwibberClient(gtk.Window):
     dialog = glade.get_widget("pref_dialog")
     dialog.show_all()
 
-    for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry", "shorten_urls"]:
+    for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry", "shorten_urls", "reply_append_colon"]:
       self.preferences.bind(glade.get_widget("pref_%s" % widget), widget)
 
     self.preferences.bind(glade.get_widget("show_tray_icon"), "show_tray_icon")
