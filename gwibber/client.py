@@ -66,6 +66,7 @@ class GwibberClient(gtk.Window):
     self.preferences = config.Preferences()
     self.last_update = None
     self.last_clear = None
+    self._reply_acct = None
     layout = gtk.VBox()
 
     gtk.rc_parse_string("""
@@ -367,6 +368,7 @@ class GwibberClient(gtk.Window):
   def on_cancel_reply(self, w, *args):
     self.cancel_button.hide()
     self.message_target = None
+    self._reply_acct = None
     self.input.set_text("")
 
   def on_toggle_window_visibility(self, w):
@@ -401,10 +403,20 @@ class GwibberClient(gtk.Window):
   
   def reply(self, message):
     acct = message.account
-
-    if acct.supports(microblog.can.REPLY):
+    # store which account we replied to first so we know when not to allow further replies
+    if not self._reply_acct:
+        self._reply_acct = acct
+    if acct.supports(microblog.can.REPLY) and acct==self._reply_acct:
       self.input.grab_focus()
-      self.input.set_text("@%s: " % message.sender_nick)
+      # Allow replying to more than one person by clicking on the reply
+      # button. 
+      current_text = self.input.get_text()
+      # If the current text ends with ": ", strip the ":", it's only
+      # taking up space
+      text = current_text[:-2] + " " if current_text.endswith(": ") else current_text
+      # do not add the nick if it's already in the list
+      if not text.count("@%s" % message.sender_nick):
+        self.input.set_text("%s@%s: " % (text, message.sender_nick))
       self.input.set_position(-1)
 
       self.message_target = message
