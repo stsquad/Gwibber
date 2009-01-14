@@ -1,0 +1,6 @@
+gwibber.desktop.in
+gwibber/client.py
+gwibber/configui.py
+gwibber/gwui.py
+gwibber/microblog/support/__init__.py
+ui/preferences.glade

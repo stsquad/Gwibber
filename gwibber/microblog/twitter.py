@@ -45,7 +45,6 @@ class Message:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.data = data
     self.sender = data["user"]["name"]
     self.sender_nick = data["user"]["screen_name"]
     self.sender_id = data["user"]["id"]
@@ -53,13 +52,13 @@ class Message:
     self.text = data["text"]
     self.image = data["user"]["profile_image_url"]
     self.bgcolor = "message_color"
-    self.url = "http://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
-    self.profile_url = "http://twitter.com/%s" % data["user"]["screen_name"]
+    self.url = "https://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
+    self.profile_url = "https://twitter.com/%s" % data["user"]["screen_name"]
     self.reply_nick = data["in_reply_to_screen_name"]
-    self.reply_url = "http://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
+    self.reply_url = "https://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
-      NICK_PARSE.sub('@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>',
+      NICK_PARSE.sub('@<a class="inlinenick" href="https://twitter.com/\\1">\\1</a>',
         support.linkify(self.text)))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
 
@@ -69,7 +68,6 @@ class SearchResult:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.data = data
     self.sender = data["from_user"]
     self.sender_nick = data["from_user"]
     self.sender_id = data["from_user_id"]
@@ -77,15 +75,15 @@ class SearchResult:
     self.text = data["text"]
     self.image = data["profile_image_url"]
     self.bgcolor = "message_color"
-    self.url = "http://twitter.com/%s/statuses/%s" % (data["from_user"], data["id"])
-    self.profile_url = "http://twitter.com/%s" % data["from_user"]
+    self.url = "https://twitter.com/%s/statuses/%s" % (data["from_user"], data["id"])
+    self.profile_url = "https://twitter.com/%s" % data["from_user"]
 
     if query: html = support.highlight_search_results(self.text, query)
     else: html = self.text
     
     self.html_string = '<span class="text">%s</span>' % \
       HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
-      NICK_PARSE.sub('@<a class="inlinenick" href="http://twitter.com/\\1">\\1</a>',
+      NICK_PARSE.sub('@<a class="inlinenick" href="https://twitter.com/\\1">\\1</a>',
         support.linkify(self.text)))
 
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text) 
@@ -114,12 +112,12 @@ class Client:
 
   def get_messages(self):
     return simplejson.loads(self.connect(
-      "http://twitter.com/statuses/friends_timeline.json",
+      "https://twitter.com/statuses/friends_timeline.json",
         urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
   def get_replies(self):
     return simplejson.loads(self.connect(
-      "http://twitter.com/statuses/replies.json",
+      "https://twitter.com/statuses/replies.json",
         urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
   def get_search_data(self, query):
@@ -144,11 +142,15 @@ class Client:
       yield Message(self, data)
 
   def send(self, message):
-    return self.connect("http://twitter.com/statuses/update.json",
-        urllib.urlencode({"status":message, "source": "gwibbernet"}))
+    data = simplejson.loads(self.connect(
+      "https://twitter.com/statuses/update.json",
+	    urllib.urlencode({"status":message, "source": "gwibbernet"})))
+    return Message(self, data)
 
   def send_thread(self, msg, message):
-    return self.connect("http://twitter.com/statuses/update.json",
+    data = simplejson.loads(self.connect(
+      "https://twitter.com/statuses/update.json",
         urllib.urlencode({"status":message,
-          "in_reply_to_status_id":msg.id, "source": "gwibbernet"}))
+          "in_reply_to_status_id":msg.id, "source": "gwibbernet"})))
+    return Message(self, data)
 

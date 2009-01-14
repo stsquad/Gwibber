@@ -111,9 +111,9 @@
 
     <script src="jquery.js"></script>
     <script>
-      function addMessages(messages) {
+      function addMessages(messages, msg) {
         clearMessages()
-        $.each(messages, function() {addMessage(this)});
+        $.each(messages, function() {addMessage(this, msg)});
       }
       
       function clearMessages() {
@@ -138,7 +138,7 @@
 
       }
 
-      function addMessage(data) {
+      function addMessage(data, msg) {
         html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol + ' ' + data.aId + data.bgcolor +'" title="'+ data.sender_nick +'">' +
           '<div class="user"> \
             <div class="user-image"> \
@@ -151,8 +151,8 @@
               <span class="text">'+ data.html_string +'</span><br /> \
               <div style="padding-top: 3px;"> \
                 <a style="float:right" href="gwibber:reply/'+ data.message_index +'"><img src="reply.png" /></a> \
-                <span class="time"><a href="'+ data.url +'">'+ data.time_string +'</a> from '+ data.protocol +
-                    (data.reply_nick ? ' in reply to <a href="'+ data.reply_url +'">' + data.reply_nick +'</a>' : '') +
+                <span class="time"><a href="'+ data.url +'">'+ data.time_string +'</a>' + msg.from + data.protocol +
+                    (data.reply_nick ? ' <a href="'+ data.reply_url +'">'+ msg.reply +' '+ data.reply_nick +'</a>' : '') +
                     '</span> \
               </div> \
             </p> \

@@ -6,8 +6,8 @@ SegPhault (Ryan Paul) - 01/06/2008
 
 """
 
-import urllib2, urllib, support, re, can, simplejson
-from xml.dom import minidom
+import urllib2, support, re, can
+import time, simplejson
 
 PROTOCOL_INFO = {
   "name": "Digg",
@@ -36,28 +36,29 @@ class Message:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.data = data
-    self.title = data.getElementsByTagName("title")[0].firstChild.nodeValue
-    self.sender = data.getElementsByTagName("author")[0].firstChild.nodeValue
-    self.sender_nick = self.sender
-    self.sender_id = self.sender.replace(" ","_")
-    self.time = support.parse_time(data.getElementsByTagName("pubDate")[0].firstChild.nodeValue)
-    self.text = sanitize_text(data.getElementsByTagName("description")[0].firstChild.nodeValue)
-    self.image = "http://digg.com/users/%s/l.png" % self.sender_nick
+    self.title = data["title"]
+    sender = data["friends"]["users"][0]
+    self.sender = "fullname" in sender and sender["fullname"] or sender["name"]
+    self.sender_nick = sender["name"]
+    self.sender_id = sender["name"]
+    
+    try:
+      self.time = support.parse_time(sender["date"])
+    except:
+      self.time = support.parse_time(time.asctime(time.gmtime(sender["date"])))
+    
+    self.text = sanitize_text(data["description"])
+    self.image = sender["icon"]
     self.bgcolor = "comment_color"
-    self.url = data.getElementsByTagName("link")[0].firstChild.nodeValue
-    self.profile_url = "http://digg.com/users/%s" % self.sender
+    self.url = data["link"]
+    self.profile_url = "http://digg.com/users/%s" % self.sender_nick
+    self.diggs = data["diggs"]
 
 class Digg(Message):
   def __init__(self, client, data):
     Message.__init__(self, client, data)
-    self.title = "%s <small>dugg %s</small>" % (self.sender_nick,    
-      data.getElementsByTagName("title")[0].firstChild.nodeValue)
+    self.title = "%s <small>dugg %s</small>" % (self.sender_nick, self.title)
     self.bgcolor = "digg_color"
-
-    self.diggs = simplejson.loads(urllib2.urlopen(urllib2.Request(
-      "http://services.digg.com/story/%s?appkey=http://cixar.com&type=json" %
-        self.url.split("/")[-1])).read())["stories"][0]["diggs"]
 
 class Client:
   def __init__(self, acct):
@@ -68,23 +69,23 @@ class Client:
       self.account["username"] != None
 
   def connect(self, url, data = None):
-    return urllib2.urlopen(urllib2.Request(url, data)).read()
+    return urllib2.urlopen(urllib2.Request(url, data))
 
   def get_comments(self):
-    return minidom.parseString(self.connect(
-      "http://digg.com/users/%s/friends/comments.rss" %
-        self.account["username"])).getElementsByTagName("item")
+    return simplejson.load(self.connect(
+      "http://services.digg.com/user/%s/friends/commented?appkey=http://launchpad.net/gwibber&type=json" %
+        self.account["username"]))["stories"]
 
   def get_diggs(self):
-    return minidom.parseString(self.connect(
-      "http://digg.com/users/%s/friends/diggs.rss" %
-        self.account["username"])).getElementsByTagName("item")
+    return simplejson.load(self.connect(
+      "http://services.digg.com/user/%s/friends/dugg?appkey=http://launchpad.net/gwibber&type=json" %
+        (self.account["username"])))["stories"]
 
   def receive(self):
-    for data in self.get_comments()[0:10]:
-      yield Message(self, data)
+    #for data in self.get_comments()[0:10]:
+    #  yield Message(self, data)
 
-    for data in self.get_diggs()[0:10]:
+    for data in self.get_diggs():
       yield Digg(self, data)
 
 

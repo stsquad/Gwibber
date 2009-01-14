@@ -5,7 +5,6 @@ SegPhault (Ryan Paul) - 12/22/2007
 """
 
 import urllib2, urllib, re, support, can, mx.DateTime
-from xml.dom import minidom
 
 PROTOCOL_INFO = {
   "name": "Facebook",
@@ -52,7 +51,6 @@ class Message:
 
       if self.text.startswith(self.sender):
         self.text = self.text[len(self.sender)+1:]
-
     self.bgcolor = "message_color"
     
     if data['pic_square']:
@@ -83,7 +81,7 @@ class Client:
       self.account["secret_key"] != None
 
   def connect(self, url, data = None):
-    return urllib2.urlopen(urllib2.Request(url, data)).read()
+    return urllib2.urlopen(urllib2.Request(url, data))
 
   def get_messages(self):
     query = "SELECT name, profile_url, status, pic_square FROM user WHERE uid in (SELECT uid2 FROM friend WHERE uid1 = "+str(self.facebook.uid)+") AND status.message != '' AND status.time > 0 ORDER BY status.time DESC" # LIMIT 1,30"
