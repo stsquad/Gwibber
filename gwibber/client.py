@@ -74,6 +74,7 @@ class GwibberClient(gtk.Window):
     self.preferences = config.Preferences()
     self.last_update = None
     self.last_clear = None
+    self._reply_acct = None
     layout = gtk.VBox()
 
     gtk.rc_parse_string("""
@@ -375,6 +376,7 @@ class GwibberClient(gtk.Window):
   def on_cancel_reply(self, w, *args):
     self.cancel_button.hide()
     self.message_target = None
+    self._reply_acct = None
     self.input.set_text("")
 
   def on_toggle_window_visibility(self, w):
@@ -409,10 +411,20 @@ class GwibberClient(gtk.Window):
   
   def reply(self, message):
     acct = message.account
-
-    if acct.supports(microblog.can.REPLY):
+    # store which account we replied to first so we know when not to allow further replies
+    if not self._reply_acct:
+        self._reply_acct = acct
+    if acct.supports(microblog.can.REPLY) and acct==self._reply_acct:
       self.input.grab_focus()
-      self.input.set_text("@%s: " % message.sender_nick)
+      # Allow replying to more than one person by clicking on the reply
+      # button. 
+      current_text = self.input.get_text()
+      # If the current text ends with ": ", strip the ":", it's only
+      # taking up space
+      text = current_text[:-2] + " " if current_text.endswith(": ") else current_text
+      # do not add the nick if it's already in the list
+      if not text.count("@%s" % message.sender_nick):
+        self.input.set_text("%s@%s: " % (text, message.sender_nick))
       self.input.set_position(-1)
 
       self.message_target = message
@@ -835,13 +847,15 @@ class GwibberClient(gtk.Window):
     def process():
       try:
 
+        next_update = mx.DateTime.gmt()
         if not self.target_tabs:
           self.target_tabs = self.tabs.get_children()
 
         for tab in self.target_tabs:
           view = tab.get_child()
           view.message_store = [m for m in
-            view.data_retrieval_handler() if m.time > self.last_clear]
+            view.data_retrieval_handler() if m.time > self.last_clear
+            and m.time <= mx.DateTime.gmt()]
           self.flag_duplicates(view.message_store)
           self.show_notification_bubbles(view.message_store)
 
@@ -854,7 +868,7 @@ class GwibberClient(gtk.Window):
 
         self.statusbar.pop(0)
         self.statusbar.push(0, _("Last update: %s") % time.strftime(_("%I:%M:%S %p")))
-        self.last_update = mx.DateTime.gmt()
+        self.last_update = next_update
         
       finally: gobject.idle_add(self.throbber.clear)
     
