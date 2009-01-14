@@ -18,6 +18,9 @@ microblog.PROTOCOLS["pidgin"] = pidgin
 import gettext
 import locale
 
+# urllib (quoting urls)
+import urllib
+
 # Set this way as in setup.cfg we have prefix=/usr/local
 LOCALEDIR = "/usr/local/share/locale"
 DOMAIN = "gwibber"
@@ -252,7 +255,8 @@ class GwibberClient(gtk.Window):
     if self.preferences["shorten_urls"]:
       if text and text.startswith("http") and not " " in text and not "http://is.gd" in text:
         entry.stop_emission("insert-text")
-        short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % text).read()
+        escaped_url = urllib.quote(text)
+        short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % escaped_url).read()
         entry.insert_text(short, entry.get_position())
         gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(short)))
   
