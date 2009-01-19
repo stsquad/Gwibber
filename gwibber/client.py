@@ -738,23 +738,21 @@ class GwibberClient(gtk.Window):
     }
 
   def on_input_activate(self, e):
-    if self.input.get_text().strip():
-      
+    text = self.input.get_text().strip()
+    if text:
+      # check if reply and target accordingly
       if self.message_target:
-        if self.message_target.account.supports(microblog.can.THREAD_REPLY) \
-            and hasattr(self.message_target, "id"):
-          self.message_target.account.get_client().send_thread(
-            self.message_target, self.input.get_text().strip())
-          self.on_cancel_reply(None)
-          return
-
-      if self.message_target:
-        protocols = [self.message_target.account["protocol"]]
-        result = self.client.reply(self.input.get_text().strip(), protocols)
+        account = self.message_target.account
+        if account:
+          if account.supports(microblog.can.THREAD_REPLY) and hasattr(self.message_target, "id"):
+            account.get_client().send_thread(self.message_target, text)
+          else:
+            result = self.client.reply(text, [account["protocol"]])
+      # else standard post
       else:
-        protocols = microblog.PROTOCOLS.keys()
-        result = self.client.send(self.input.get_text().strip(), protocols)
+        result = self.client.send(text, microblog.PROTOCOLS.keys())
 
+      # if we get a returned msg we may be able to display it to the user immediately
       if result: 
         for msg in result:
           if hasattr(msg, 'client'):
