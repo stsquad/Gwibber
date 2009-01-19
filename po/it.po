@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gwibber 0.7.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-19 19:38+0100\n"
+"POT-Creation-Date: 2009-01-19 21:09+0100\n"
 "PO-Revision-Date: 2009-01-01 14:49+0100\n"
 "Last-Translator: Milo Casagrande <milo@ubuntu.com>\n"
 "Language-Team: Italian\n"
@@ -285,42 +285,42 @@ msgstr "esecuzione interrogazione di ricerca"
 msgid "perform tag query"
 msgstr "esecuzione interrogazione etichetta"
 
-#: ../gwibber/microblog/support/__init__.py:54
+#: ../gwibber/microblog/support/__init__.py:56
 #, python-format
 msgid "%(year)d year ago"
 msgid_plural "%(year)d years ago"
 msgstr[0] "%(year)d anno fa"
 msgstr[1] "%(year)d anni fa"
 
-#: ../gwibber/microblog/support/__init__.py:57
+#: ../gwibber/microblog/support/__init__.py:59
 #, python-format
 msgid "%(day)d day ago"
 msgid_plural "%(day)d days ago"
 msgstr[0] "%(day)d giorno fa"
 msgstr[1] "%(day)d giorni fa"
 
-#: ../gwibber/microblog/support/__init__.py:60
+#: ../gwibber/microblog/support/__init__.py:62
 #, python-format
 msgid "%(hour)d hour ago"
 msgid_plural "%(hour)d hours ago"
 msgstr[0] "%(hour)d ora fa"
 msgstr[1] "%(hour)d ore fa"
 
-#: ../gwibber/microblog/support/__init__.py:63
+#: ../gwibber/microblog/support/__init__.py:65
 #, python-format
 msgid "%(minute)d minute ago"
 msgid_plural "%(minute)d minutes ago"
 msgstr[0] "%(minute)d minuto fa"
 msgstr[1] "%(minute)d minuti fa"
 
-#: ../gwibber/microblog/support/__init__.py:66
+#: ../gwibber/microblog/support/__init__.py:68
 #, python-format
 msgid "%(sec)d second ago"
 msgid_plural "%(sec)d seconds ago"
 msgstr[0] "%(sec)d secondo fa"
 msgstr[1] "%(sec)d secondi fa"
 
-#: ../gwibber/microblog/support/__init__.py:68
+#: ../gwibber/microblog/support/__init__.py:70
 #, python-format
 msgid "BUG: %s"
 msgstr "Bug: %s"

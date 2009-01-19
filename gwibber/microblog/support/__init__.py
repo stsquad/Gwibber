@@ -10,6 +10,8 @@ import re, os, facelib, locale, mx.DateTime
 
 import gettext
 
+_ = gettext.lgettext
+
 def parse_time(t):
 
   loc = locale.getlocale(locale.LC_TIME)
@@ -58,7 +60,7 @@ def generate_time_string(t):
   elif d.seconds >= 3600 and d.days < 1:
     hours = round(d.seconds / 60 / 60)
     return gettext.ngettext("%(hour)d hour ago", "%(hour)d hours ago", hours) % {"hour": hours}
-  elif d.seconds < 3600:
+  elif d.seconds < 3600 and d.second >= 60:
     minutes = round(d.seconds / 60)
     return gettext.ngettext("%(minute)d minute ago", "%(minute)d minutes ago", minutes) % {"minute": minutes}
   elif round(d.seconds) < 60:
