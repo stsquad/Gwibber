@@ -4,6 +4,20 @@
 #
 
 import gtk, inspect
+import gettext
+
+_ = gettext.lgettext
+
+def N_(message): return message
+
+DEFAULT_COLUMNS = {
+  #Translators: columns' names in the Error dialog
+  "date": N_("Date"),
+  "time": N_("Time"),
+  "username": N_("Username"),
+  "protocol": N_("Protocol"),
+  "message": N_("Message")
+  }
 
 class Obj:
   def __init__(self, **args):
@@ -44,10 +58,10 @@ class Style:
       else: name = c[0].replace("_", " ")
 
       if len(c) > 1 and isinstance(c[1], tuple):
-        col = gtk.TreeViewColumn(name, c[1][0])
+        col = gtk.TreeViewColumn(_(DEFAULT_COLUMNS[name]), c[1][0])
         col.set_cell_data_func(c[1][0], self.custom_handler, [c[1][1], tree])
       else:
-        col = gtk.TreeViewColumn(name, gtk.CellRendererText(), text=ci)
+        col = gtk.TreeViewColumn(_(DEFAULT_COLUMNS[name]), gtk.CellRendererText(), text=ci)
         renderer = gtk.CellRendererText()
 
       col.set_reorderable(True)

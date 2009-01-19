@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-01 14:48+0100\n"
+"POT-Creation-Date: 2009-01-19 19:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,51 +58,31 @@ msgstr ""
 msgid "Gwibber"
 msgstr ""
 
-#: ../gwibber/client.py:98
-msgid "Date"
-msgstr ""
-
-#: ../gwibber/client.py:98
+#: ../gwibber/client.py:99
 msgid "%Y-%m-%d"
 msgstr ""
 
-#: ../gwibber/client.py:99
-msgid "Time"
-msgstr ""
-
-#: ../gwibber/client.py:99 ../gwibber/client.py:856
+#: ../gwibber/client.py:100 ../gwibber/client.py:870
 msgid "%I:%M:%S %p"
 msgstr ""
 
-#: ../gwibber/client.py:100 ../gwibber/configui.py:116
-msgid "Username"
-msgstr ""
-
-#: ../gwibber/client.py:101 ../gwibber/configui.py:127
-msgid "Protocol"
-msgstr ""
-
-#: ../gwibber/client.py:102
-msgid "Message"
-msgstr ""
-
-#: ../gwibber/client.py:128
+#: ../gwibber/client.py:129
 msgid "Messages"
 msgstr ""
 
-#: ../gwibber/client.py:129
+#: ../gwibber/client.py:130
 msgid "Replies"
 msgstr ""
 
-#: ../gwibber/client.py:164
+#: ../gwibber/client.py:165
 msgid "Cancel"
 msgstr ""
 
-#: ../gwibber/client.py:274
+#: ../gwibber/client.py:275
 msgid "Enter a search query:"
 msgstr ""
 
-#: ../gwibber/client.py:406
+#: ../gwibber/client.py:408
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
@@ -110,79 +90,79 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../gwibber/client.py:470
+#: ../gwibber/client.py:482
 #, python-format
 msgid "Characters remaining: %s"
 msgstr ""
 
-#: ../gwibber/client.py:500
+#: ../gwibber/client.py:512
 msgid "_Manage"
 msgstr ""
 
-#: ../gwibber/client.py:504
+#: ../gwibber/client.py:516
 msgid "_Create"
 msgstr ""
 
-#: ../gwibber/client.py:565
+#: ../gwibber/client.py:577
 msgid "Refresh"
 msgstr ""
 
-#: ../gwibber/client.py:566 ../gwibber/configui.py:123
+#: ../gwibber/client.py:578 ../gwibber/configui.py:123
 msgid "Search"
 msgstr ""
 
-#: ../gwibber/client.py:567
+#: ../gwibber/client.py:579
 msgid "Clear"
 msgstr ""
 
-#: ../gwibber/client.py:568 ../ui/preferences.glade.h:32
+#: ../gwibber/client.py:580 ../ui/preferences.glade.h:32
 msgid "Preferences"
 msgstr ""
 
-#: ../gwibber/client.py:569
+#: ../gwibber/client.py:581
 msgid "Quit"
 msgstr ""
 
 #. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
 #. actThemeTest.connect("activate", self.theme_preview_test)
 #. menuHelp.append(actThemeTest.create_menu_item())
-#: ../gwibber/client.py:575
+#: ../gwibber/client.py:587
 msgid "_About"
 msgstr ""
 
-#: ../gwibber/client.py:585
+#: ../gwibber/client.py:597
 msgid "S_pellcheck"
 msgstr ""
 
-#: ../gwibber/client.py:589
+#: ../gwibber/client.py:601
 msgid "E_rrors"
 msgstr ""
 
-#: ../gwibber/client.py:594
+#: ../gwibber/client.py:606
 msgid "_Gwibber"
 msgstr ""
 
-#: ../gwibber/client.py:597
+#: ../gwibber/client.py:609
 msgid "_View"
 msgstr ""
 
-#: ../gwibber/client.py:600
+#: ../gwibber/client.py:612
 msgid "_Accounts"
 msgstr ""
 
-#: ../gwibber/client.py:604
+#: ../gwibber/client.py:616
 msgid "_Help"
 msgstr ""
 
-#: ../gwibber/client.py:656
+#: ../gwibber/client.py:668
 msgid "Errors"
 msgstr ""
 
-#: ../gwibber/client.py:662
+#: ../gwibber/client.py:674
 msgid "Debug Output"
 msgstr ""
 
-#: ../gwibber/client.py:856
+#: ../gwibber/client.py:870
 #, python-format
 msgid "Last update: %s"
 msgstr ""
@@ -217,12 +197,20 @@ msgstr ""
 msgid "Manage Accounts"
 msgstr ""
 
+#: ../gwibber/configui.py:116 ../gwibber/table.py:17
+msgid "Username"
+msgstr ""
+
 #: ../gwibber/configui.py:117
 msgid "Receive"
 msgstr ""
 
 #: ../gwibber/configui.py:120
 msgid "Send"
+msgstr ""
+
+#: ../gwibber/configui.py:127 ../gwibber/table.py:18
+msgid "Protocol"
 msgstr ""
 
 #. Translators: this string appears when somebody reply to a message
@@ -235,6 +223,19 @@ msgstr ""
 #. like 'from api', 'from Gwibber'
 #: ../gwibber/gwui.py:58
 msgid "from"
+msgstr ""
+
+#. Translators: columns' names in the Error dialog
+#: ../gwibber/table.py:15
+msgid "Date"
+msgstr ""
+
+#: ../gwibber/table.py:16
+msgid "Time"
+msgstr ""
+
+#: ../gwibber/table.py:19
+msgid "Message"
 msgstr ""
 
 #. Translators: this message appears in the Errors dialog
@@ -279,42 +280,42 @@ msgstr ""
 msgid "perform tag query"
 msgstr ""
 
-#: ../gwibber/microblog/support/__init__.py:55
-#, python-format
-msgid "%(sec)d second ago"
-msgid_plural "%(sec)d seconds ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../gwibber/microblog/support/__init__.py:58
-#, python-format
-msgid "%(minute)d minute ago"
-msgid_plural "%(minute)d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../gwibber/microblog/support/__init__.py:61
-#, python-format
-msgid "%(hour)d hour ago"
-msgid_plural "%(hour)d hours ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../gwibber/microblog/support/__init__.py:64
-#, python-format
-msgid "%(day)d day ago"
-msgid_plural "%(day)d days ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../gwibber/microblog/support/__init__.py:67
+#: ../gwibber/microblog/support/__init__.py:54
 #, python-format
 msgid "%(year)d year ago"
 msgid_plural "%(year)d years ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gwibber/microblog/support/__init__.py:69
+#: ../gwibber/microblog/support/__init__.py:57
+#, python-format
+msgid "%(day)d day ago"
+msgid_plural "%(day)d days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../gwibber/microblog/support/__init__.py:60
+#, python-format
+msgid "%(hour)d hour ago"
+msgid_plural "%(hour)d hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../gwibber/microblog/support/__init__.py:63
+#, python-format
+msgid "%(minute)d minute ago"
+msgid_plural "%(minute)d minutes ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../gwibber/microblog/support/__init__.py:66
+#, python-format
+msgid "%(sec)d second ago"
+msgid_plural "%(sec)d seconds ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../gwibber/microblog/support/__init__.py:68
 #, python-format
 msgid "BUG: %s"
 msgstr ""

@@ -96,11 +96,11 @@ class GwibberClient(gtk.Window):
     self.message_target = None
     
     self.errors = table.generate([
-      [_("Date"), lambda t: t.time.strftime(_("%Y-%m-%d"))],
-      [_("Time"), lambda t: t.time.strftime(_("%I:%M:%S %p"))],
-      [_("Username")],
-      [_("Protocol")],
-      [_("Message"), (gtk.CellRendererText(), {
+      ["date", lambda t: t.time.strftime(_("%Y-%m-%d"))],
+      ["time", lambda t: t.time.strftime(_("%I:%M:%S %p"))],
+      ["username"],
+      ["protocol"],
+      ["message", (gtk.CellRendererText(), {
         "markup": lambda t: t.message})]
     ])
 

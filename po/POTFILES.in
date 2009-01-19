@@ -2,6 +2,7 @@ gwibber.desktop.in
 gwibber/client.py
 gwibber/configui.py
 gwibber/gwui.py
+gwibber/table.py
 gwibber/microblog/__init__.py
 gwibber/microblog/support/__init__.py
 ui/preferences.glade

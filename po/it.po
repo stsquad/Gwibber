@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gwibber 0.7.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-01 14:48+0100\n"
+"POT-Creation-Date: 2009-01-19 19:38+0100\n"
 "PO-Revision-Date: 2009-01-01 14:49+0100\n"
 "Last-Translator: Milo Casagrande <milo@ubuntu.com>\n"
 "Language-Team: Italian\n"
@@ -58,52 +58,32 @@ msgstr "_Cercare messaggi"
 msgid "Gwibber"
 msgstr "Gwibber"
 
-#: ../gwibber/client.py:98
-msgid "Date"
-msgstr "Data"
-
-#: ../gwibber/client.py:98
+#: ../gwibber/client.py:99
 msgid "%Y-%m-%d"
 msgstr "%d/%m/%Y"
 
-#: ../gwibber/client.py:99
-msgid "Time"
-msgstr "Orario"
-
-#: ../gwibber/client.py:99 ../gwibber/client.py:856
+#: ../gwibber/client.py:100 ../gwibber/client.py:870
 msgid "%I:%M:%S %p"
 msgstr "%H.%M.%S"
 
-#: ../gwibber/client.py:100 ../gwibber/configui.py:116
-msgid "Username"
-msgstr "Nome utente"
-
-#: ../gwibber/client.py:101 ../gwibber/configui.py:127
-msgid "Protocol"
-msgstr "Protocollo"
-
-#: ../gwibber/client.py:102
-msgid "Message"
-msgstr "Messaggio"
-
-#: ../gwibber/client.py:128
+#: ../gwibber/client.py:129
 msgid "Messages"
 msgstr "Messaggi"
 
-#: ../gwibber/client.py:129
+#: ../gwibber/client.py:130
 msgid "Replies"
 msgstr "Risposte"
 
-#: ../gwibber/client.py:164
+#: ../gwibber/client.py:165
 msgid "Cancel"
 msgstr "Annulla"
 
 # (ndt) un po' più libera...
-#: ../gwibber/client.py:274
+#: ../gwibber/client.py:275
 msgid "Enter a search query:"
 msgstr "Digitare una chiave di ricerca:"
 
-#: ../gwibber/client.py:406
+#: ../gwibber/client.py:408
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
@@ -114,79 +94,79 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../gwibber/client.py:470
+#: ../gwibber/client.py:482
 #, python-format
 msgid "Characters remaining: %s"
 msgstr "Caratteri rimanenti: %s"
 
-#: ../gwibber/client.py:500
+#: ../gwibber/client.py:512
 msgid "_Manage"
 msgstr "_Gestisci"
 
-#: ../gwibber/client.py:504
+#: ../gwibber/client.py:516
 msgid "_Create"
 msgstr "_Crea"
 
-#: ../gwibber/client.py:565
+#: ../gwibber/client.py:577
 msgid "Refresh"
 msgstr "Aggiorna"
 
-#: ../gwibber/client.py:566 ../gwibber/configui.py:123
+#: ../gwibber/client.py:578 ../gwibber/configui.py:123
 msgid "Search"
 msgstr "Cerca"
 
-#: ../gwibber/client.py:567
+#: ../gwibber/client.py:579
 msgid "Clear"
 msgstr "Pulisci"
 
-#: ../gwibber/client.py:568 ../ui/preferences.glade.h:32
+#: ../gwibber/client.py:580 ../ui/preferences.glade.h:32
 msgid "Preferences"
 msgstr "Preferenze"
 
-#: ../gwibber/client.py:569
+#: ../gwibber/client.py:581
 msgid "Quit"
 msgstr "Esci"
 
 #. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
 #. actThemeTest.connect("activate", self.theme_preview_test)
 #. menuHelp.append(actThemeTest.create_menu_item())
-#: ../gwibber/client.py:575
+#: ../gwibber/client.py:587
 msgid "_About"
 msgstr "I_nformazioni"
 
-#: ../gwibber/client.py:585
+#: ../gwibber/client.py:597
 msgid "S_pellcheck"
 msgstr "C_ontrollo ortografico"
 
-#: ../gwibber/client.py:589
+#: ../gwibber/client.py:601
 msgid "E_rrors"
 msgstr "E_rrori"
 
-#: ../gwibber/client.py:594
+#: ../gwibber/client.py:606
 msgid "_Gwibber"
 msgstr "_Gwibber"
 
-#: ../gwibber/client.py:597
+#: ../gwibber/client.py:609
 msgid "_View"
 msgstr "_Visualizza"
 
-#: ../gwibber/client.py:600
+#: ../gwibber/client.py:612
 msgid "_Accounts"
 msgstr "_Account"
 
-#: ../gwibber/client.py:604
+#: ../gwibber/client.py:616
 msgid "_Help"
 msgstr "A_iuto"
 
-#: ../gwibber/client.py:656
+#: ../gwibber/client.py:668
 msgid "Errors"
 msgstr "Errori"
 
-#: ../gwibber/client.py:662
+#: ../gwibber/client.py:674
 msgid "Debug Output"
 msgstr "Output di debug"
 
-#: ../gwibber/client.py:856
+#: ../gwibber/client.py:870
 #, python-format
 msgid "Last update: %s"
 msgstr "Ultimo aggiornamento: %s"
@@ -221,6 +201,10 @@ msgstr "Eliminare questo account?"
 msgid "Manage Accounts"
 msgstr "Gestisci account"
 
+#: ../gwibber/configui.py:116 ../gwibber/table.py:17
+msgid "Username"
+msgstr "Nome utente"
+
 #: ../gwibber/configui.py:117
 msgid "Receive"
 msgstr "Ricevi"
@@ -228,6 +212,10 @@ msgstr "Ricevi"
 #: ../gwibber/configui.py:120
 msgid "Send"
 msgstr "Invia"
+
+#: ../gwibber/configui.py:127 ../gwibber/table.py:18
+msgid "Protocol"
+msgstr "Protocollo"
 
 #. Translators: this string appears when somebody reply to a message
 #. like '3 minutes ago in reply to angelina'
@@ -241,6 +229,19 @@ msgstr "in risposta a"
 #: ../gwibber/gwui.py:58
 msgid "from"
 msgstr "via"
+
+#. Translators: columns' names in the Error dialog
+#: ../gwibber/table.py:15
+msgid "Date"
+msgstr "Data"
+
+#: ../gwibber/table.py:16
+msgid "Time"
+msgstr "Orario"
+
+#: ../gwibber/table.py:19
+msgid "Message"
+msgstr "Messaggio"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
@@ -284,42 +285,42 @@ msgstr "esecuzione interrogazione di ricerca"
 msgid "perform tag query"
 msgstr "esecuzione interrogazione etichetta"
 
-#: ../gwibber/microblog/support/__init__.py:55
-#, python-format
-msgid "%(sec)d second ago"
-msgid_plural "%(sec)d seconds ago"
-msgstr[0] "%(sec)d secondo fa"
-msgstr[1] "%(sec)d secondi fa"
-
-#: ../gwibber/microblog/support/__init__.py:58
-#, python-format
-msgid "%(minute)d minute ago"
-msgid_plural "%(minute)d minutes ago"
-msgstr[0] "%(minute)d minuto fa"
-msgstr[1] "%(minute)d minuti fa"
-
-#: ../gwibber/microblog/support/__init__.py:61
-#, python-format
-msgid "%(hour)d hour ago"
-msgid_plural "%(hour)d hours ago"
-msgstr[0] "%(hour)d ora fa"
-msgstr[1] "%(hour)d ore fa"
-
-#: ../gwibber/microblog/support/__init__.py:64
-#, python-format
-msgid "%(day)d day ago"
-msgid_plural "%(day)d days ago"
-msgstr[0] "%(day)d giorno fa"
-msgstr[1] "%(day)d giorni fa"
-
-#: ../gwibber/microblog/support/__init__.py:67
+#: ../gwibber/microblog/support/__init__.py:54
 #, python-format
 msgid "%(year)d year ago"
 msgid_plural "%(year)d years ago"
 msgstr[0] "%(year)d anno fa"
 msgstr[1] "%(year)d anni fa"
 
-#: ../gwibber/microblog/support/__init__.py:69
+#: ../gwibber/microblog/support/__init__.py:57
+#, python-format
+msgid "%(day)d day ago"
+msgid_plural "%(day)d days ago"
+msgstr[0] "%(day)d giorno fa"
+msgstr[1] "%(day)d giorni fa"
+
+#: ../gwibber/microblog/support/__init__.py:60
+#, python-format
+msgid "%(hour)d hour ago"
+msgid_plural "%(hour)d hours ago"
+msgstr[0] "%(hour)d ora fa"
+msgstr[1] "%(hour)d ore fa"
+
+#: ../gwibber/microblog/support/__init__.py:63
+#, python-format
+msgid "%(minute)d minute ago"
+msgid_plural "%(minute)d minutes ago"
+msgstr[0] "%(minute)d minuto fa"
+msgstr[1] "%(minute)d minuti fa"
+
+#: ../gwibber/microblog/support/__init__.py:66
+#, python-format
+msgid "%(sec)d second ago"
+msgid_plural "%(sec)d seconds ago"
+msgstr[0] "%(sec)d secondo fa"
+msgstr[1] "%(sec)d secondi fa"
+
+#: ../gwibber/microblog/support/__init__.py:68
 #, python-format
 msgid "BUG: %s"
 msgstr "Bug: %s"
