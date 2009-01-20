@@ -31,6 +31,7 @@ PROTOCOL_INFO = {
     can.DELETE,
     can.TAG,
     #can.THREAD,
+    can.THREAD_REPLY,
   ],
 }
 
@@ -44,6 +45,7 @@ feedparser._FeedParserMixin._start_sioc_has_creator  = _has_creator
 
 class Message:
   def __init__(self, client, data):
+    self.id = data["id"]
     self.client = client
     self.account = client.account
     self.protocol = client.account["protocol"]
@@ -136,4 +138,10 @@ class Client:
     data = simplejson.loads(self.connect(
       "http://identi.ca/api/statuses/update.json",
 	    urllib.urlencode({"status":message})))
+    return Message(self, data)
+
+  def send_thread(self, msg, message):
+    data = simplejson.loads(self.connect(
+      "http://identi.ca/api/statuses/update.json",
+        urllib.urlencode({"status":message, "in_reply_to_status_id":msg.id})))
     return Message(self, data)
