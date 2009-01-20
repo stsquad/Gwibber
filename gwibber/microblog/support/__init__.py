@@ -6,8 +6,7 @@ SegPhault (Ryan Paul) - 07/25/2008
 
 """
 
-import re, os, facelib, locale, mx.DateTime
-import math
+import re, os, math, facelib, locale, mx.DateTime
 
 import gettext
 
@@ -52,17 +51,20 @@ def generate_time_string(t):
   d = mx.DateTime.gmt() - t
 
   # Aliasing the function doesn't work here with intltool...
-  if round(d.seconds) < 60:
+  if d.days >= 365:
+    years = round(d.days / 365)
+    return gettext.ngettext("%(year)d year ago", "%(year)d years ago", years) % {"year": years}
+  elif d.days >= 1 and d.days < 365:
+    days = round(d.days)
+    return gettext.ngettext("%(day)d day ago", "%(day)d days ago", days) % {"day": days}
+  elif d.seconds >= 3600 and d.days < 1:
+    hours = round(d.seconds / 60 / 60)
+    return gettext.ngettext("%(hour)d hour ago", "%(hour)d hours ago", hours) % {"hour": hours}
+  elif d.seconds < 3600 and d.seconds >= 60:
+    minutes = round(d.seconds / 60)
+    return gettext.ngettext("%(minute)d minute ago", "%(minute)d minutes ago", minutes) % {"minute": minutes}
+  elif round(d.seconds) < 60:
     seconds = math.floor(d.seconds)
     return gettext.ngettext("%(sec)d second ago", "%(sec)d seconds ago", seconds) % {"sec": seconds}
-  elif d.seconds < (60 * 60):
-    minutes = math.floor(d.seconds / 60)
-    return gettext.ngettext("%(minute)d minute ago", "%(minute)d minutes ago", minutes) % {"minute": minutes}
-  elif d.seconds >= (60 * 60) and d.days < 1:
-    hours = math.floor(d.seconds / 60 / 60)
-    return gettext.ngettext("%(hour)d hour ago", "%(hour)d hours ago", hours) % {"hour": hours}
-  elif d.days > 0:
-    days = math.floor(d.days)
-    return gettext.ngettext("%(day)d day ago", "%(day)d days ago", days) % {"day": days}
   else:
     return _("BUG: %s") % str(d)

@@ -50,9 +50,11 @@ class MessageView(webkit.WebView):
     self.open(os.path.join("file:/", resources.get_theme_path(theme), "theme.html"))
 
   def load_messages(self, message_store = None):
-    # Translators: this string appears when somebody reply to a message, like '3 minutes ago in reply to angelina'
+    # Translators: this string appears when somebody reply to a message
+    # like '3 minutes ago in reply to angelina'
     reply_string = " " + _("in reply to") + " "
-    # Translators: this string indicates where the message arrived from, like 'from api', 'from Gwibber' 
+    # Translators: this string indicates where the message arrived from
+    # like 'from api', 'from Gwibber' 
     from_string = " " + _("from") + " "
     # Done that way so translators don't have to handle white/empty spaces
     # and there's no need to handle them in the html too
