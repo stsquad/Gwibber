@@ -237,6 +237,21 @@ msgstr[1] "%(day) días atrás"
 msgid "BUG: %s"
 msgstr "FÁLLO: %s"
 
+#: ../gwibber/microblog/twitter.py:78
+#, python-format
+msgid "This user has protected their updates."
+msgstr ""
+
+#: ../gwibber/microblog/twitter.py:78
+#, python-format
+msgid "You need to send a request before you can view this person's timeline."
+msgstr ""
+
+#: ../gwibber/microblog/twitter.py:78
+#, python-format
+msgid "Send request..."
+msgstr ""
+
 #: ../ui/preferences.glade.h:1
 msgid ""
 "<b>1.</b> Click the button below to request\n"

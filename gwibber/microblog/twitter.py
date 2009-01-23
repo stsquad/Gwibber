@@ -7,6 +7,9 @@ SegPhault (Ryan Paul) - 12/22/2007
 """
 
 import urllib2, urllib, base64, re, support, can, simplejson
+import gettext
+_ = gettext.lgettext
+
 
 PROTOCOL_INFO = {
   "name": "Twitter",
@@ -71,9 +74,8 @@ class Message:
       self.url = self.profile_url = self.external_profile_url = "https://twitter.com/%s" % data["screen_name"]
       self.is_reply = False
       if data["protected"] == True:
-        # FIXME: needs translation
-        self.text = "This user has protected their updates. You need to send a request before you can view this person's timeline. Send request..."
-        self.html_string = '<p><b>This user has protected their updates.</b><p>You need to send a request before you can view this person\'s timeline.<p><a href="'+ self.url +'">Send request...</a>'
+        self.text = _("This user has protected their updates.") + ' ' + _("You need to send a request before you can view this person's timeline.") + ' ' + _("Send request...")
+        self.html_string = '<p><b>' + _("This user has protected their updates.") + '</b><p>' + _("You need to send a request before you can view this person's timeline.") + '<p><a href="' + self.url + '">' + _("Send request...") + '</a>'
       else:
         self.text = self.html_string = ''
 
@@ -90,16 +92,9 @@ class Message:
     if data.has_key("in_reply_to_screen_name"):
       self.reply_nick = data["in_reply_to_screen_name"]
       self.reply_url = "https://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
-
-    if data.has_key("name"):
-      self.gId = ''
-      self.aId = ''
-      html = '<div id="'+ self.gId +'" class="message '+ self.username + self.protocol + ' ' + self.aId + self.bgcolor +'" title="'+ self.sender_nick +'">' + '<center> <p class="content"> <span class="title">'+ self.sender +'</span><br /> <span class="text">'+ str(self.sender_followers_count) +' followers</span><br /> <span class="text">'+ self.sender_location +'</span><br /> <span class="text"><a href="'+ self.external_profile_url  +'">'+ self.external_profile_url +'</a></span> </p> </center> </div>'
-      print html
    except Exception:
     from traceback import format_exc
     print format_exc()
-
 
 class SearchResult:
   def __init__(self, client, data, query = None):
