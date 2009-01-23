@@ -41,30 +41,65 @@ HASH_PARSE = re.compile("\B#([A-Za-z0-9_\-]+|@[A-Za-z0-9_\-]$)")
 
 class Message:
   def __init__(self, client, data):
-    self.id = data["id"]
+   try:
     self.client = client
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.sender = data["user"]["name"]
-    self.sender_nick = data["user"]["screen_name"]
-    self.sender_id = data["user"]["id"]
-    self.sender_location = data["user"]["location"]
-    self.sender_followers_count = data["user"]["followers_count"]
-    self.time = support.parse_time(data["created_at"])
-    self.text = data["text"]
-    self.image = data["user"]["profile_image_url"]
     self.bgcolor = "message_color"
-    self.url = "https://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
-    self.profile_url = "gwibber:user/%s" % data["user"]["screen_name"]
-    self.external_profile_url = "https://twitter.com/%s" % data["user"]["screen_name"]
-    self.reply_nick = data["in_reply_to_screen_name"]
-    self.reply_url = "https://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
-    self.html_string = '<span class="text">%s</span>' % \
-        HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
-        NICK_PARSE.sub('@<a class="inlinenick" href="gwibber:user/\\1">\\1</a>',
-        support.linkify(self.text)))
-    self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
+    self.id = data["id"] or ''
+    self.time = support.parse_time(data["created_at"])
+
+    if data.has_key("user"):
+      self.sender = data["user"]["name"]
+      self.sender_nick = data["user"]["screen_name"]
+      self.sender_id = data["user"]["id"]
+      self.sender_location = data["user"]["location"]
+      self.sender_followers_count = data["user"]["followers_count"]
+      self.image = data["user"]["profile_image_url"]
+      self.url = "https://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
+      self.profile_url = "gwibber:user/%s" % data["user"]["screen_name"]
+      self.external_profile_url = "https://twitter.com/%s" % data["user"]["screen_name"]
+
+    if data.has_key("name"):
+      self.sender = data["name"]
+      self.sender_nick = data["screen_name"]
+      self.sender_id = data["id"]
+      self.sender_location = data["location"]
+      self.sender_followers_count = data["followers_count"]
+      self.image = data["profile_image_url"]
+      self.url = self.profile_url = self.external_profile_url = "https://twitter.com/%s" % data["screen_name"]
+      self.is_reply = False
+      if data["protected"] == True:
+        # FIXME: needs translation
+        self.text = "This user has protected their updates. You need to send a request before you can view this person's timeline. Send request..."
+        self.html_string = '<p><b>This user has protected their updates.</b><p>You need to send a request before you can view this person\'s timeline.<p><a href="'+ self.url +'">Send request...</a>'
+      else:
+        self.text = self.html_string = ''
+
+    if data.has_key("text"):
+      self.text = data["text"]
+      self.html_string = '<span class="text">%s</span>' % \
+          HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
+          NICK_PARSE.sub('@<a class="inlinenick" href="gwibber:user/\\1">\\1</a>',
+          support.linkify(self.text)))
+      self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
+      self.reply_nick = ''
+      self.reply_url = ''
+
+    if data.has_key("in_reply_to_screen_name"):
+      self.reply_nick = data["in_reply_to_screen_name"]
+      self.reply_url = "https://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
+
+    if data.has_key("name"):
+      self.gId = ''
+      self.aId = ''
+      html = '<div id="'+ self.gId +'" class="message '+ self.username + self.protocol + ' ' + self.aId + self.bgcolor +'" title="'+ self.sender_nick +'">' + '<center> <p class="content"> <span class="title">'+ self.sender +'</span><br /> <span class="text">'+ str(self.sender_followers_count) +' followers</span><br /> <span class="text">'+ self.sender_location +'</span><br /> <span class="text"><a href="'+ self.external_profile_url  +'">'+ self.external_profile_url +'</a></span> </p> </center> </div>'
+      print html
+   except Exception:
+    from traceback import format_exc
+    print format_exc()
+
 
 class SearchResult:
   def __init__(self, client, data, query = None):
@@ -121,9 +156,14 @@ class Client:
         urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
   def get_user_messages(self, screen_name):
-    return simplejson.loads(self.connect(
-      "https://twitter.com/statuses/user_timeline/"+ screen_name +".json",
-        urllib.urlencode({"count": self.account["receive_count"] or "20"})))
+    try:
+      return simplejson.loads(self.connect(
+        "https://twitter.com/statuses/user_timeline/"+ screen_name + ".json",
+          urllib.urlencode({"count": self.account["receive_count"] or "20"})))
+    except Exception:
+      profile = [simplejson.loads(self.connect(
+        "https://twitter.com/users/show/"+ screen_name +".json"))]
+      return profile
 
   def get_replies(self):
     return simplejson.loads(self.connect(
@@ -158,7 +198,7 @@ class Client:
   def send(self, message):
     data = simplejson.loads(self.connect(
       "https://twitter.com/statuses/update.json",
-	    urllib.urlencode({"status":message, "source": "gwibbernet"})))
+        urllib.urlencode({"status":message, "source": "gwibbernet"})))
     return Message(self, data)
 
   def send_thread(self, msg, message):
