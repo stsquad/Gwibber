@@ -3,6 +3,11 @@ import operator, traceback, can
 import twitter, jaiku, identica, laconica, pownce
 import digg, flickr, brightkite, rss, pingfm, facebook
 
+# i18n magic
+import gettext
+
+_ = gettext.lgettext
+
 PROTOCOLS = {
   "jaiku": jaiku,
   "digg": digg,
@@ -53,43 +58,59 @@ class Client:
   def send(self, message, filter=PROTOCOLS.keys()):
     return list(self.get_data(
       lambda a: a["send_enabled"] and supports(a, can.SEND),
-      lambda c: c.send(message), "send message", filter, False))
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened 
+      lambda c: c.send(message), _("send message"), filter, False))
 
   def reply(self, message, filter=PROTOCOLS.keys()):
     return list(self.get_data(
       lambda a: supports(a, can.SEND),
-      lambda c: c.send(message), "send message", filter, False, True))
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened       
+      lambda c: c.send(message), _("send message"), filter, False, True))
 
   def thread(self, query, filter=PROTOCOLS.keys()):
     return self.perform_operation(
       lambda a: a["receive_enabled"] and supports(a, can.THREAD) and \
         a.id == query.account.id,
-      lambda c: c.get_thread(query), "retrieve thread", filter)
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened 
+      lambda c: c.get_thread(query), _("retrieve thread"), filter)
   
   def responses(self, filter=PROTOCOLS.keys()):
     return self.perform_operation(
       lambda a: a["receive_enabled"] and supports(a, can.RESPONSES),
-      lambda c: c.responses(), "retrieve responses", filter)
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened 
+      lambda c: c.responses(), _("retrieve responses"), filter)
 
   def receive(self, filter=PROTOCOLS.keys()):
     return self.perform_operation(
       lambda a: a["receive_enabled"] and supports(a, can.RECEIVE),
-      lambda c: c.receive(), "retrieve messages", filter)
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened 
+      lambda c: c.receive(), _("retrieve messages"), filter)
 
   def friend_positions(self, filter=PROTOCOLS.keys()):
     return self.perform_operation(
       lambda a: a["receive_enabled"] and supports(a, can.GEO_FRIEND_POSITIONS),
-      lambda c: c.friend_positions(), "retrieve positions", filter)
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened 
+      lambda c: c.friend_positions(), _("retrieve positions"), filter)
 
   def search(self, query, filter=PROTOCOLS.keys()):
     return self.perform_operation(
       lambda a: a["search_enabled"] and supports(a, can.SEARCH),
-      lambda c: c.search(query), "perform search query", filter)
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened       
+      lambda c: c.search(query), _("perform search query"), filter)
 
   def tag(self, query, filter=PROTOCOLS.keys()):
     return self.perform_operation(
       lambda a: a["receive_enabled"] and supports(a, can.TAG),
-      lambda c: c.tag(query.lower().replace("#", "")), "perform tag query", filter)
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened       
+      lambda c: c.tag(query.lower().replace("#", "")), _("perform tag query"), filter)
 
   def user_messages(self, screen_name, filter=PROTOCOLS.keys()):
     return self.perform_operation(

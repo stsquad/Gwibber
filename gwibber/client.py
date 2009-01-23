@@ -18,16 +18,20 @@ microblog.PROTOCOLS["pidgin"] = pidgin
 import gettext
 import locale
 
+# urllib (quoting urls)
+import urllib
+
 # Set this way as in setup.cfg we have prefix=/usr/local
 LOCALEDIR = "/usr/local/share/locale"
 DOMAIN = "gwibber"
 
 locale.setlocale(locale.LC_ALL, "")
 
-_ = gettext.lgettext
+for module in gtk.glade, gettext:
+  module.bindtextdomain(DOMAIN, LOCALEDIR)
+  module.textdomain(DOMAIN)
 
-gettext.bindtextdomain(DOMAIN, LOCALEDIR)
-gettext.textdomain(DOMAIN)
+_ = gettext.lgettext
 
 gtk.gdk.threads_init()
 
@@ -43,6 +47,13 @@ CONFIGURABLE_UI_ELEMENTS = {
   "statusbar": N_("_Statusbar"),
   "tray_icon": N_("Tray _Icon"),
 }
+
+CONFIGURABLE_ACCOUNT_ACTIONS = {
+  # Translators: these are checkbox
+  "receive": N_("_Receive Messages"),
+  "send": N_("_Send Messages"),
+  "search": N_("Search _Messages")
+  }
 
 DEFAULT_PREFERENCES = {
   "version": VERSION_NUMBER,
@@ -66,6 +77,7 @@ class GwibberClient(gtk.Window):
     self.preferences = config.Preferences()
     self.last_update = None
     self.last_clear = None
+    self._reply_acct = None
     layout = gtk.VBox()
 
     gtk.rc_parse_string("""
@@ -251,7 +263,8 @@ class GwibberClient(gtk.Window):
     if self.preferences["shorten_urls"]:
       if text and text.startswith("http") and not " " in text and not "http://is.gd" in text:
         entry.stop_emission("insert-text")
-        short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % text).read()
+        escaped_url = urllib.quote(text)
+        short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % escaped_url).read()
         entry.insert_text(short, entry.get_position())
         gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(short)))
   
@@ -357,6 +370,7 @@ class GwibberClient(gtk.Window):
   def on_cancel_reply(self, w, *args):
     self.cancel_button.hide()
     self.message_target = None
+    self._reply_acct = None
     self.input.set_text("")
 
   def on_toggle_window_visibility(self, w):
@@ -391,10 +405,20 @@ class GwibberClient(gtk.Window):
   
   def reply(self, message):
     acct = message.account
-
-    if acct.supports(microblog.can.REPLY):
+    # store which account we replied to first so we know when not to allow further replies
+    if not self._reply_acct:
+        self._reply_acct = acct
+    if acct.supports(microblog.can.REPLY) and acct==self._reply_acct:
       self.input.grab_focus()
-      self.input.set_text("@%s: " % message.sender_nick)
+      # Allow replying to more than one person by clicking on the reply
+      # button. 
+      current_text = self.input.get_text()
+      # If the current text ends with ": ", strip the ":", it's only
+      # taking up space
+      text = current_text[:-2] + " " if current_text.endswith(": ") else current_text
+      # do not add the nick if it's already in the list
+      if not text.count("@%s" % message.sender_nick):
+        self.input.set_text("%s@%s%s" % (text, message.sender_nick, self.preferences['reply_append_colon'] and ': ' or ' '))
       self.input.set_position(-1)
 
       self.message_target = message
@@ -504,11 +528,11 @@ class GwibberClient(gtk.Window):
     for acct in self.accounts:
       if acct["protocol"] in microblog.PROTOCOLS.keys():
         sm = gtk.Menu()
-        
-        for i in ["receive", "send", "search"]:
-          if acct.supports(getattr(microblog.can, i.upper())):
-            mi = gtk.CheckMenuItem(_("_%s Messages") % i.capitalize())
-            acct.bind(mi, "%s_enabled" % i)
+
+        for key in CONFIGURABLE_ACCOUNT_ACTIONS.keys():
+          if acct.supports(getattr(microblog.can, key.upper())):
+            mi = gtk.CheckMenuItem(_(CONFIGURABLE_ACCOUNT_ACTIONS[key]))
+            acct.bind(mi, "%s_enabled" % key)
             sm.append(mi)
         
         sm.append(gtk.SeparatorMenuItem())
@@ -694,7 +718,7 @@ class GwibberClient(gtk.Window):
     dialog = glade.get_widget("pref_dialog")
     dialog.show_all()
 
-    for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry", "shorten_urls"]:
+    for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry", "shorten_urls", "reply_append_colon"]:
       self.preferences.bind(glade.get_widget("pref_%s" % widget), widget)
 
     self.preferences.bind(glade.get_widget("show_tray_icon"), "show_tray_icon")
@@ -718,29 +742,26 @@ class GwibberClient(gtk.Window):
     }
 
   def on_input_activate(self, e):
-    if self.input.get_text().strip():
-      
+    text = self.input.get_text().strip()
+    if text:
+      # check if reply and target accordingly
       if self.message_target:
-        if self.message_target.account.supports(microblog.can.THREAD_REPLY) \
-            and hasattr(self.message_target, "id"):
-          self.message_target.account.get_client().send_thread(
-            self.message_target, self.input.get_text().strip())
-          self.on_cancel_reply(None)
-          return
-
-      if self.message_target:
-        protocols = [self.message_target.account["protocol"]]
-        result = self.client.reply(self.input.get_text().strip(), protocols)
+        account = self.message_target.account
+        if account:
+          if account.supports(microblog.can.THREAD_REPLY) and hasattr(self.message_target, "id"):
+            result = account.get_client().send_thread(self.message_target, text)
+          else:
+            result = self.client.reply(text, [account["protocol"]])
+      # else standard post
       else:
-        protocols = microblog.PROTOCOLS.keys()
-        result = self.client.send(self.input.get_text().strip(), protocols)
+        result = self.client.send(text, microblog.PROTOCOLS.keys())
 
+      # if we get a returned msg we may be able to display it to the user immediately
       if result: 
-        for msg in result:
-          if hasattr(msg, 'client'):
-            self.post_process_message(msg)
-            msg.is_new = False
-            self.messages_view.message_store = [msg] + self.messages_view.message_store
+        if hasattr(result, 'client'):
+          self.post_process_message(result)
+          result.is_new = False
+          self.messages_view.message_store = [result] + self.messages_view.message_store
         self.messages_view.load_messages()
         self.messages_view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
     
@@ -823,13 +844,15 @@ class GwibberClient(gtk.Window):
     def process():
       try:
 
+        next_update = mx.DateTime.gmt()
         if not self.target_tabs:
           self.target_tabs = self.tabs.get_children()
 
         for tab in self.target_tabs:
           view = tab.get_child()
           view.message_store = [m for m in
-            view.data_retrieval_handler() if m.time > self.last_clear]
+            view.data_retrieval_handler() if m.time > self.last_clear
+            and m.time <= mx.DateTime.gmt()]
           self.flag_duplicates(view.message_store)
           self.show_notification_bubbles(view.message_store)
 
@@ -842,7 +865,7 @@ class GwibberClient(gtk.Window):
 
         self.statusbar.pop(0)
         self.statusbar.push(0, _("Last update: %s") % time.strftime(_("%I:%M:%S %p")))
-        self.last_update = mx.DateTime.gmt()
+        self.last_update = next_update
         
       finally: gobject.idle_add(self.throbber.clear)
     
