@@ -38,6 +38,7 @@ PROTOCOL_INFO = {
 
 NICK_PARSE = re.compile("\B@([A-Za-z0-9_]+|@[A-Za-z0-9_]$)")
 HASH_PARSE = re.compile("\B#([A-Za-z0-9_\-]+|@[A-Za-z0-9_\-]$)")
+GROUP_PARSE = re.compile("\B!([A-Za-z0-9_\-]+|![A-Za-z0-9_\-]$)")
 
 def _posticon(self, a): self._getContext()["laconica_posticon"] = a["rdf:resource"]
 def _has_creator(self, a): self._getContext()["sioc_has_creator"] = a["rdf:resource"]
@@ -63,6 +64,7 @@ class Message:
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://%s/\\1">\\1</a>' % self.account["domain"],
+        GROUP_PARSE.sub('!<a class="inlinegroup" href="http://identi.ca/group/\\1">\\1</a>',
           support.linkify(self.text)))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
 
@@ -84,6 +86,7 @@ class SearchResult:
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://%s/\\1">\\1</a>' % self.account["domain"],
+        GROUP_PARSE.sub('!<a class="inlinegroup" href="http://identi.ca/group/\\1">\\1</a>',
           support.linkify(self.text)))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
 
