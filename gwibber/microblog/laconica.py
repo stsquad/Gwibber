@@ -31,6 +31,7 @@ PROTOCOL_INFO = {
     can.RESPONSES,
     can.DELETE,
     can.TAG,
+    can.GROUP,
     #can.THREAD,
     can.THREAD_REPLY,
   ],
@@ -64,8 +65,8 @@ class Message:
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://%s/\\1">\\1</a>' % self.account["domain"],
-        GROUP_PARSE.sub('!<a class="inlinegroup" href="http://identi.ca/group/\\1">\\1</a>',
-          support.linkify(self.text)))
+        GROUP_PARSE.sub('!<a class="inlinegroup" href="http://%s/group/\\1">\\1</a>' % self.account["domain"],
+          support.linkify(self.text))))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
 
 class SearchResult:
@@ -86,8 +87,8 @@ class SearchResult:
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://%s/\\1">\\1</a>' % self.account["domain"],
-        GROUP_PARSE.sub('!<a class="inlinegroup" href="http://identi.ca/group/\\1">\\1</a>',
-          support.linkify(self.text)))
+        GROUP_PARSE.sub('!<a class="inlinegroup" href="http://%s/group/\\1">\\1</a>' % self.account["domain"],
+          support.linkify(self.text))))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
 
 class Client:
@@ -121,12 +122,22 @@ class Client:
         urllib.urlencode({"action": "tagrss", "tag":
           query}))))["entries"]
 
+  def get_group(self, query):
+    return feedparser.parse(urllib2.urlopen(
+      urllib2.Request("http://%s/index.php" % self.account["domain"],
+        urllib.urlencode({"action": "grouprss", "group":
+          query}))))["entries"]
+
   def search(self, query):
     for data in self.get_search(query):
       yield SearchResult(self, data, query)
 
   def tag(self, query):
     for data in self.get_tag(query):
+      yield SearchResult(self, data, query)
+
+  def group(self, query):
+    for data in self.get_group(query):
       yield SearchResult(self, data, query)
 
   def responses(self):

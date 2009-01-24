@@ -458,6 +458,12 @@ class GwibberClient(gtk.Window):
           query, True, gtk.STOCK_INFO, True, query)
         self.update([view.get_parent()])
         return True
+      elif uri.startswith("gwibber:group"):
+        query = uri.split("/")[-1]
+        view = self.add_tab(lambda: self.client.group(query),
+          query, True, gtk.STOCK_INFO, True, query)
+        self.update([view.get_parent()])
+        return True
       elif uri.startswith("gwibber:thread"):
         msg = view.message_store[int(uri.split("/")[-1])]
         if hasattr(msg, "original_title"): tab_label = msg.original_title

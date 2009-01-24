@@ -30,6 +30,7 @@ PROTOCOL_INFO = {
     can.RESPONSES,
     can.DELETE,
     can.TAG,
+    can.GROUP,
     #can.THREAD,
     can.THREAD_REPLY,
   ],
@@ -121,12 +122,22 @@ class Client:
         urllib.urlencode({"action": "tagrss", "tag":
           query}))))["entries"]
 
+  def get_group(self, query):
+    return feedparser.parse(urllib2.urlopen(
+      urllib2.Request("http://identi.ca/index.php",
+        urllib.urlencode({"action": "grouprss", "group":
+          query}))))["entries"]
+
   def search(self, query):
     for data in self.get_search(query):
       yield SearchResult(self, data, query)
 
   def tag(self, query):
     for data in self.get_tag(query):
+      yield SearchResult(self, data, query)
+
+  def group(self, query):
+    for data in self.get_group(query):
       yield SearchResult(self, data, query)
 
   def responses(self):
