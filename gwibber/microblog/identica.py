@@ -125,7 +125,7 @@ class Client:
   def get_group(self, query):
     return feedparser.parse(urllib2.urlopen(
       urllib2.Request("http://identi.ca/index.php",
-        urllib.urlencode({"action": "grouprss", "group":
+        urllib.urlencode({"action": "grouprss", "nickname":
           query}))))["entries"]
 
   def search(self, query):
