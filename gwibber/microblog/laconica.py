@@ -65,7 +65,7 @@ class Message:
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://%s/\\1">\\1</a>' % self.account["domain"],
-        GROUP_PARSE.sub('!<a class="inlinegroup" href="gwibber://%s/group/\\1">\\1</a>' % self.account["domain"],
+        GROUP_PARSE.sub('!<a class="inlinegroup" href="gwibber:group/\\1">\\1</a>',
           support.linkify(self.text))))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
 
@@ -87,7 +87,7 @@ class SearchResult:
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://%s/\\1">\\1</a>' % self.account["domain"],
-        GROUP_PARSE.sub('!<a class="inlinegroup" href="gwibber://%s/group/\\1">\\1</a>' % self.account["domain"],
+        GROUP_PARSE.sub('!<a class="inlinegroup" href="gwibber:group/\\1">\\1</a>',
           support.linkify(self.text))))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
 
