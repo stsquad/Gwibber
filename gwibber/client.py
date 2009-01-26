@@ -18,6 +18,9 @@ microblog.PROTOCOLS["pidgin"] = pidgin
 import gettext
 import locale
 
+# urllib (quoting urls)
+import urllib
+
 # Set this way as in setup.cfg we have prefix=/usr/local
 LOCALEDIR = "/usr/local/share/locale"
 DOMAIN = "gwibber"
@@ -260,7 +263,8 @@ class GwibberClient(gtk.Window):
     if self.preferences["shorten_urls"]:
       if text and text.startswith("http") and not " " in text and not "http://is.gd" in text:
         entry.stop_emission("insert-text")
-        short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % text).read()
+        escaped_url = urllib.quote(text)
+        short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % escaped_url).read()
         entry.insert_text(short, entry.get_position())
         gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(short)))
   
@@ -424,7 +428,7 @@ class GwibberClient(gtk.Window):
       text = current_text[:-2] + " " if current_text.endswith(": ") else current_text
       # do not add the nick if it's already in the list
       if not text.count("@%s" % message.sender_nick):
-        self.input.set_text("%s@%s: " % (text, message.sender_nick))
+        self.input.set_text("%s@%s%s" % (text, message.sender_nick, self.preferences['reply_append_colon'] and ': ' or ' '))
       self.input.set_position(-1)
 
       self.message_target = message
@@ -718,7 +722,7 @@ class GwibberClient(gtk.Window):
     dialog = glade.get_widget("pref_dialog")
     dialog.show_all()
 
-    for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry", "shorten_urls"]:
+    for widget in ["show_notifications", "refresh_interval", "minimize_to_tray", "hide_taskbar_entry", "shorten_urls", "reply_append_colon"]:
       self.preferences.bind(glade.get_widget("pref_%s" % widget), widget)
 
     self.preferences.bind(glade.get_widget("show_tray_icon"), "show_tray_icon")
@@ -742,29 +746,26 @@ class GwibberClient(gtk.Window):
     }
 
   def on_input_activate(self, e):
-    if self.input.get_text().strip():
-      
+    text = self.input.get_text().strip()
+    if text:
+      # check if reply and target accordingly
       if self.message_target:
-        if self.message_target.account.supports(microblog.can.THREAD_REPLY) \
-            and hasattr(self.message_target, "id"):
-          self.message_target.account.get_client().send_thread(
-            self.message_target, self.input.get_text().strip())
-          self.on_cancel_reply(None)
-          return
-
-      if self.message_target:
-        protocols = [self.message_target.account["protocol"]]
-        result = self.client.reply(self.input.get_text().strip(), protocols)
+        account = self.message_target.account
+        if account:
+          if account.supports(microblog.can.THREAD_REPLY) and hasattr(self.message_target, "id"):
+            result = account.get_client().send_thread(self.message_target, text)
+          else:
+            result = self.client.reply(text, [account["protocol"]])
+      # else standard post
       else:
-        protocols = microblog.PROTOCOLS.keys()
-        result = self.client.send(self.input.get_text().strip(), protocols)
+        result = self.client.send(text, microblog.PROTOCOLS.keys())
 
+      # if we get a returned msg we may be able to display it to the user immediately
       if result: 
-        for msg in result:
-          if hasattr(msg, 'client'):
-            self.post_process_message(msg)
-            msg.is_new = False
-            self.messages_view.message_store = [msg] + self.messages_view.message_store
+        if hasattr(result, 'client'):
+          self.post_process_message(result)
+          result.is_new = False
+          self.messages_view.message_store = [result] + self.messages_view.message_store
         self.messages_view.load_messages()
         self.messages_view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
     

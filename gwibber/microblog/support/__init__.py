@@ -8,8 +8,6 @@ SegPhault (Ryan Paul) - 07/25/2008
 
 import re, os, facelib, locale, mx.DateTime
 
-import math
-
 import gettext
 
 _ = gettext.lgettext
