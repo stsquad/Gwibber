@@ -8,6 +8,8 @@ SegPhault (Ryan Paul) - 07/25/2008
 
 import re, os, facelib, locale, mx.DateTime
 
+import math
+
 import gettext
 
 _ = gettext.lgettext
@@ -60,11 +62,11 @@ def generate_time_string(t):
   elif d.seconds >= 3600 and d.days < 1:
     hours = round(d.seconds / 60 / 60)
     return gettext.ngettext("%(hour)d hour ago", "%(hour)d hours ago", hours) % {"hour": hours}
-  elif d.seconds < 3600 and d.second >= 60:
+  elif d.seconds < 3600 and d.seconds >= 60:
     minutes = round(d.seconds / 60)
     return gettext.ngettext("%(minute)d minute ago", "%(minute)d minutes ago", minutes) % {"minute": minutes}
   elif round(d.seconds) < 60:
-    seconds = math.floor(d.seconds)
+    seconds = round(d.seconds)
     return gettext.ngettext("%(sec)d second ago", "%(sec)d seconds ago", seconds) % {"sec": seconds}
   else:
     return _("BUG: %s") % str(d)
