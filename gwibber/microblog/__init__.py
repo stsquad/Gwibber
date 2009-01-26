@@ -117,4 +117,4 @@ class Client:
       lambda a: a["receive_enabled"] and supports(a, can.GROUP),
       # Translators: this message appears in the Errors dialog
       # Indicates with wich action the error happened       
-      lambda c: c.tag(query.lower().replace("!", "")), _("perform group query"), filter)
+      lambda c: c.group(query.lower().replace("!", "")), _("perform group query"), filter)
