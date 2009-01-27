@@ -112,4 +112,9 @@ class Client:
       # Indicates with wich action the error happened       
       lambda c: c.tag(query.lower().replace("#", "")), _("perform tag query"), filter)
 
-
+  def group(self, query, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and supports(a, can.GROUP),
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened       
+      lambda c: c.group(query.lower().replace("!", "")), _("perform group query"), filter)

@@ -1,467 +1,475 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Swedish translation for gwibber
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the gwibber package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-27 11:21+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: gwibber\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-01-19 21:09+0100\n"
+"PO-Revision-Date: 2009-01-27 08:59+0000\n"
+"Last-Translator: XeroXer <info@xeroxer.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Launchpad-Export-Date: 2009-01-27 10:28+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
 msgid "Gwibber Microblogging Client"
-msgstr ""
+msgstr "Gwibber Mikroblogg Klient"
 
 #: ../gwibber.desktop.in.h:2
 msgid "Microblogging Client"
-msgstr ""
+msgstr "Mikroblogg Klient"
 
 #: ../gwibber.desktop.in.h:3
 msgid "Microblogging client for GNOME"
-msgstr ""
+msgstr "Mikroblogg klient för GNOME"
 
-#: ../gwibber/client.py:46
+#: ../gwibber/client.py:43
 msgid "_Editor"
-msgstr ""
+msgstr "_Redigerare"
 
-#: ../gwibber/client.py:47
+#: ../gwibber/client.py:44
 msgid "_Statusbar"
-msgstr ""
+msgstr "_Statusrad"
 
-#: ../gwibber/client.py:48
+#: ../gwibber/client.py:45
 msgid "Tray _Icon"
-msgstr ""
+msgstr "_Ikon för aktivitetsfält"
 
 #. Translators: these are checkbox
-#: ../gwibber/client.py:53 ../ui/preferences.glade.h:52
+#: ../gwibber/client.py:50 ../ui/preferences.glade.h:51
 msgid "_Receive Messages"
-msgstr ""
+msgstr "_Ta emot Meddelanden"
 
-#: ../gwibber/client.py:54 ../ui/preferences.glade.h:53
+#: ../gwibber/client.py:51 ../ui/preferences.glade.h:52
 msgid "_Send Messages"
-msgstr ""
+msgstr "_Skicka Meddelanden"
 
-#: ../gwibber/client.py:55
+#: ../gwibber/client.py:52
 msgid "Search _Messages"
-msgstr ""
+msgstr "_Sök Meddelanden"
 
-#: ../gwibber/client.py:74
+#: ../gwibber/client.py:71
 msgid "Gwibber"
-msgstr ""
+msgstr "Gwibber"
 
-#: ../gwibber/client.py:102
+#: ../gwibber/client.py:99
 msgid "%Y-%m-%d"
-msgstr ""
+msgstr "%Y-%m-%d"
 
-#: ../gwibber/client.py:103 ../gwibber/client.py:871
+#: ../gwibber/client.py:100 ../gwibber/client.py:870
 msgid "%I:%M:%S %p"
-msgstr ""
+msgstr "%H:%M:%S"
 
-#: ../gwibber/client.py:132
+#: ../gwibber/client.py:129
 msgid "Messages"
-msgstr ""
+msgstr "Meddelanden"
 
-#: ../gwibber/client.py:133
+#: ../gwibber/client.py:130
 msgid "Replies"
-msgstr ""
+msgstr "Svar"
 
-#: ../gwibber/client.py:168
+#: ../gwibber/client.py:165
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
-#: ../gwibber/client.py:279
+#: ../gwibber/client.py:275
 msgid "Enter a search query:"
-msgstr ""
+msgstr "Ange söktext:"
 
-#: ../gwibber/client.py:412
+#: ../gwibber/client.py:408
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
 "\n"
 "%s"
 msgstr ""
+"%s meddelande från %s vid %s\n"
+"\n"
+"%s"
 
-#: ../gwibber/client.py:486
+#: ../gwibber/client.py:482
 #, python-format
 msgid "Characters remaining: %s"
-msgstr ""
+msgstr "Tecken kvar: %s"
+
+#: ../gwibber/client.py:512
+msgid "_Manage"
+msgstr "_Hantera"
 
 #: ../gwibber/client.py:516
-msgid "_Manage"
-msgstr ""
-
-#: ../gwibber/client.py:520
 msgid "_Create"
-msgstr ""
+msgstr "_Skapa"
+
+#: ../gwibber/client.py:577
+msgid "Refresh"
+msgstr "Uppdatera"
+
+#: ../gwibber/client.py:578 ../gwibber/configui.py:123
+msgid "Search"
+msgstr "Sök"
+
+#: ../gwibber/client.py:579
+msgid "Clear"
+msgstr "Rensa"
+
+#: ../gwibber/client.py:580 ../ui/preferences.glade.h:32
+msgid "Preferences"
+msgstr "Inställningar"
 
 #: ../gwibber/client.py:581
-msgid "Refresh"
-msgstr ""
-
-#: ../gwibber/client.py:582 ../gwibber/configui.py:123
-msgid "Search"
-msgstr ""
-
-#: ../gwibber/client.py:583
-msgid "Clear"
-msgstr ""
-
-#: ../gwibber/client.py:584 ../ui/preferences.glade.h:33
-msgid "Preferences"
-msgstr ""
-
-#: ../gwibber/client.py:585
 msgid "Quit"
-msgstr ""
+msgstr "Avsluta"
 
 #. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
 #. actThemeTest.connect("activate", self.theme_preview_test)
 #. menuHelp.append(actThemeTest.create_menu_item())
-#: ../gwibber/client.py:591
+#: ../gwibber/client.py:587
 msgid "_About"
-msgstr ""
+msgstr "_Om"
+
+#: ../gwibber/client.py:597
+msgid "S_pellcheck"
+msgstr "_Stavningskontroll"
 
 #: ../gwibber/client.py:601
-msgid "S_pellcheck"
-msgstr ""
-
-#: ../gwibber/client.py:605
 msgid "E_rrors"
-msgstr ""
+msgstr "_Fel"
 
-#: ../gwibber/client.py:610
+#: ../gwibber/client.py:606
 msgid "_Gwibber"
-msgstr ""
+msgstr "_Gwibber"
 
-#: ../gwibber/client.py:613
+#: ../gwibber/client.py:609
 msgid "_View"
-msgstr ""
+msgstr "_Visa"
+
+#: ../gwibber/client.py:612
+msgid "_Accounts"
+msgstr "_Konton"
 
 #: ../gwibber/client.py:616
-msgid "_Accounts"
-msgstr ""
-
-#: ../gwibber/client.py:620
 msgid "_Help"
-msgstr ""
+msgstr "_Hjälp"
 
-#: ../gwibber/client.py:672
+#: ../gwibber/client.py:668
 msgid "Errors"
-msgstr ""
+msgstr "Fel"
 
-#: ../gwibber/client.py:678
+#: ../gwibber/client.py:674
 msgid "Debug Output"
-msgstr ""
+msgstr "Felsökningsmeddelanden"
 
-#: ../gwibber/client.py:871
+#: ../gwibber/client.py:870
 #, python-format
 msgid "Last update: %s"
-msgstr ""
+msgstr "Senaste uppdatering: %s"
 
 #: ../gwibber/configui.py:30
 msgid "Keys obtained successfully."
-msgstr ""
+msgstr "Nycklar mottagna utan fel."
 
 #: ../gwibber/configui.py:33
 msgid "Failed to obtain key."
-msgstr ""
+msgstr "Misslyckades att ta emot nyckel."
 
 #: ../gwibber/configui.py:72
 #, python-format
 msgid "Create %s account"
-msgstr ""
+msgstr "Skapa %s konto"
 
 #: ../gwibber/configui.py:74
 #, python-format
 msgid "Edit %s account"
-msgstr ""
+msgstr "Redigera %s konto"
 
 #: ../gwibber/configui.py:83
 msgid "Are you sure you want to cancel the creation of this account?"
-msgstr ""
+msgstr "Är du säker på att du vill avbryta skapandet av detta konto?"
 
 #: ../gwibber/configui.py:85
 msgid "Are you sure you want to delete this account?"
-msgstr ""
+msgstr "Är du säker på att du vill ta bort detta konto?"
 
 #: ../gwibber/configui.py:98
 msgid "Manage Accounts"
-msgstr ""
+msgstr "Hantera konton"
 
 #: ../gwibber/configui.py:116 ../gwibber/table.py:17
 msgid "Username"
-msgstr ""
+msgstr "Användarnamn"
 
 #: ../gwibber/configui.py:117
 msgid "Receive"
-msgstr ""
+msgstr "Ta emot"
 
 #: ../gwibber/configui.py:120
 msgid "Send"
-msgstr ""
+msgstr "Skicka"
 
 #: ../gwibber/configui.py:127 ../gwibber/table.py:18
 msgid "Protocol"
-msgstr ""
+msgstr "Protokoll"
 
 #. Translators: this string appears when somebody reply to a message
 #. like '3 minutes ago in reply to angelina'
 #: ../gwibber/gwui.py:55
 msgid "in reply to"
-msgstr ""
+msgstr "som svar till"
 
 #. Translators: this string indicates where the message arrived from
 #. like 'from api', 'from Gwibber'
 #: ../gwibber/gwui.py:58
 msgid "from"
-msgstr ""
+msgstr "från"
 
 #. Translators: columns' names in the Error dialog
 #: ../gwibber/table.py:15
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: ../gwibber/table.py:16
 msgid "Time"
-msgstr ""
+msgstr "Tid"
 
 #: ../gwibber/table.py:19
 msgid "Message"
-msgstr ""
+msgstr "Meddelande"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:63 ../gwibber/microblog/__init__.py:70
 msgid "send message"
-msgstr ""
+msgstr "skicka meddelande"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:78
 msgid "retrieve thread"
-msgstr ""
+msgstr "hämta tråd"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:85
 msgid "retrieve responses"
-msgstr ""
+msgstr "hämta svar"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:92
 msgid "retrieve messages"
-msgstr ""
+msgstr "hämta meddelande"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:99
 msgid "retrieve positions"
-msgstr ""
+msgstr "hämta position"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:106
 msgid "perform search query"
-msgstr ""
+msgstr "utför sökning"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:113
 msgid "perform tag query"
-msgstr ""
+msgstr "utför tagg förfrågan"
 
 #: ../gwibber/microblog/support/__init__.py:56
 #, python-format
 msgid "%(year)d year ago"
 msgid_plural "%(year)d years ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(year)d år sedan"
+msgstr[1] "%(year)d år sedan"
 
 #: ../gwibber/microblog/support/__init__.py:59
 #, python-format
 msgid "%(day)d day ago"
 msgid_plural "%(day)d days ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(day)d dag sedan"
+msgstr[1] "%(day)d dagar sedan"
 
 #: ../gwibber/microblog/support/__init__.py:62
 #, python-format
 msgid "%(hour)d hour ago"
 msgid_plural "%(hour)d hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(hour)d timme sedan"
+msgstr[1] "%(hour)d timmar sedan"
 
 #: ../gwibber/microblog/support/__init__.py:65
 #, python-format
 msgid "%(minute)d minute ago"
 msgid_plural "%(minute)d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(minute)d minut sedan"
+msgstr[1] "%(minute)d minuter sedan"
 
 #: ../gwibber/microblog/support/__init__.py:68
 #, python-format
 msgid "%(sec)d second ago"
 msgid_plural "%(sec)d seconds ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(sec)d sekund sedan"
+msgstr[1] "%(sec)d sekunder sedan"
 
 #: ../gwibber/microblog/support/__init__.py:70
 #, python-format
 msgid "BUG: %s"
-msgstr ""
+msgstr "BUGG: %s"
 
 #: ../ui/preferences.glade.h:1
 msgid ""
 "<b>1.</b> Click the button below to request\n"
 "a Gwibber login code from Facebook."
 msgstr ""
+"<b>1.</b> Klicka knappen nedan för att begära\n"
+"en Gwibber login kop från Facebook."
 
 #: ../ui/preferences.glade.h:3
 msgid ""
 "<b>2.</b> Copy and paste the one-time code into the entry field below and "
 "then click the Apply button."
 msgstr ""
+"<b>2.</b> Kopiera och klistra in engångskoden i rutan nedan och klicka på "
+"Verkställ knappen."
 
 #: ../ui/preferences.glade.h:4
 msgid ""
 "<b>3.</b> Click the button below to give Gwibber permission to set your "
 "Facebook status."
 msgstr ""
+"<b>3.</b> Klicka på knappen nedan för att ge Gwibber tillstånd att ändra din "
+"Facebook status."
 
 #: ../ui/preferences.glade.h:5
 msgid "<b>Account Information</b>"
-msgstr ""
+msgstr "<b>Kontoinformation</b>"
 
 #: ../ui/preferences.glade.h:6
 msgid "<b>Account Status</b>"
-msgstr ""
+msgstr "<b>Kontostatus</b>"
 
 #: ../ui/preferences.glade.h:7
 msgid "<b>Appearance</b>"
-msgstr ""
+msgstr "<b>Utseende</b>"
 
 #: ../ui/preferences.glade.h:8
 msgid "<b>Experimental</b>"
-msgstr ""
+msgstr "<b>Experimentell</b>"
 
 #: ../ui/preferences.glade.h:9
 msgid "<b>Notification</b>"
-msgstr ""
+msgstr "<b>Notifiering</b>"
 
 #: ../ui/preferences.glade.h:10
 msgid "<b>Theme</b>"
-msgstr ""
+msgstr "<b>Tema</b>"
 
 #: ../ui/preferences.glade.h:11
 msgid "<b>Update</b>"
-msgstr ""
+msgstr "<b>Uppdatera</b>"
 
 #: ../ui/preferences.glade.h:12
 msgid "<b>Window Behavior</b>"
-msgstr ""
+msgstr "<b>Fönsterbeteende</b>"
 
 #: ../ui/preferences.glade.h:13
 msgid "API key:"
-msgstr ""
+msgstr "API nyckel:"
 
 #: ../ui/preferences.glade.h:14
 msgid "About Gwibber"
-msgstr ""
+msgstr "Om Gwibber"
 
 #: ../ui/preferences.glade.h:15
 msgid "App Key:"
-msgstr ""
+msgstr "App Nyckel:"
 
 #: ../ui/preferences.glade.h:16
-msgid "Append colon to username when replying"
-msgstr ""
+msgid "Authorize Status Changes"
+msgstr "Godkänn Status Ändring"
 
 #: ../ui/preferences.glade.h:17
-msgid "Authorize Status Changes"
-msgstr ""
+msgid "Automatically shorten pasted URLs"
+msgstr "FÖrkorta automatiskt inklistrade URLs"
 
 #: ../ui/preferences.glade.h:18
-msgid "Automatically shorten pasted URLs"
-msgstr ""
+msgid "Comment Color:"
+msgstr "Kommentar Färg:"
 
 #: ../ui/preferences.glade.h:19
-msgid "Comment Color:"
-msgstr ""
+msgid "Copyright (C) 2007-2008 Ryan Paul"
+msgstr "Copyright (C) 2007-2008 Ryan Paul"
 
 #: ../ui/preferences.glade.h:20
-msgid "Copyright (C) 2007-2008 Ryan Paul"
-msgstr ""
+msgid "Digg Color:"
+msgstr "Digg Färg:"
 
 #: ../ui/preferences.glade.h:21
-msgid "Digg Color:"
-msgstr ""
+msgid "Display bubbles"
+msgstr "Visa bubblor"
 
 #: ../ui/preferences.glade.h:22
-msgid "Display bubbles"
-msgstr ""
+msgid "Domain:"
+msgstr "Domän:"
 
 #: ../ui/preferences.glade.h:23
-msgid "Domain:"
-msgstr ""
+msgid "Facebook Authorization"
+msgstr "Facebook Tillåtelse"
 
 #: ../ui/preferences.glade.h:24
-msgid "Facebook Authorization"
-msgstr ""
+msgid "Feed URL:"
+msgstr "Flödes-URL:"
 
 #: ../ui/preferences.glade.h:25
-msgid "Feed URL:"
-msgstr ""
+msgid "Gwibber Web Site"
+msgstr "Gwibber Webbsida"
 
 #: ../ui/preferences.glade.h:26
-msgid "Gwibber Web Site"
-msgstr ""
-
-#: ../ui/preferences.glade.h:27
 msgid ""
 "Gwibber is an open source microblogging client for GNOME that supports "
 "Twitter, Jaiku, Facebook, Pownce, Identi.ca and other popular social web "
 "services."
 msgstr ""
+"Gwibber är en öppen källkod mikroblogg klient för GNOME som har stöd för "
+"Twitter, Jaiku, Facebook, Pownce, Identi.ca och andra populära webbtjänster."
+
+#: ../ui/preferences.glade.h:27
+msgid "Hide taskbar entry"
+msgstr "Dölj uppgiftsinlägg"
 
 #: ../ui/preferences.glade.h:28
-msgid "Hide taskbar entry"
-msgstr ""
+msgid "Message Color:"
+msgstr "Meddelandefärg"
 
 #: ../ui/preferences.glade.h:29
-msgid "Message Color:"
-msgstr ""
+msgid "Minimize to tray on close"
+msgstr "Minimera till aktivitetsfältet vid stängning"
 
 #: ../ui/preferences.glade.h:30
-msgid "Minimize to tray on close"
-msgstr ""
+msgid "Minutes between refresh:  "
+msgstr "Minuter mellan uppdatering:  "
 
 #: ../ui/preferences.glade.h:31
-msgid "Minutes between refresh:  "
-msgstr ""
-
-#: ../ui/preferences.glade.h:32
 msgid "Password:"
-msgstr ""
+msgstr "Lösenord:"
+
+#: ../ui/preferences.glade.h:33
+msgid "Request Login Code"
+msgstr "Begärn Loginkod"
 
 #: ../ui/preferences.glade.h:34
-msgid "Request Login Code"
-msgstr ""
+msgid "Show tray icon"
+msgstr "Visa ikon i aktivitetsfältet"
 
 #: ../ui/preferences.glade.h:35
-msgid "Show tray icon"
-msgstr ""
-
-#: ../ui/preferences.glade.h:36
 msgid ""
 "This program is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -478,16 +486,35 @@ msgid ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, "
 "USA.\n"
 msgstr ""
+"This program is free software; you can redistribute it and/or\n"
+"modify it under the terms of the GNU General Public License\n"
+"as published by the Free Software Foundation; either version 2\n"
+"of the License, or (at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n"
+"GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License\n"
+"along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
+"USA.\n"
+
+#: ../ui/preferences.glade.h:49
+msgid "Username:"
+msgstr "Användarnamn:"
 
 #: ../ui/preferences.glade.h:50
-msgid "Username:"
-msgstr ""
-
-#: ../ui/preferences.glade.h:51
 msgid "_Authorize Gwibber"
-msgstr ""
+msgstr "_Auktorisera Gwibber"
 
 #. Translators: insert your name here as Name Surname <email>, year
-#: ../ui/preferences.glade.h:55
+#: ../ui/preferences.glade.h:54
 msgid "translator-credits"
 msgstr ""
+"Launchpad Contributions:\n"
+"  XeroXer https://launchpad.net/~info-xeroxer\n"
+"\n"
+"Launchpad Contributions:\n"
+"  XeroXer https://launchpad.net/~info-xeroxer"
