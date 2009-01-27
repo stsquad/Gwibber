@@ -1,21 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Indonesian translation for gwibber
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the gwibber package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-27 11:21+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: gwibber\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-01-19 21:09+0100\n"
+"PO-Revision-Date: 2009-01-27 04:33+0000\n"
+"Last-Translator: Rakhmad Azhari <rakhmad.azhari@gmail.com>\n"
+"Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Launchpad-Export-Date: 2009-01-27 10:28+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
 msgid "Gwibber Microblogging Client"
@@ -23,146 +24,149 @@ msgstr ""
 
 #: ../gwibber.desktop.in.h:2
 msgid "Microblogging Client"
-msgstr ""
+msgstr "Microblogging Client"
 
 #: ../gwibber.desktop.in.h:3
 msgid "Microblogging client for GNOME"
 msgstr ""
 
-#: ../gwibber/client.py:46
+#: ../gwibber/client.py:43
 msgid "_Editor"
-msgstr ""
+msgstr "_Editor"
 
-#: ../gwibber/client.py:47
+#: ../gwibber/client.py:44
 msgid "_Statusbar"
-msgstr ""
+msgstr "Bar _Status"
 
-#: ../gwibber/client.py:48
+#: ../gwibber/client.py:45
 msgid "Tray _Icon"
-msgstr ""
+msgstr "_Ikon Tray"
 
 #. Translators: these are checkbox
-#: ../gwibber/client.py:53 ../ui/preferences.glade.h:52
+#: ../gwibber/client.py:50 ../ui/preferences.glade.h:51
 msgid "_Receive Messages"
-msgstr ""
+msgstr "_Pesan Diterima"
 
-#: ../gwibber/client.py:54 ../ui/preferences.glade.h:53
+#: ../gwibber/client.py:51 ../ui/preferences.glade.h:52
 msgid "_Send Messages"
-msgstr ""
+msgstr "_Kirimkan Pesan"
 
-#: ../gwibber/client.py:55
+#: ../gwibber/client.py:52
 msgid "Search _Messages"
-msgstr ""
+msgstr "Pencarian Pe_san"
 
-#: ../gwibber/client.py:74
+#: ../gwibber/client.py:71
 msgid "Gwibber"
-msgstr ""
+msgstr "Gwibber"
 
-#: ../gwibber/client.py:102
+#: ../gwibber/client.py:99
 msgid "%Y-%m-%d"
-msgstr ""
+msgstr "%d-%m-%Y"
 
-#: ../gwibber/client.py:103 ../gwibber/client.py:871
+#: ../gwibber/client.py:100 ../gwibber/client.py:870
 msgid "%I:%M:%S %p"
-msgstr ""
+msgstr "%I:%M:%S %p"
 
-#: ../gwibber/client.py:132
+#: ../gwibber/client.py:129
 msgid "Messages"
-msgstr ""
+msgstr "Pesan"
 
-#: ../gwibber/client.py:133
+#: ../gwibber/client.py:130
 msgid "Replies"
-msgstr ""
+msgstr "Balasan"
 
-#: ../gwibber/client.py:168
+#: ../gwibber/client.py:165
 msgid "Cancel"
-msgstr ""
+msgstr "Batalkan"
 
-#: ../gwibber/client.py:279
+#: ../gwibber/client.py:275
 msgid "Enter a search query:"
 msgstr ""
 
-#: ../gwibber/client.py:412
+#: ../gwibber/client.py:408
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
 "\n"
 "%s"
 msgstr ""
+"%s pesan dari %s pada %s\n"
+"\n"
+"%s"
 
-#: ../gwibber/client.py:486
+#: ../gwibber/client.py:482
 #, python-format
 msgid "Characters remaining: %s"
-msgstr ""
+msgstr "Karakter yang tersisa: %s"
+
+#: ../gwibber/client.py:512
+msgid "_Manage"
+msgstr "Peng_aturan"
 
 #: ../gwibber/client.py:516
-msgid "_Manage"
-msgstr ""
-
-#: ../gwibber/client.py:520
 msgid "_Create"
-msgstr ""
+msgstr "_Buat"
+
+#: ../gwibber/client.py:577
+msgid "Refresh"
+msgstr "Muat ulang"
+
+#: ../gwibber/client.py:578 ../gwibber/configui.py:123
+msgid "Search"
+msgstr "Cari"
+
+#: ../gwibber/client.py:579
+msgid "Clear"
+msgstr "Hapus"
+
+#: ../gwibber/client.py:580 ../ui/preferences.glade.h:32
+msgid "Preferences"
+msgstr "Preferensi"
 
 #: ../gwibber/client.py:581
-msgid "Refresh"
-msgstr ""
-
-#: ../gwibber/client.py:582 ../gwibber/configui.py:123
-msgid "Search"
-msgstr ""
-
-#: ../gwibber/client.py:583
-msgid "Clear"
-msgstr ""
-
-#: ../gwibber/client.py:584 ../ui/preferences.glade.h:33
-msgid "Preferences"
-msgstr ""
-
-#: ../gwibber/client.py:585
 msgid "Quit"
-msgstr ""
+msgstr "Keluar"
 
 #. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
 #. actThemeTest.connect("activate", self.theme_preview_test)
 #. menuHelp.append(actThemeTest.create_menu_item())
-#: ../gwibber/client.py:591
+#: ../gwibber/client.py:587
 msgid "_About"
-msgstr ""
+msgstr "_Tentang"
+
+#: ../gwibber/client.py:597
+msgid "S_pellcheck"
+msgstr "Pemeriksaan _Ejaan"
 
 #: ../gwibber/client.py:601
-msgid "S_pellcheck"
-msgstr ""
-
-#: ../gwibber/client.py:605
 msgid "E_rrors"
-msgstr ""
+msgstr "_Kesalahan"
 
-#: ../gwibber/client.py:610
+#: ../gwibber/client.py:606
 msgid "_Gwibber"
-msgstr ""
+msgstr "Gwibber"
 
-#: ../gwibber/client.py:613
+#: ../gwibber/client.py:609
 msgid "_View"
-msgstr ""
+msgstr "_Tampilan"
+
+#: ../gwibber/client.py:612
+msgid "_Accounts"
+msgstr "_Akun"
 
 #: ../gwibber/client.py:616
-msgid "_Accounts"
-msgstr ""
-
-#: ../gwibber/client.py:620
 msgid "_Help"
-msgstr ""
+msgstr "Bantuan"
 
-#: ../gwibber/client.py:672
+#: ../gwibber/client.py:668
 msgid "Errors"
-msgstr ""
+msgstr "Kesalahan"
 
-#: ../gwibber/client.py:678
+#: ../gwibber/client.py:674
 msgid "Debug Output"
 msgstr ""
 
-#: ../gwibber/client.py:871
+#: ../gwibber/client.py:870
 #, python-format
 msgid "Last update: %s"
 msgstr ""
@@ -178,40 +182,40 @@ msgstr ""
 #: ../gwibber/configui.py:72
 #, python-format
 msgid "Create %s account"
-msgstr ""
+msgstr "Buat akun %s"
 
 #: ../gwibber/configui.py:74
 #, python-format
 msgid "Edit %s account"
-msgstr ""
+msgstr "Ubah akun %s"
 
 #: ../gwibber/configui.py:83
 msgid "Are you sure you want to cancel the creation of this account?"
-msgstr ""
+msgstr "Apakah anda yakin ingin membatalkan pembuatan akun ini?"
 
 #: ../gwibber/configui.py:85
 msgid "Are you sure you want to delete this account?"
-msgstr ""
+msgstr "Apakah anda yakin ingin menghapus akun ini?"
 
 #: ../gwibber/configui.py:98
 msgid "Manage Accounts"
-msgstr ""
+msgstr "Kelola Akun"
 
 #: ../gwibber/configui.py:116 ../gwibber/table.py:17
 msgid "Username"
-msgstr ""
+msgstr "Nama Pengguna"
 
 #: ../gwibber/configui.py:117
 msgid "Receive"
-msgstr ""
+msgstr "Terima"
 
 #: ../gwibber/configui.py:120
 msgid "Send"
-msgstr ""
+msgstr "Kirim"
 
 #: ../gwibber/configui.py:127 ../gwibber/table.py:18
 msgid "Protocol"
-msgstr ""
+msgstr "Protokol"
 
 #. Translators: this string appears when somebody reply to a message
 #. like '3 minutes ago in reply to angelina'
@@ -223,26 +227,26 @@ msgstr ""
 #. like 'from api', 'from Gwibber'
 #: ../gwibber/gwui.py:58
 msgid "from"
-msgstr ""
+msgstr "dari"
 
 #. Translators: columns' names in the Error dialog
 #: ../gwibber/table.py:15
 msgid "Date"
-msgstr ""
+msgstr "Tanggal"
 
 #: ../gwibber/table.py:16
 msgid "Time"
-msgstr ""
+msgstr "Waktu"
 
 #: ../gwibber/table.py:19
 msgid "Message"
-msgstr ""
+msgstr "Pesan"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:63 ../gwibber/microblog/__init__.py:70
 msgid "send message"
-msgstr ""
+msgstr "kirim pesan"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
@@ -266,7 +270,7 @@ msgstr ""
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:99
 msgid "retrieve positions"
-msgstr ""
+msgstr "ambil posisi"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
@@ -284,36 +288,31 @@ msgstr ""
 #, python-format
 msgid "%(year)d year ago"
 msgid_plural "%(year)d years ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(year)d tahun yang lalu"
 
 #: ../gwibber/microblog/support/__init__.py:59
 #, python-format
 msgid "%(day)d day ago"
 msgid_plural "%(day)d days ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(day)d hari yang lalu"
 
 #: ../gwibber/microblog/support/__init__.py:62
 #, python-format
 msgid "%(hour)d hour ago"
 msgid_plural "%(hour)d hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(hour)d jam yang lalu"
 
 #: ../gwibber/microblog/support/__init__.py:65
 #, python-format
 msgid "%(minute)d minute ago"
 msgid_plural "%(minute)d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(minute)d menit yang lalu"
 
 #: ../gwibber/microblog/support/__init__.py:68
 #, python-format
 msgid "%(sec)d second ago"
 msgid_plural "%(sec)d seconds ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(sec)d detil yang lalu"
 
 #: ../gwibber/microblog/support/__init__.py:70
 #, python-format
@@ -331,24 +330,28 @@ msgid ""
 "<b>2.</b> Copy and paste the one-time code into the entry field below and "
 "then click the Apply button."
 msgstr ""
+"<b>2.</b> Salin dan tempelkan kode ke kolom isian di bawah ini lalu tekan "
+"tombol Apply."
 
 #: ../ui/preferences.glade.h:4
 msgid ""
 "<b>3.</b> Click the button below to give Gwibber permission to set your "
 "Facebook status."
 msgstr ""
+"<b>3.</b>Klik tombol di bawah ini untuk memperbolehkan Gwibber mengatur "
+"status Facebook anda."
 
 #: ../ui/preferences.glade.h:5
 msgid "<b>Account Information</b>"
-msgstr ""
+msgstr "<b>Informasi Akun</b>"
 
 #: ../ui/preferences.glade.h:6
 msgid "<b>Account Status</b>"
-msgstr ""
+msgstr "<b>Status Akun</b>"
 
 #: ../ui/preferences.glade.h:7
 msgid "<b>Appearance</b>"
-msgstr ""
+msgstr "<b>Tampilan</b>"
 
 #: ../ui/preferences.glade.h:8
 msgid "<b>Experimental</b>"
@@ -364,7 +367,7 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:11
 msgid "<b>Update</b>"
-msgstr ""
+msgstr "<b>Perbaharui</b>"
 
 #: ../ui/preferences.glade.h:12
 msgid "<b>Window Behavior</b>"
@@ -376,92 +379,88 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:14
 msgid "About Gwibber"
-msgstr ""
+msgstr "Tentang Gwibber"
 
 #: ../ui/preferences.glade.h:15
 msgid "App Key:"
 msgstr ""
 
 #: ../ui/preferences.glade.h:16
-msgid "Append colon to username when replying"
-msgstr ""
-
-#: ../ui/preferences.glade.h:17
 msgid "Authorize Status Changes"
 msgstr ""
 
-#: ../ui/preferences.glade.h:18
+#: ../ui/preferences.glade.h:17
 msgid "Automatically shorten pasted URLs"
 msgstr ""
 
-#: ../ui/preferences.glade.h:19
+#: ../ui/preferences.glade.h:18
 msgid "Comment Color:"
 msgstr ""
 
-#: ../ui/preferences.glade.h:20
+#: ../ui/preferences.glade.h:19
 msgid "Copyright (C) 2007-2008 Ryan Paul"
-msgstr ""
+msgstr "Copyright (C) 2007-2008 Ryan Paul"
 
-#: ../ui/preferences.glade.h:21
+#: ../ui/preferences.glade.h:20
 msgid "Digg Color:"
 msgstr ""
 
-#: ../ui/preferences.glade.h:22
+#: ../ui/preferences.glade.h:21
 msgid "Display bubbles"
 msgstr ""
 
-#: ../ui/preferences.glade.h:23
+#: ../ui/preferences.glade.h:22
 msgid "Domain:"
-msgstr ""
+msgstr "Domain:"
+
+#: ../ui/preferences.glade.h:23
+msgid "Facebook Authorization"
+msgstr "Otorisasi Facebook"
 
 #: ../ui/preferences.glade.h:24
-msgid "Facebook Authorization"
-msgstr ""
-
-#: ../ui/preferences.glade.h:25
 msgid "Feed URL:"
 msgstr ""
 
-#: ../ui/preferences.glade.h:26
+#: ../ui/preferences.glade.h:25
 msgid "Gwibber Web Site"
-msgstr ""
+msgstr "Situs Web Gwibber"
 
-#: ../ui/preferences.glade.h:27
+#: ../ui/preferences.glade.h:26
 msgid ""
 "Gwibber is an open source microblogging client for GNOME that supports "
 "Twitter, Jaiku, Facebook, Pownce, Identi.ca and other popular social web "
 "services."
 msgstr ""
 
-#: ../ui/preferences.glade.h:28
+#: ../ui/preferences.glade.h:27
 msgid "Hide taskbar entry"
 msgstr ""
 
-#: ../ui/preferences.glade.h:29
+#: ../ui/preferences.glade.h:28
 msgid "Message Color:"
-msgstr ""
+msgstr "Warna Pesan"
+
+#: ../ui/preferences.glade.h:29
+msgid "Minimize to tray on close"
+msgstr "Minimalkan ke tray ketika ditutup"
 
 #: ../ui/preferences.glade.h:30
-msgid "Minimize to tray on close"
-msgstr ""
-
-#: ../ui/preferences.glade.h:31
 msgid "Minutes between refresh:  "
 msgstr ""
 
-#: ../ui/preferences.glade.h:32
+#: ../ui/preferences.glade.h:31
 msgid "Password:"
-msgstr ""
+msgstr "Kata Sandi:"
 
-#: ../ui/preferences.glade.h:34
+#: ../ui/preferences.glade.h:33
 msgid "Request Login Code"
 msgstr ""
 
-#: ../ui/preferences.glade.h:35
+#: ../ui/preferences.glade.h:34
 msgid "Show tray icon"
-msgstr ""
+msgstr "Tampilkan ikon tray"
 
-#: ../ui/preferences.glade.h:36
+#: ../ui/preferences.glade.h:35
 msgid ""
 "This program is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -479,15 +478,17 @@ msgid ""
 "USA.\n"
 msgstr ""
 
-#: ../ui/preferences.glade.h:50
+#: ../ui/preferences.glade.h:49
 msgid "Username:"
-msgstr ""
+msgstr "Pengguna:"
 
-#: ../ui/preferences.glade.h:51
+#: ../ui/preferences.glade.h:50
 msgid "_Authorize Gwibber"
 msgstr ""
 
 #. Translators: insert your name here as Name Surname <email>, year
-#: ../ui/preferences.glade.h:55
+#: ../ui/preferences.glade.h:54
 msgid "translator-credits"
 msgstr ""
+"Launchpad Contributions:\n"
+"  Rakhmad Azhari https://launchpad.net/~rakhmad-azhari"
