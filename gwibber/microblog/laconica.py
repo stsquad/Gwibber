@@ -151,11 +151,12 @@ class Client:
   def send(self, message):
     data = simplejson.loads(self.connect(
       "http://%s/api/statuses/update.json" % self.account["domain"],
-        urllib.urlencode({"status":message})))
+        urllib.urlencode({"status":message, "source": "Gwibber"})))
     return Message(self, data)
 
   def send_thread(self, msg, message):
     data = simplejson.loads(self.connect(
       "http://%s/api/statuses/update.json" % self.account["domain"],
-        urllib.urlencode({"status":message, "in_reply_to_status_id":msg.id})))
+        urllib.urlencode({"status":message,
+            "in_reply_to_status_id":msg.id, "source": "Gwibber"})))
     return Message(self, data)
