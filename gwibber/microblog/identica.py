@@ -61,6 +61,12 @@ class Message:
     self.bgcolor = "message_color"
     self.url = "http://identi.ca/notice/%s" % data["id"] # % (data["user"]["screen_name"], data["id"])
     self.profile_url = "http://identi.ca/%s" % data["user"]["screen_name"]
+    # FIXME: bug in identi.ca 'twitter-compatible' API, no
+    #        in_reply_to_screen_name grr, so we have to extract ourselves
+    # self.reply_nick = data["in_reply_to_screen_name"]
+    screen_names = NICK_PARSE.match(self.text)
+    self.reply_nick = screen_names.group(0)[1:] if screen_names else data['in_reply_to_user_id']
+    self.reply_url = "http://identi.ca/notice/%s" % data["in_reply_to_status_id"]
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>',

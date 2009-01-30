@@ -62,6 +62,12 @@ class Message:
     self.bgcolor = "message_color"
     self.url = "http://%s/notice/%s" % (self.account["domain"], data["id"])
     self.profile_url = "http://%s/%s" % (self.account["domain"], data["user"]["screen_name"])
+    # FIXME: bug in laconi.ca 'twitter-compatible' API, no
+    #        in_reply_to_screen_name grr, so we have to extract ourselves
+    # self.reply_nick = data["in_reply_to_screen_name"]
+    screen_names = NICK_PARSE.match(self.text)
+    self.reply_nick = screen_names.group(0)[1:] if screen_names else data['in_reply_to_user_id']
+    self.reply_url = "http://%s/notice/%s" % (self.account["domain"], data["in_reply_to_status_id"])
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://%s/\\1">\\1</a>' % self.account["domain"],
