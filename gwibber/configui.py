@@ -113,18 +113,17 @@ class AccountManager(config.Accounts):
       elif acct["username"]: return acct["username"]
 
     data = table.generate([
-      [_("Username"), lambda a: generate_account_name(a)],
-      [_("Receive"), (col_receive, {
+      ["username", lambda a: generate_account_name(a), _("Username")],
+      ["receive",  (col_receive, {
         "active": lambda a: a["receive_enabled"],
-        "visible": lambda a: a.supports(microblog.can.RECEIVE)})],
-      [_("Send"), (col_send, {
+        "visible": lambda a: a.supports(microblog.can.RECEIVE)}), _("Receive")],
+      ["send", (col_send, {
         "active": lambda a: a["send_enabled"],
-        "visible": lambda a: a.supports(microblog.can.SEND)})],
-      [_("Search"), (col_search, {
+        "visible": lambda a: a.supports(microblog.can.SEND)}), _("Send")],
+      ["search", (col_search, {
         "active": lambda a: a["search_enabled"],
-        "visible": lambda a: a.supports(microblog.can.SEARCH)})],
-
-      [_("Protocol"), lambda a: a.get_protocol().PROTOCOL_INFO["name"]],
+        "visible": lambda a: a.supports(microblog.can.SEARCH)}), _("Search")],
+      ["protocol", lambda a: a.get_protocol().PROTOCOL_INFO["name"], _("Protocol")],
     ])
 
     col_receive.connect("toggled", toggle_table_checkbox, "receive_enabled", data)
