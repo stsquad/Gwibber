@@ -58,24 +58,21 @@ else:
 ######################################################################
 # Go...
 
-import dbus
-bus = dbus.SessionBus()
-dbus_objects = dbus.Interface(bus.get_object('org.freedesktop.DBus', 
-                                             '/org/freedesktop/DBus'), 
-                              'org.freedesktop.DBus').ListNames()
+import dbus, dbus.exceptions
+from gwibber.gintegration import DBUS_NAME, DBUS_PATH
 
-if not "net.launchpad.Gwibber" in dbus_objects:
+try:
+    bus = dbus.SessionBus()
+    proxy = bus.get_object(DBUS_NAME, DBUS_PATH)
+    iface = dbus.Interface(proxy, DBUS_NAME)
+
+    logging.info("Found existing Gwibber interface: invoking...")
+    iface.external_invoke()
+
+except dbus.exceptions.DBusException:
     logging.info("No existing Gwibber session: starting...")
     GwibberClient()
     gtk.main()
 
-else:
-    from gwibber.gintegration import DBUS_NAME, DBUS_PATH
-
-    logging.info("Found existing Gwibber interface: invoking...")
-    proxy = bus.get_object(DBUS_NAME, DBUS_PATH)
-    iface = dbus.Interface(proxy, DBUS_NAME)
-
-    iface.external_invoke()
 
 
