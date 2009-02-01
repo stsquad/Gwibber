@@ -5,7 +5,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import time, os, threading, mx.DateTime, hashlib
+import time, os, threading, logging, mx.DateTime, hashlib
 import gtk, gtk.glade, gobject, table
 import microblog, gwui, config, gintegration, configui
 import xdg.BaseDirectory, resources, urllib2
@@ -70,6 +70,9 @@ for _i in CONFIGURABLE_UI_ELEMENTS.keys():
 
 class GwibberClient(gtk.Window):
   def __init__(self):
+
+    self.dbus = gintegration.DBusManager(self)
+
     gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
     self.set_title(_("Gwibber"))
     self.set_default_size(330, 500)
@@ -191,6 +194,7 @@ class GwibberClient(gtk.Window):
     self.add(layout)
 
     if gintegration.can_notify:
+      # FIXME: Move this to DBusManager
       import dbus
 
       def on_notify_close(nId):
@@ -388,6 +392,13 @@ class GwibberClient(gtk.Window):
       self.last_position = self.get_position()
       self.hide()
     else:
+      self.present()
+      self.move(*self.last_position)
+
+  def external_invoke(self):
+    logging.info("Invoked by external")
+    if not self.get_property("visible"):
+      logging.debug("Not visible..")
       self.present()
       self.move(*self.last_position)
 
