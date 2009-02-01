@@ -377,7 +377,7 @@ class GwibberClient(gtk.Window):
       return True
     else: self.on_quit()
   
-  def on_ctrl_w(self, w, *args):
+  def on_close(self, w, *args):
     self.on_window_close(w, None)
 
   def on_cancel_reply(self, w, *args):
@@ -578,9 +578,6 @@ class GwibberClient(gtk.Window):
     key, mod = gtk.accelerator_parse("Escape")
     accelGroup.connect_group(key, mod, gtk.ACCEL_VISIBLE, self.on_cancel_reply)
 
-    key, mod = gtk.accelerator_parse("<ctrl>W")
-    accelGroup.connect_group(key, mod, gtk.ACCEL_VISIBLE, self.on_ctrl_w)
-
     def create_action(name, accel, stock, fn, parent = menuGwibber):
       mi = gtk.Action("gwibber%s" % name, "_%s" % name, None, stock)
       gtk.accel_map_add_entry("<Gwibber>/%s" % name, *gtk.accelerator_parse(accel))
@@ -595,7 +592,7 @@ class GwibberClient(gtk.Window):
     actClear = create_action(_("Clear"), "<ctrl>L", gtk.STOCK_CLEAR, self.on_clear) 
     actPreferences = create_action(_("Preferences"), "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
     actQuit = create_action(_("Quit"), "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
-    actClose = create_action(_("Close Window"), "<ctrl>W", gtk.STOCK_CLOSE, self.on_ctrl_w)
+    actClose = create_action(_("Close Window"), "<ctrl>W", gtk.STOCK_CLOSE, self.on_close)
     
     #actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
     #actThemeTest.connect("activate", self.theme_preview_test)
