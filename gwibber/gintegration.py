@@ -1,6 +1,26 @@
 
-import dbus, gobject, dbus.glib, os, sys
+import gobject, dbus.glib, os, sys
+import dbus, dbus.service
 
+######################################################################
+# DBus integration
+
+DBUS_PATH = '/net/launchpad/gwibber/Interface'
+DBUS_NAME = 'net.launchpad.Gwibber'
+
+class DBusManager(dbus.service.Object):
+  def __init__(self, client):
+    self.client = client
+    self.bus = dbus.SessionBus()
+    bus_name = dbus.service.BusName(DBUS_NAME, bus=self.bus)
+    dbus.service.Object.__init__(self, bus_name, DBUS_PATH)
+
+  @dbus.service.method(DBUS_NAME)
+  def external_invoke(self):
+    self.client.external_invoke()
+
+
+# FIXME: Move this to the manager class
 try:
   notifier = dbus.Interface(dbus.SessionBus().get_object(
     "org.freedesktop.Notifications", "/org/freedesktop/Notifications"),
@@ -12,6 +32,10 @@ try:
   can_notify = True
 except:
   can_notify = False
+
+
+######################################################################
+
 
 try:
   import sexy
