@@ -7,20 +7,56 @@ SegPhault (Ryan Paul) - 05/29/2007
 
 """
 
-import sys, gtk
-from os.path import join, dirname, exists, realpath
+import sys, logging, gtk, optparse
+from os.path import join, dirname, exists, realpath, abspath
 
-# use the local ../gwibber/client.py if we are in the source tree
-source_tree_gwibber = join(dirname(__file__), "..", "gwibber")
+
+######################################################################
+# Options and configuration
+def parse_opts():
+    usage = "usage: %prog [options] <config-file>"
+
+    oparse = optparse.OptionParser(usage=usage)
+
+    oparse.add_option("-v", "--verbose", action="store_true",
+                      help="Verbose messages", default=False)
+    oparse.add_option("-d", "--debug", action="store_true",
+                      help="Debug messages", default=False)
+
+    opts, rest = oparse.parse_args()
+    return opts
+    
+opts = parse_opts()
+
+if opts.debug:
+    logging.root.setLevel(logging.DEBUG)
+elif opts.verbose:
+    logging.root.setLevel(logging.INFO)
+
+
+######################################################################
+# Setup path
+
+LAUNCH_DIR = abspath(sys.path[0])
+logging.debug("Launched from %s", LAUNCH_DIR)
+source_tree_gwibber = join(LAUNCH_DIR, "..", "gwibber")
+
+# If we were invoked from a Gwibber source directory add that as the
+# preferred module path ...
 if exists(join(source_tree_gwibber, "client.py")):
+    logging.info("Running from source tree; adjusting path")
     sys.path.insert(0, realpath(dirname(source_tree_gwibber)))
     try:
         from gwibber.client import GwibberClient
     finally:
         del sys.path[0]
 else:
+    logging.debug("Assuming path is correct")
     from gwibber.client import GwibberClient
+
+
+######################################################################
+# Go...
 
 GwibberClient()
 gtk.main()
-
