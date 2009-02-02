@@ -111,26 +111,26 @@ class Client:
 
   def get_messages(self):
     return simplejson.loads(self.connect(
-      "http://%s/api/statuses/friends_timeline.json" % self.account["domain"]))
+      "https://%s/api/statuses/friends_timeline.json" % self.account["domain"]))
 
   def get_responses(self):
     return simplejson.loads(self.connect(
-      "http://%s/api/statuses/replies.json" % self.account["domain"]))
+      "https://%s/api/statuses/replies.json" % self.account["domain"]))
 
   def get_search(self, query):
     return feedparser.parse(urllib2.urlopen(
-      urllib2.Request("http://%s/search/notice/rss" % self.account["domain"],
+      urllib2.Request("https://%s/search/notice/rss" % self.account["domain"],
         urllib.urlencode({"q": query}))))["entries"]
 
   def get_tag(self, query):
     return feedparser.parse(urllib2.urlopen(
-      urllib2.Request("http://%s/index.php" % self.account["domain"],
+      urllib2.Request("https://%s/index.php" % self.account["domain"],
         urllib.urlencode({"action": "tagrss", "tag":
           query}))))["entries"]
 
   def get_group(self, query):
     return feedparser.parse(urllib2.urlopen(
-      urllib2.Request("http://%s/index.php" % self.account["domain"],
+      urllib2.Request("https://%s/index.php" % self.account["domain"],
         urllib.urlencode({"action": "grouprss", "nickname":
           query}))))["entries"]
 
@@ -156,13 +156,13 @@ class Client:
 
   def send(self, message):
     data = simplejson.loads(self.connect(
-      "http://%s/api/statuses/update.json" % self.account["domain"],
+      "https://%s/api/statuses/update.json" % self.account["domain"],
         urllib.urlencode({"status":message, "source": "Gwibber"})))
     return Message(self, data)
 
   def send_thread(self, msg, message):
     data = simplejson.loads(self.connect(
-      "http://%s/api/statuses/update.json" % self.account["domain"],
+      "https://%s/api/statuses/update.json" % self.account["domain"],
         urllib.urlencode({"status":message,
             "in_reply_to_status_id":msg.id, "source": "Gwibber"})))
     return Message(self, data)

@@ -110,27 +110,27 @@ class Client:
 
   def get_messages(self):
     return simplejson.loads(self.connect(
-      "http://identi.ca/api/statuses/friends_timeline.json",
+      "https://identi.ca/api/statuses/friends_timeline.json",
         urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
   def get_responses(self):
     return simplejson.loads(self.connect(
-      "http://identi.ca/api/statuses/replies.json"))
+      "https://identi.ca/api/statuses/replies.json"))
 
   def get_search(self, query):
     return feedparser.parse(urllib2.urlopen(
-      urllib2.Request("http://identi.ca/search/notice/rss",
+      urllib2.Request("https://identi.ca/search/notice/rss",
         urllib.urlencode({"q": query}))))["entries"]
 
   def get_tag(self, query):
     return feedparser.parse(urllib2.urlopen(
-      urllib2.Request("http://identi.ca/index.php",
+      urllib2.Request("https://identi.ca/index.php",
         urllib.urlencode({"action": "tagrss", "tag":
           query}))))["entries"]
 
   def get_group(self, query):
     return feedparser.parse(urllib2.urlopen(
-      urllib2.Request("http://identi.ca/index.php",
+      urllib2.Request("https://identi.ca/index.php",
         urllib.urlencode({"action": "grouprss", "nickname":
           query}))))["entries"]
 
@@ -156,13 +156,13 @@ class Client:
 
   def send(self, message):
     data = simplejson.loads(self.connect(
-      "http://identi.ca/api/statuses/update.json",
+      "https://identi.ca/api/statuses/update.json",
         urllib.urlencode({"status":message, "source": "Gwibber"})))
     return Message(self, data)
 
   def send_thread(self, msg, message):
     data = simplejson.loads(self.connect(
-      "http://identi.ca/api/statuses/update.json",
+      "https://identi.ca/api/statuses/update.json",
         urllib.urlencode({"status":message,
             "in_reply_to_status_id":msg.id, "source": "Gwibber"})))
     return Message(self, data)

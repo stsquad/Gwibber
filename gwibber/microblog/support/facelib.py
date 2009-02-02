@@ -766,7 +766,7 @@ class Facebook(object):
         return result
 
 
-    def __call__(self, method, args=None, secure=False):
+    def __call__(self, method, args=None, secure=True):
         """Make a call to Facebook's REST server."""
         post_data = urllib.urlencode(self._build_post_args(method, args))
 
