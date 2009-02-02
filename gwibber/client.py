@@ -6,9 +6,9 @@ SegPhault (Ryan Paul) - 01/05/2008
 """
 
 import time, os, threading, logging, mx.DateTime, hashlib
-import gtk, gtk.glade, gobject, table
+import gtk, gtk.glade, gobject, table, functools
 import microblog, gwui, config, gintegration, configui
-import xdg.BaseDirectory, resources, urllib2
+import xdg.BaseDirectory, resources, urllib2, urlparse
 
 # Setup Pidgin
 import pidgin
@@ -149,13 +149,15 @@ class GwibberClient(gtk.Window):
     if saved_queries:
       for query in saved_queries:
         if query.startswith("#"):
-          self.add_tab(lambda: self.client.tag(query),
+          self.add_tab(functools.partial(self.client.tag, query),
             query.replace("#", ""), True, gtk.STOCK_INFO, False, query)
+        elif microblog.support.LINK_PARSE.match(query):
+          self.add_tab(functools.partial(self.client.search_url, query),
+            urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
         elif len(query) > 0:
-          self.add_tab(lambda: self.client.search(query),
+          self.add_tab(functools.partial(self.client.search, query),
             query, True, gtk.STOCK_FIND, False, query)
-
-
+        
     #self.add_map_tab(self.client.friend_positions, "Location")
 
     if gintegration.SPELLCHECK_ENABLED:
@@ -271,7 +273,7 @@ class GwibberClient(gtk.Window):
         short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % escaped_url).read()
         entry.insert_text(short, entry.get_position())
         gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(short)))
-  
+
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
       gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION,
@@ -290,10 +292,13 @@ class GwibberClient(gtk.Window):
       query = entry.get_text()
       view = None
       if query.startswith("#"):
-        view = self.add_tab(lambda: self.client.tag(query),
+        view = self.add_tab(functools.partial(self.client.tag, query),
           query.replace("#", ""), True, gtk.STOCK_INFO, True, query)
+      elif microblog.support.LINK_PARSE.match(query):
+        view = self.add_tab(functools.partial(self.client.search_url, query),
+          urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
       elif len(query) > 0:
-        view = self.add_tab(lambda: self.client.search(query),
+        view = self.add_tab(functools.partial(self.client.search, query),
           query, True, gtk.STOCK_FIND, True, query)
       
       if view:

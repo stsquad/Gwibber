@@ -6,7 +6,7 @@ SegPhault (Ryan Paul) - 07/25/2008
 
 """
 
-import re, os, facelib, locale, mx.DateTime
+import re, os, facelib, locale, mx.DateTime, urllib2
 
 import gettext
 
@@ -44,6 +44,9 @@ def xml_escape(t):
 
 def truncate(text, count=10):
   return len(text) > count and "%s..." % text[:count+1] or text
+
+def unshorten_url(url):
+  return urllib2.urlopen("http://tweetbacks.appspot.com/tb?url=%s" % url).read().split()
 
 def generate_time_string(t):
   if isinstance(t, str): return t

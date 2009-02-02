@@ -32,6 +32,7 @@ PROTOCOL_INFO = {
     can.DELETE,
     #can.THREAD,
     can.THREAD_REPLY,
+    can.SEARCH_URL,
   ],
 }
 
@@ -128,6 +129,12 @@ class Client:
   def search(self, query):
     for data in self.get_search_data(query)["results"]:
       yield SearchResult(self, data, query)
+
+  def search_url(self, query):
+    urls = support.unshorten_url(query)
+    for data in self.get_search_data(" OR ".join(urls))["results"]:
+      if any(item in data["text"] for item in urls):
+        yield SearchResult(self, data, query)
 
   def tag(self, query):
     for data in self.get_search_data("#%s" % query)["results"]:
