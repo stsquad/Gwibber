@@ -6,7 +6,7 @@ SegPhault (Ryan Paul) - 01/05/2008
 """
 
 import time, os, threading, logging, mx.DateTime, hashlib
-import gtk, gtk.glade, gobject, table, functools
+import gtk, gtk.glade, gobject, table, functools, traceback
 import microblog, gwui, config, gintegration, configui
 import xdg.BaseDirectory, resources, urllib2, urlparse
 
@@ -269,12 +269,21 @@ class GwibberClient(gtk.Window):
 
   def on_add_text(self, entry, text, txtlen, pos):
     if self.preferences["shorten_urls"]:
-      if text and text.startswith("http") and not " " in text and not "http://is.gd" in text:
+      if text and text.startswith("http") and not " " in text and not "http://is.gd" in text \
+          and not "http://tinyurl.com" in text and len(text) > 20:
         entry.stop_emission("insert-text")
-        escaped_url = urllib.quote(text)
-        short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % escaped_url).read()
-        entry.insert_text(short, entry.get_position())
-        gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(short)))
+        try:
+          short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % urllib2.quote(text)).read()
+        except:
+          self.handle_error({"username": "None", "protocol": "is.gd"},
+            traceback.format_exc(), "Failed to shorten URL")
+          self.preferences["shorten_urls"] = False
+          entry.insert_text(text, entry.get_position())
+          gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(text)))
+          self.preferences["shorten_urls"] = True
+        else:
+          entry.insert_text(short, entry.get_position())
+          gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(short)))
 
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
