@@ -347,7 +347,7 @@
     <property name="has_separator">False</property>
     <property name="program_name">Gwibber</property>
     <property name="version">0.7</property>
-    <property name="copyright" translatable="yes">Copyright (C) 2007-2008 Ryan Paul</property>
+    <property name="copyright" translatable="yes">Copyright (C) 2007-2009 Gwibber Team</property>
     <property name="comments" translatable="yes">Gwibber is an open source microblogging client for GNOME that supports Twitter, Jaiku, Facebook, Pownce, Identi.ca and other popular social web services.</property>
     <property name="website">https://launchpad.net/gwibber/</property>
     <property name="website_label" translatable="yes">Gwibber Web Site</property>
@@ -366,7 +366,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 </property>
     <property name="authors">Ryan Paul
-Dominic Evans</property>
+Dominic Evans
+Greg Grossmeier</property>
     <property name="translator_credits" translatable="yes" comments="Translators: insert your name here as Name Surname &lt;email&gt;, year">translator-credits</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
