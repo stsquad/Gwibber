@@ -100,6 +100,11 @@
         border-style: ridge;
       }
 
+      .private {
+        border: 3px solid rgba(255, 44, 188, 0.8);
+        border-style: ridge;
+      }
+
       .dupes {
         display: none;
       }
@@ -181,6 +186,9 @@
 
         if (data.is_reply)
           $(".message:last").addClass("reply");
+
+        if (data.is_private)
+          $(".message:last").addClass("private");
 
         $(".message:last").hover(
           function() {$(this).find(".replybutton").fadeIn(100)},

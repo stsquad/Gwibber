@@ -46,22 +46,32 @@ class Message:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.sender = data["user"]["name"]
-    self.sender_nick = data["user"]["screen_name"]
-    self.sender_id = data["user"]["id"]
+
+    if "user" in data:
+      user = data["user"]
+      self.reply_nick = data["in_reply_to_screen_name"]
+      self.reply_url = "https://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
+    else:
+      user = data["sender"]
+      self.reply_nick = None
+      self.reply_url = None
+
+    self.sender = user["name"]
+    self.sender_nick = user["screen_name"]
+    self.sender_id = user["id"]
     self.time = support.parse_time(data["created_at"])
     self.text = data["text"]
-    self.image = data["user"]["profile_image_url"]
+    self.image = user["profile_image_url"]
     self.bgcolor = "message_color"
-    self.url = "https://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
-    self.profile_url = "https://twitter.com/%s" % data["user"]["screen_name"]
-    self.reply_nick = data["in_reply_to_screen_name"]
-    self.reply_url = "https://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
+    self.url = "https://twitter.com/%s/statuses/%s" % (user["screen_name"], data["id"])
+    self.profile_url = "https://twitter.com/%s" % user["screen_name"]
+    
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
       NICK_PARSE.sub('@<a class="inlinenick" href="https://twitter.com/\\1">\\1</a>',
         support.linkify(self.text)))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
+    self.is_private  = False
 
 class SearchResult:
   def __init__(self, client, data, query = None):
@@ -121,6 +131,10 @@ class Client:
       "https://twitter.com/statuses/replies.json",
         urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
+  def get_direct_messages(self):
+    return simplejson.loads(self.connect(
+      "https://twitter.com/direct_messages.json"))
+
   def get_search_data(self, query):
     return simplejson.loads(urllib2.urlopen(
       urllib2.Request("http://search.twitter.com/search.json",
@@ -143,6 +157,11 @@ class Client:
   def responses(self):
     for data in self.get_replies():
       yield Message(self, data)
+
+    for data in self.get_direct_messages():
+      m = Message(self, data)
+      m.is_private = True
+      yield m
 
   def receive(self):
     for data in self.get_messages():

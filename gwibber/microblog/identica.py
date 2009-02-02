@@ -52,21 +52,29 @@ class Message:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.sender = data["user"]["name"]
-    self.sender_nick = data["user"]["screen_name"]
-    self.sender_id = data["user"]["id"]
-    self.time = support.parse_time(data["created_at"])
     self.text = support.xml_escape(data["text"])
-    self.image = data["user"]["profile_image_url"]
+    
+    if "user" in data:
+      user = data["user"]
+      # FIXME: bug in identi.ca 'twitter-compatible' API, no
+      #        in_reply_to_screen_name grr, so we have to extract ourselves
+      # self.reply_nick = data["in_reply_to_screen_name"]
+      screen_names = NICK_PARSE.match(self.text)
+      self.reply_nick = screen_names.group(0)[1:] if screen_names else data['in_reply_to_user_id']
+      self.reply_url = "http://identi.ca/notice/%s" % data["in_reply_to_status_id"]
+    else:
+      user = data["sender"]
+      self.reply_nick = None
+      self.reply_url = None
+
+    self.sender = user["name"]
+    self.sender_nick = user["screen_name"]
+    self.sender_id = user["id"]
+    self.time = support.parse_time(data["created_at"])
+    self.image = user["profile_image_url"]
     self.bgcolor = "message_color"
-    self.url = "http://identi.ca/notice/%s" % data["id"] # % (data["user"]["screen_name"], data["id"])
-    self.profile_url = "http://identi.ca/%s" % data["user"]["screen_name"]
-    # FIXME: bug in identi.ca 'twitter-compatible' API, no
-    #        in_reply_to_screen_name grr, so we have to extract ourselves
-    # self.reply_nick = data["in_reply_to_screen_name"]
-    screen_names = NICK_PARSE.match(self.text)
-    self.reply_nick = screen_names.group(0)[1:] if screen_names else data['in_reply_to_user_id']
-    self.reply_url = "http://identi.ca/notice/%s" % data["in_reply_to_status_id"]
+    self.url = "http://identi.ca/notice/%s" % data["id"]
+    self.profile_url = "http://identi.ca/%s" % user["screen_name"]
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>',
@@ -117,6 +125,10 @@ class Client:
     return simplejson.loads(self.connect(
       "https://identi.ca/api/statuses/replies.json"))
 
+  def get_direct_messages(self):
+    return simplejson.loads(self.connect(
+      "https://identi.ca/api/direct_messages.json"))
+
   def get_search(self, query):
     return feedparser.parse(urllib2.urlopen(
       urllib2.Request("https://identi.ca/search/notice/rss",
@@ -149,6 +161,11 @@ class Client:
   def responses(self):
     for data in self.get_responses():
       yield Message(self, data)
+
+    for data in self.get_direct_messages():
+      m = Message(self, data)
+      m.is_private = True
+      yield m
 
   def receive(self):
     for data in self.get_messages():
