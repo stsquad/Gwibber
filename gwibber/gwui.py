@@ -15,7 +15,7 @@ import gettext
 _ = gettext.lgettext
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
-IMG_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
+IMG_CACHE_DIR = os.path.join(resources.CACHE_BASE_DIR, "gwibber", "images")
 
 class MapView(webkit.WebView):
   def __init__(self):
