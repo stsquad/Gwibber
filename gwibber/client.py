@@ -234,6 +234,9 @@ class GwibberClient(gtk.Window):
     #    lambda *a: self.apply_ui_drawing_settings())
 
     def on_key_press(w, e):
+      if e.keyval == gtk.keysyms.F5:
+        self.update()
+        return True
       if e.keyval == gtk.keysyms.Tab and e.state & gtk.gdk.CONTROL_MASK:
         if len(self.tabs) == self.tabs.get_current_page() + 1:
           self.tabs.set_current_page(0)
