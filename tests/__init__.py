@@ -37,3 +37,11 @@ class GenerateTimeStringTestCase(unittest.TestCase):
     def testoneweek(self):
         time_string = self.generate_time_string(self.now - mx.DateTime.oneWeek)
         self.assertEqual(time_string, '7 days ago')
+
+    def testoneyear(self):
+        time_string = self.generate_time_string(self.now - 365 * mx.DateTime.oneDay)
+        self.assertEqual(time_string, '1 year ago')
+
+    def testtwoyears(self):
+        time_string = self.generate_time_string(self.now - 2 * 365 * mx.DateTime.oneDay)
+        self.assertEqual(time_string, '2 years ago')

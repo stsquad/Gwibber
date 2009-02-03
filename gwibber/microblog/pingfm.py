@@ -35,5 +35,5 @@ class Client:
     urllib2.urlopen(urllib2.Request(url, urllib.urlencode(data))).read()
 
   def send(self, message):
-    return self.connect("http://api.ping.fm/v1/user.post",
+    return self.connect("https://api.ping.fm/v1/user.post",
       {"post_method": "microblog", "body": message})

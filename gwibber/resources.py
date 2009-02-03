@@ -10,19 +10,20 @@ PROGRAM_NAME = "gwibber"
 UI_DIR_NAME = "ui"
 THEME_DIR_NAME = os.path.join(UI_DIR_NAME, "themes")
 LAUNCH_DIR = os.path.abspath(sys.path[0])
+DATA_DIRS = [LAUNCH_DIR]
 
 try:
   import xdg
   DATA_BASE_DIRS = xdg.BaseDirectory.xdg_data_dirs
+  CACHE_BASE_DIR = xdg.BaseDirectory.xdg_cache_home
 except:
   DATA_BASE_DIRS = [
     os.path.join(os.path.expanduser("~"), ".local", "share"),
     "/usr/local/share", "/usr/share"]
+  CACHE_BASE_DIR = os.path.join(os.path.expanduser("~"), ".cache")
 
-DATA_DIRS = [os.path.join(d, PROGRAM_NAME) for d in DATA_BASE_DIRS]
+DATA_DIRS += [os.path.join(d, PROGRAM_NAME) for d in DATA_BASE_DIRS]
 
-if os.path.expanduser("~") in LAUNCH_DIR:
-  DATA_DIRS = [LAUNCH_DIR] + DATA_DIRS
 
 def get_theme_paths():
   for base in DATA_DIRS:

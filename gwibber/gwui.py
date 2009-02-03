@@ -15,7 +15,7 @@ import gettext
 _ = gettext.lgettext
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
-IMG_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
+IMG_CACHE_DIR = os.path.join(resources.CACHE_BASE_DIR, "gwibber", "images")
 
 class MapView(webkit.WebView):
   def __init__(self):
@@ -50,9 +50,11 @@ class MessageView(webkit.WebView):
     self.open(os.path.join("file:/", resources.get_theme_path(theme), "theme.html"))
 
   def load_messages(self, message_store = None):
-    # Translators: this string appears when somebody reply to a message, like '3 minutes ago in reply to angelina'
+    # Translators: this string appears when somebody reply to a message
+    # like '3 minutes ago in reply to angelina'
     reply_string = " " + _("in reply to") + " "
-    # Translators: this string indicates where the message arrived from, like 'from api', 'from Gwibber' 
+    # Translators: this string indicates where the message arrived from
+    # like 'from api', 'from Gwibber' 
     from_string = " " + _("from") + " "
     # Done that way so translators don't have to handle white/empty spaces
     # and there's no need to handle them in the html too
@@ -60,7 +62,6 @@ class MessageView(webkit.WebView):
     
     strings = simplejson.dumps(ui_dict)
     msgs = simplejson.dumps([dict(m.__dict__, message_index=n)
-                             
       for n, m in enumerate(message_store or self.message_store)],
         indent=4, default=str)
     self.execute_script("addMessages(%(msg)s, %(rep)s)" % {"msg": msgs, "rep": strings})
@@ -83,6 +84,15 @@ class MessageView(webkit.WebView):
 
   def link_handler(self, uri):
     pass
+
+class UserView(MessageView):
+  def load_messages(self, message_store = None): # override
+    if (self.message_store and len(self.message_store) > 0):
+      # use info from first message to create user header
+      msg = simplejson.dumps(dict(self.message_store[0].__dict__, message_index=0), sort_keys=True, indent=4, default=str)
+      self.execute_script("addUserHeader(%s)" % msg)
+      # display other messages as normal
+      MessageView.load_messages(self, message_store)
 
 def image_cache(url, cache_dir = IMG_CACHE_DIR):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)
