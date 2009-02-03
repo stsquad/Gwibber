@@ -857,8 +857,9 @@ class GwibberClient(gtk.Window):
         message.first_seen and gintegration.can_notify and \
           message.username != message.sender_nick:
         gtk.gdk.threads_enter()
-        n = gintegration.notify(message.sender, microblog.support.linkify(message.text),
-          hasattr(message, "image_path") and message.image_path or None, ["reply", "Reply"])
+        body = microblog.support.linkify(microblog.support.xml_escape(message.text))
+        n = gintegration.notify(message.sender, body,
+          hasattr(message, "image_path") and message.image_path or '', ["reply", "Reply"])
         gtk.gdk.threads_leave()
 
         self.notification_bubbles[n] = message
