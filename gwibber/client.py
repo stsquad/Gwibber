@@ -613,9 +613,11 @@ class GwibberClient(gtk.Window):
     actRefresh = create_action(_("Refresh"), "<ctrl>R", gtk.STOCK_REFRESH, self.on_refresh) 
     actSearch = create_action(_("Search"), "<ctrl>F", gtk.STOCK_FIND, self.on_search) 
     actClear = create_action(_("Clear"), "<ctrl>L", gtk.STOCK_CLEAR, self.on_clear) 
-    actPreferences = create_action(_("Preferences"), "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
-    actQuit = create_action(_("Quit"), "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
     actClose = create_action(_("Close Window"), "<ctrl>W", gtk.STOCK_CLOSE, self.on_close)
+    menuGwibber.append(gtk.SeparatorMenuItem())
+    actPreferences = create_action(_("Preferences"), "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
+    menuGwibber.append(gtk.SeparatorMenuItem())
+    actQuit = create_action(_("Quit"), "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
     
     #actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
     #actThemeTest.connect("activate", self.theme_preview_test)
