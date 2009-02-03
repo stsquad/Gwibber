@@ -280,6 +280,17 @@ msgstr ""
 msgid "perform tag query"
 msgstr ""
 
+#: ../gwibber/microblog/twitter.py:77 ../gwibber/microblog/twitter.py:78
+msgid "This user has protected their updates."
+msgstr ""
+
+#: ../gwibber/microblog/twitter.py:77 ../gwibber/microblog/twitter.py:78
+msgid "You need to send a request before you can view this person's timeline."
+msgstr ""
+
+#: ../gwibber/microblog/twitter.py:77 ../gwibber/microblog/twitter.py:78
+msgid "Send request..."
+
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:120

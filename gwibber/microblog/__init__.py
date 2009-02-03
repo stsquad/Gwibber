@@ -119,6 +119,11 @@ class Client:
       # Indicates with wich action the error happened       
       lambda c: c.tag(query.lower().replace("#", "")), _("perform tag query"), filter)
 
+  def user_messages(self, screen_name, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and supports(a, can.USER_MESSAGES),
+      lambda c: c.user_messages(screen_name), "perform user_messages query", filter)
+
   def group(self, query, filter=PROTOCOLS.keys()):
     return self.perform_operation(
       lambda a: a["receive_enabled"] and supports(a, can.GROUP),

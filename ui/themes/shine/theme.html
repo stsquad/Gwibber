@@ -86,6 +86,23 @@
     </style>
     <script src="jquery.js"></script>
     <script>
+      // XXX: this is a twitter-specific hack currently...needs updating for other protocols
+      function addUserHeader(data) {
+        html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol + ' ' + data.aId + data.bgcolor +'" title="'+ data.sender_nick +'">' +
+            '<div class="heading '+ data.aId + data.bgcolor +'"> \
+			<center> \
+			<p class="content"> \
+			<span class="title">'+ data.sender +'</span><br /> \
+			<span class="text">'+ data.sender_followers_count +' followers</span><br /> \
+			<span class="text">'+ data.sender_location +'</span><br /> \
+			<span class="time"><a href="'+ data.external_profile_url +'">'+ data.external_profile_url +'</a></span> \
+			</p> \
+			</center> \
+		    </div> \
+		</div>'
+		$(".header").html(html);
+      }
+
       function addMessages(messages, msg) {
         clearMessages()
         $.each(messages, function() {addMessage(this, msg)});
@@ -161,6 +178,8 @@
     </script>
   </head>
   <body>
+    <div class="header">
+    </div>
     <div class="messages">
     </div>
   </body>
