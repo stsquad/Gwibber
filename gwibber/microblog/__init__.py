@@ -105,6 +105,13 @@ class Client:
       # Indicates with wich action the error happened       
       lambda c: c.search(query), _("perform search query"), filter)
 
+  def search_url(self, query, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["search_enabled"] and supports(a, can.SEARCH_URL),
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened       
+      lambda c: c.search_url(query), _("perform search query"), filter)
+
   def tag(self, query, filter=PROTOCOLS.keys()):
     return self.perform_operation(
       lambda a: a["receive_enabled"] and supports(a, can.TAG),
@@ -117,3 +124,9 @@ class Client:
       lambda a: a["receive_enabled"] and supports(a, can.USER_MESSAGES),
       lambda c: c.user_messages(screen_name), "perform user_messages query", filter)
 
+  def group(self, query, filter=PROTOCOLS.keys()):
+    return self.perform_operation(
+      lambda a: a["receive_enabled"] and supports(a, can.GROUP),
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened       
+      lambda c: c.group(query.lower().replace("!", "")), _("perform group query"), filter)

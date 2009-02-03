@@ -35,6 +35,7 @@ PROTOCOL_INFO = {
     can.DELETE,
     #can.THREAD,
     can.THREAD_REPLY,
+    can.SEARCH_URL,
     can.USER_MESSAGES,
   ],
 }
@@ -52,6 +53,20 @@ class Message:
     self.bgcolor = "message_color"
     self.id = data["id"] or ''
     self.time = support.parse_time(data["created_at"])
+    self.is_private  = False
+
+    if "user" in data:
+      user = data["user"]
+      self.reply_nick = data["in_reply_to_screen_name"]
+      self.reply_url = "https://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
+    else:
+      user = data["sender"]
+      self.reply_nick = None
+      self.reply_url = None
+
+    self.sender = user["name"]
+    self.sender_nick = user["screen_name"]
+    self.sender_id = user["id"]
 
     if data.has_key("user"):
       self.sender = data["user"]["name"]
@@ -165,6 +180,10 @@ class Client:
       "https://twitter.com/statuses/replies.json",
         urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
+  def get_direct_messages(self):
+    return simplejson.loads(self.connect(
+      "https://twitter.com/direct_messages.json"))
+
   def get_search_data(self, query):
     return simplejson.loads(urllib2.urlopen(
       urllib2.Request("http://search.twitter.com/search.json",
@@ -174,6 +193,12 @@ class Client:
     for data in self.get_search_data(query)["results"]:
       yield SearchResult(self, data, query)
 
+  def search_url(self, query):
+    urls = support.unshorten_url(query)
+    for data in self.get_search_data(" OR ".join(urls))["results"]:
+      if any(item in data["text"] for item in urls):
+        yield SearchResult(self, data, query)
+
   def tag(self, query):
     for data in self.get_search_data("#%s" % query)["results"]:
       yield SearchResult(self, data, "#%s" % query)
@@ -181,6 +206,11 @@ class Client:
   def responses(self):
     for data in self.get_replies():
       yield Message(self, data)
+
+    for data in self.get_direct_messages():
+      m = Message(self, data)
+      m.is_private = True
+      yield m
 
   def receive(self):
     for data in self.get_messages():

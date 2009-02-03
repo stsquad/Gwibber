@@ -158,6 +158,9 @@
         if (data.is_reply)
           $(".message:last").addClass("reply");
 
+        if (data.is_private)
+          $(".message:last").addClass("private");
+
         $(".message:last").hover(
           function() {$(this).find(".replybutton").fadeIn(100)},
           function() {$(this).find(".replybutton").hide(0)});

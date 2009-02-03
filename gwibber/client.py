@@ -5,10 +5,10 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import time, os, threading, mx.DateTime, hashlib
-import gtk, gtk.glade, gobject, table
+import time, os, threading, logging, mx.DateTime, hashlib
+import gtk, gtk.glade, gobject, table, functools, traceback
 import microblog, gwui, config, gintegration, configui
-import xdg.BaseDirectory, resources, urllib2
+import xdg.BaseDirectory, resources, urllib2, urlparse
 
 # Setup Pidgin
 import pidgin
@@ -37,7 +37,6 @@ gtk.gdk.threads_init()
 
 MAX_MESSAGE_LENGTH = 140
 
-IMAGE_CACHE_DIR = "%s/.gwibber/imgcache" % os.path.expanduser("~")
 VERSION_NUMBER = "0.7.3"
 
 def N_(message): return message
@@ -70,6 +69,9 @@ for _i in CONFIGURABLE_UI_ELEMENTS.keys():
 
 class GwibberClient(gtk.Window):
   def __init__(self):
+
+    self.dbus = gintegration.DBusManager(self)
+
     gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
     self.set_title(_("Gwibber"))
     self.set_default_size(330, 500)
@@ -146,13 +148,15 @@ class GwibberClient(gtk.Window):
     if saved_queries:
       for query in saved_queries:
         if query.startswith("#"):
-          self.add_msg_tab(lambda: self.client.tag(query),
+          self.add_msg_tab(functools.partial(self.client.tag, query),
             query.replace("#", ""), True, gtk.STOCK_INFO, False, query)
+        elif microblog.support.LINK_PARSE.match(query):
+          self.add_tab(functools.partial(self.client.search_url, query),
+            urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
         elif len(query) > 0:
-          self.add_msg_tab(lambda: self.client.search(query),
+          self.add_msg_tab(functools.partial(self.client.search, query),
             query, True, gtk.STOCK_FIND, False, query)
-
-
+        
     #self.add_map_tab(self.client.friend_positions, "Location")
 
     if gintegration.SPELLCHECK_ENABLED:
@@ -191,6 +195,7 @@ class GwibberClient(gtk.Window):
     self.add(layout)
 
     if gintegration.can_notify:
+      # FIXME: Move this to DBusManager
       import dbus
 
       def on_notify_close(nId):
@@ -229,6 +234,9 @@ class GwibberClient(gtk.Window):
     #    lambda *a: self.apply_ui_drawing_settings())
 
     def on_key_press(w, e):
+      if e.keyval == gtk.keysyms.F5:
+        self.update()
+        return True
       if e.keyval == gtk.keysyms.Tab and e.state & gtk.gdk.CONTROL_MASK:
         if len(self.tabs) == self.tabs.get_current_page() + 1:
           self.tabs.set_current_page(0)
@@ -261,13 +269,22 @@ class GwibberClient(gtk.Window):
 
   def on_add_text(self, entry, text, txtlen, pos):
     if self.preferences["shorten_urls"]:
-      if text and text.startswith("http") and not " " in text and not "http://is.gd" in text:
+      if text and text.startswith("http") and not " " in text and not "http://is.gd" in text \
+          and not "http://tinyurl.com" in text and len(text) > 20:
         entry.stop_emission("insert-text")
-        escaped_url = urllib.quote(text)
-        short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % escaped_url).read()
-        entry.insert_text(short, entry.get_position())
-        gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(short)))
-  
+        try:
+          short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % urllib2.quote(text)).read()
+        except:
+          self.handle_error({"username": "None", "protocol": "is.gd"},
+            traceback.format_exc(), "Failed to shorten URL")
+          self.preferences["shorten_urls"] = False
+          entry.insert_text(text, entry.get_position())
+          gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(text)))
+          self.preferences["shorten_urls"] = True
+        else:
+          entry.insert_text(short, entry.get_position())
+          gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(short)))
+
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
       gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION,
@@ -286,10 +303,13 @@ class GwibberClient(gtk.Window):
       query = entry.get_text()
       view = None
       if query.startswith("#"):
-        view = self.add_msg_tab(lambda: self.client.tag(query),
+        view = self.add_msg_tab(functools.partial(self.client.tag, query),
           query.replace("#", ""), True, gtk.STOCK_INFO, True, query)
+      elif microblog.support.LINK_PARSE.match(query):
+        view = self.add_tab(functools.partial(self.client.search_url, query),
+          urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
       elif len(query) > 0:
-        view = self.add_msg_tab(lambda: self.client.search(query),
+        view = self.add_msg_tab(functools.partial(self.client.search, query),
           query, True, gtk.STOCK_FIND, True, query)
       
       if view:
@@ -367,6 +387,9 @@ class GwibberClient(gtk.Window):
       return True
     else: self.on_quit()
   
+  def on_close(self, w, *args):
+    self.on_window_close(w, None)
+
   def on_cancel_reply(self, w, *args):
     self.cancel_button.hide()
     self.message_target = None
@@ -378,6 +401,13 @@ class GwibberClient(gtk.Window):
       self.last_position = self.get_position()
       self.hide()
     else:
+      self.present()
+      self.move(*self.last_position)
+
+  def external_invoke(self):
+    logging.info("Invoked by external")
+    if not self.get_property("visible"):
+      logging.debug("Not visible..")
       self.present()
       self.move(*self.last_position)
 
@@ -445,6 +475,12 @@ class GwibberClient(gtk.Window):
       elif uri.startswith("gwibber:tag"):
         query = uri.split("/")[-1]
         view = self.add_msg_tab(lambda: self.client.tag(query),
+          query, True, gtk.STOCK_INFO, True, query)
+        self.update([view.get_parent()])
+        return True
+      elif uri.startswith("gwibber:group"):
+        query = uri.split("/")[-1]
+        view = self.add_tab(lambda: self.client.group(query),
           query, True, gtk.STOCK_INFO, True, query)
         self.update([view.get_parent()])
         return True
@@ -579,6 +615,7 @@ class GwibberClient(gtk.Window):
     actClear = create_action(_("Clear"), "<ctrl>L", gtk.STOCK_CLEAR, self.on_clear) 
     actPreferences = create_action(_("Preferences"), "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
     actQuit = create_action(_("Quit"), "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
+    actClose = create_action(_("Close Window"), "<ctrl>W", gtk.STOCK_CLOSE, self.on_close)
     
     #actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
     #actThemeTest.connect("activate", self.theme_preview_test)
