@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gwibber 0.7.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-19 21:09+0100\n"
-"PO-Revision-Date: 2009-01-26 18:18+0000\n"
+"POT-Creation-Date: 2009-01-28 12:25+0000\n"
+"PO-Revision-Date: 2009-01-28 15:35+0000\n"
 "Last-Translator: Milo Casagrande <milo@milo.name>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-28 12:08+0000\n"
+"X-Launchpad-Export-Date: 2009-02-03 12:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
@@ -31,61 +31,61 @@ msgstr "Client per micro-blog"
 msgid "Microblogging client for GNOME"
 msgstr "Client GNOME per micro-blog"
 
-#: ../gwibber/client.py:43
+#: ../gwibber/client.py:46
 msgid "_Editor"
 msgstr "_Editor"
 
-#: ../gwibber/client.py:44
+#: ../gwibber/client.py:47
 msgid "_Statusbar"
 msgstr "Barra di _stato"
 
-#: ../gwibber/client.py:45
+#: ../gwibber/client.py:48
 msgid "Tray _Icon"
 msgstr "_Icona di notifica"
 
 #. Translators: these are checkbox
-#: ../gwibber/client.py:50 ../ui/preferences.glade.h:51
+#: ../gwibber/client.py:53 ../ui/preferences.glade.h:52
 msgid "_Receive Messages"
 msgstr "_Ricevere messaggi"
 
-#: ../gwibber/client.py:51 ../ui/preferences.glade.h:52
+#: ../gwibber/client.py:54 ../ui/preferences.glade.h:53
 msgid "_Send Messages"
 msgstr "_Inviare messaggi"
 
-#: ../gwibber/client.py:52
+#: ../gwibber/client.py:55
 msgid "Search _Messages"
 msgstr "_Cercare messaggi"
 
-#: ../gwibber/client.py:71
+#: ../gwibber/client.py:74
 msgid "Gwibber"
 msgstr "Gwibber"
 
-#: ../gwibber/client.py:99
+#: ../gwibber/client.py:102
 msgid "%Y-%m-%d"
 msgstr "%d/%m/%Y"
 
-#: ../gwibber/client.py:100 ../gwibber/client.py:870
+#: ../gwibber/client.py:103 ../gwibber/client.py:877
 msgid "%I:%M:%S %p"
 msgstr "%H.%M.%S"
 
-#: ../gwibber/client.py:129
+#: ../gwibber/client.py:132
 msgid "Messages"
 msgstr "Messaggi"
 
-#: ../gwibber/client.py:130
+#: ../gwibber/client.py:133
 msgid "Replies"
 msgstr "Risposte"
 
-#: ../gwibber/client.py:165
+#: ../gwibber/client.py:168
 msgid "Cancel"
 msgstr "Annulla"
 
 # (ndt) un po' più libera...
-#: ../gwibber/client.py:275
+#: ../gwibber/client.py:279
 msgid "Enter a search query:"
 msgstr "Digitare una chiave di ricerca:"
 
-#: ../gwibber/client.py:408
+#: ../gwibber/client.py:412
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
@@ -96,79 +96,79 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../gwibber/client.py:482
+#: ../gwibber/client.py:492
 #, python-format
 msgid "Characters remaining: %s"
 msgstr "Caratteri rimanenti: %s"
 
-#: ../gwibber/client.py:512
+#: ../gwibber/client.py:522
 msgid "_Manage"
 msgstr "_Gestisci"
 
-#: ../gwibber/client.py:516
+#: ../gwibber/client.py:526
 msgid "_Create"
 msgstr "_Crea"
 
-#: ../gwibber/client.py:577
+#: ../gwibber/client.py:587
 msgid "Refresh"
 msgstr "Aggiorna"
 
-#: ../gwibber/client.py:578 ../gwibber/configui.py:123
+#: ../gwibber/client.py:588 ../gwibber/configui.py:123
 msgid "Search"
 msgstr "Cerca"
 
-#: ../gwibber/client.py:579
+#: ../gwibber/client.py:589
 msgid "Clear"
 msgstr "Pulisci"
 
-#: ../gwibber/client.py:580 ../ui/preferences.glade.h:32
+#: ../gwibber/client.py:590 ../ui/preferences.glade.h:33
 msgid "Preferences"
 msgstr "Preferenze"
 
-#: ../gwibber/client.py:581
+#: ../gwibber/client.py:591
 msgid "Quit"
 msgstr "Esci"
 
 #. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
 #. actThemeTest.connect("activate", self.theme_preview_test)
 #. menuHelp.append(actThemeTest.create_menu_item())
-#: ../gwibber/client.py:587
+#: ../gwibber/client.py:597
 msgid "_About"
 msgstr "I_nformazioni"
 
-#: ../gwibber/client.py:597
+#: ../gwibber/client.py:607
 msgid "S_pellcheck"
 msgstr "C_ontrollo ortografico"
 
-#: ../gwibber/client.py:601
+#: ../gwibber/client.py:611
 msgid "E_rrors"
 msgstr "E_rrori"
 
-#: ../gwibber/client.py:606
+#: ../gwibber/client.py:616
 msgid "_Gwibber"
 msgstr "_Gwibber"
 
-#: ../gwibber/client.py:609
+#: ../gwibber/client.py:619
 msgid "_View"
 msgstr "_Visualizza"
 
-#: ../gwibber/client.py:612
+#: ../gwibber/client.py:622
 msgid "_Accounts"
 msgstr "_Account"
 
-#: ../gwibber/client.py:616
+#: ../gwibber/client.py:626
 msgid "_Help"
 msgstr "A_iuto"
 
-#: ../gwibber/client.py:668
+#: ../gwibber/client.py:678
 msgid "Errors"
 msgstr "Errori"
 
-#: ../gwibber/client.py:674
+#: ../gwibber/client.py:684
 msgid "Debug Output"
 msgstr "Output di debug"
 
-#: ../gwibber/client.py:870
+#: ../gwibber/client.py:877
 #, python-format
 msgid "Last update: %s"
 msgstr "Ultimo aggiornamento: %s"
@@ -287,6 +287,12 @@ msgstr "esecuzione interrogazione di ricerca"
 msgid "perform tag query"
 msgstr "esecuzione interrogazione etichetta"
 
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../gwibber/microblog/__init__.py:120
+msgid "perform group query"
+msgstr "esecuzione interrogazione sul gruppo"
+
 #: ../gwibber/microblog/support/__init__.py:56
 #, python-format
 msgid "%(year)d year ago"
@@ -326,21 +332,6 @@ msgstr[1] "%(sec)d secondi fa"
 #, python-format
 msgid "BUG: %s"
 msgstr "Bug: %s"
-
-#: ../gwibber/microblog/twitter.py:78
-#, python-format
-msgid "This user has protected their updates."
-msgstr ""
-
-#: ../gwibber/microblog/twitter.py:78
-#, python-format
-msgid "You need to send a request before you can view this person's timeline."
-msgstr ""
-
-#: ../gwibber/microblog/twitter.py:78
-#, python-format
-msgid "Send request..."
-msgstr ""
 
 #: ../ui/preferences.glade.h:1
 msgid ""
@@ -413,46 +404,50 @@ msgid "App Key:"
 msgstr "Chiave applicazione:"
 
 #: ../ui/preferences.glade.h:16
+msgid "Append colon to username when replying"
+msgstr "Aggiungere i due punti al nome utente nelle risposte"
+
+#: ../ui/preferences.glade.h:17
 msgid "Authorize Status Changes"
 msgstr "Autorizza modifica stato"
 
-#: ../ui/preferences.glade.h:17
+#: ../ui/preferences.glade.h:18
 msgid "Automatically shorten pasted URLs"
 msgstr "Accorciare automaticamente gli URL copiati"
 
-#: ../ui/preferences.glade.h:18
+#: ../ui/preferences.glade.h:19
 msgid "Comment Color:"
 msgstr "Colore commento:"
 
-#: ../ui/preferences.glade.h:19
+#: ../ui/preferences.glade.h:20
 msgid "Copyright (C) 2007-2008 Ryan Paul"
 msgstr "Copyright © 2007-2008 Ryan Paul"
 
-#: ../ui/preferences.glade.h:20
+#: ../ui/preferences.glade.h:21
 msgid "Digg Color:"
 msgstr "Colore Digg:"
 
-#: ../ui/preferences.glade.h:21
+#: ../ui/preferences.glade.h:22
 msgid "Display bubbles"
 msgstr "Visualizzare notifiche"
 
-#: ../ui/preferences.glade.h:22
+#: ../ui/preferences.glade.h:23
 msgid "Domain:"
 msgstr "Dominio:"
 
-#: ../ui/preferences.glade.h:23
+#: ../ui/preferences.glade.h:24
 msgid "Facebook Authorization"
 msgstr "Autorizzazione Facebook"
 
-#: ../ui/preferences.glade.h:24
+#: ../ui/preferences.glade.h:25
 msgid "Feed URL:"
 msgstr "URL del feed:"
 
-#: ../ui/preferences.glade.h:25
+#: ../ui/preferences.glade.h:26
 msgid "Gwibber Web Site"
 msgstr "Sito web di Gwibber"
 
-#: ../ui/preferences.glade.h:26
+#: ../ui/preferences.glade.h:27
 msgid ""
 "Gwibber is an open source microblogging client for GNOME that supports "
 "Twitter, Jaiku, Facebook, Pownce, Identi.ca and other popular social web "
@@ -462,35 +457,35 @@ msgstr ""
 "Twitter, Jaiku, Facebook, Pownce, Identi.ca e altri famosi servizi di web "
 "sociale."
 
-#: ../ui/preferences.glade.h:27
+#: ../ui/preferences.glade.h:28
 msgid "Hide taskbar entry"
 msgstr "Nascondere la finestra dall'elenco finestre"
 
-#: ../ui/preferences.glade.h:28
+#: ../ui/preferences.glade.h:29
 msgid "Message Color:"
 msgstr "Colore messaggio:"
 
-#: ../ui/preferences.glade.h:29
+#: ../ui/preferences.glade.h:30
 msgid "Minimize to tray on close"
 msgstr "Alla chiusura minimizzare nell'area di notifica"
 
-#: ../ui/preferences.glade.h:30
+#: ../ui/preferences.glade.h:31
 msgid "Minutes between refresh:  "
 msgstr "Minuti tra gli aggiornamenti:  "
 
-#: ../ui/preferences.glade.h:31
+#: ../ui/preferences.glade.h:32
 msgid "Password:"
 msgstr "Password:"
 
-#: ../ui/preferences.glade.h:33
+#: ../ui/preferences.glade.h:34
 msgid "Request Login Code"
 msgstr "Richiedi codice d'accesso"
 
-#: ../ui/preferences.glade.h:34
+#: ../ui/preferences.glade.h:35
 msgid "Show tray icon"
 msgstr "Mostrare icona nell'area di notifica"
 
-#: ../ui/preferences.glade.h:35
+#: ../ui/preferences.glade.h:36
 msgid ""
 "This program is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -523,19 +518,22 @@ msgstr ""
 "Free Software Foundation, Inc. 51 Franklin Street, Fifth Floor, Boston\n"
 "MA 02111-1301, USA\n"
 
-#: ../ui/preferences.glade.h:49
+#: ../ui/preferences.glade.h:50
 msgid "Username:"
 msgstr "Nome utente:"
 
-#: ../ui/preferences.glade.h:50
+#: ../ui/preferences.glade.h:51
 msgid "_Authorize Gwibber"
 msgstr "_Autorizza Gwibber"
 
 #. Translators: insert your name here as Name Surname <email>, year
-#: ../ui/preferences.glade.h:54
+#: ../ui/preferences.glade.h:55
 msgid "translator-credits"
 msgstr ""
 "Milo Casagrande <milo@ubuntu.com>, 2008\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Milo Casagrande https://launchpad.net/~milo\n"
 "\n"
 "Launchpad Contributions:\n"
 "  Milo Casagrande https://launchpad.net/~milo\n"
