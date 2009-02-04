@@ -623,8 +623,19 @@ class GwibberClient(gtk.Window):
     #actThemeTest.connect("activate", self.theme_preview_test)
     #menuHelp.append(actThemeTest.create_menu_item())
 
+    actHelpOnline = gtk.Action("gwibberHelpOnline", _("Get Help Online..."), None, None)
+    actHelpOnline.connect("activate", lambda *a: gintegration.load_url("https://answers.launchpad.net/gwibber"))
+    actTranslate = gtk.Action("gwibberTranslate", _("Translate This Application..."), None, None)
+    actTranslate.connect("activate", lambda *a: gintegration.load_url("https://translations.launchpad.net/gwibber"))
+    actReportProblem = gtk.Action("gwibberReportProblem", _("Report a Problem"), None, None)
+    actReportProblem.connect("activate", lambda *a: gintegration.load_url("https://bugs.launchpad.net/gwibber/+filebug"))
     actAbout = gtk.Action("gwibberAbout", _("_About"), None, gtk.STOCK_ABOUT)
     actAbout.connect("activate", self.on_about)
+
+    menuHelp.append(actHelpOnline.create_menu_item())
+    menuHelp.append(actTranslate.create_menu_item())
+    menuHelp.append(actReportProblem.create_menu_item())
+    menuHelp.append(gtk.SeparatorMenuItem())
     menuHelp.append(actAbout.create_menu_item())
 
     for w, n in CONFIGURABLE_UI_ELEMENTS.items():

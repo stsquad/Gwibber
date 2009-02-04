@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-03 15:14+0000\n"
+"POT-Creation-Date: 2009-02-04 12:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "%Y-%m-%d"
 msgstr ""
 
-#: ../gwibber/client.py:105 ../gwibber/client.py:909
+#: ../gwibber/client.py:105 ../gwibber/client.py:920
 msgid "%I:%M:%S %p"
 msgstr ""
 
@@ -131,42 +131,54 @@ msgstr ""
 #. actThemeTest.connect("activate", self.theme_preview_test)
 #. menuHelp.append(actThemeTest.create_menu_item())
 #: ../gwibber/client.py:626
+msgid "Get Help Online..."
+msgstr ""
+
+#: ../gwibber/client.py:628
+msgid "Translate This Application..."
+msgstr ""
+
+#: ../gwibber/client.py:630
+msgid "Report a Problem"
+msgstr ""
+
+#: ../gwibber/client.py:632
 msgid "_About"
 msgstr ""
 
-#: ../gwibber/client.py:636
+#: ../gwibber/client.py:647
 msgid "S_pellcheck"
 msgstr ""
 
-#: ../gwibber/client.py:640
+#: ../gwibber/client.py:651
 msgid "E_rrors"
 msgstr ""
 
-#: ../gwibber/client.py:645
+#: ../gwibber/client.py:656
 msgid "_Gwibber"
 msgstr ""
 
-#: ../gwibber/client.py:648
+#: ../gwibber/client.py:659
 msgid "_View"
 msgstr ""
 
-#: ../gwibber/client.py:651
+#: ../gwibber/client.py:662
 msgid "_Accounts"
 msgstr ""
 
-#: ../gwibber/client.py:655
+#: ../gwibber/client.py:666
 msgid "_Help"
 msgstr ""
 
-#: ../gwibber/client.py:707
+#: ../gwibber/client.py:718
 msgid "Errors"
 msgstr ""
 
-#: ../gwibber/client.py:713
+#: ../gwibber/client.py:724
 msgid "Debug Output"
 msgstr ""
 
-#: ../gwibber/client.py:909
+#: ../gwibber/client.py:920
 #, python-format
 msgid "Last update: %s"
 msgstr ""
