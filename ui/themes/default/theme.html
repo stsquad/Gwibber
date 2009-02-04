@@ -160,11 +160,11 @@
       }
 
       function addMessage(data, msg) {
-        html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol + ' ' + data.aId + data.bgcolor +'" title="'+ data.sender_nick +'">' +
+        html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol + ' ' + data.aId + data.bgcolor +'">' +
           '<table><tr>' +
             (data.image ? '<td class="imagecolumn"> \
               <a href="'+ data.profile_url +'"> \
-                <div class="imgbox" style="background-image: url('+ data.image +');"></div> \
+                <div class="imgbox" title="'+ data.sender_nick +'" style="background-image: url('+ data.image +');"></div> \
               </a> \
               <br />\
               <div class="diggbox"></div> \
