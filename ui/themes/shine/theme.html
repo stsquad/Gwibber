@@ -126,9 +126,9 @@
       }
 
       function addMessage(data, msg) {
-        html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol + '" title="'+ data.sender_nick +'"> \
+        html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol + '"> \
           <div class="heading '+ data.aId + data.bgcolor +'">' +
-            (data.image ? '<img class="imgbox" src="'+ data.image +'" />' : '') +
+            (data.image ? '<img class="imgbox" title="'+ data.sender_nick +'" src="'+ data.image +'" />' : '') +
             '<p class="title">'+ (data.title == undefined ? data.sender : data.title) +'</p> \
             <div class="bottom"> \
               <span class="time"><a href="'+ data.url +'">'+ data.time_string +'</a>' +
