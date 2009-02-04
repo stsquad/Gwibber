@@ -127,9 +127,6 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
-#. actThemeTest.connect("activate", self.theme_preview_test)
-#. menuHelp.append(actThemeTest.create_menu_item())
 #: ../gwibber/client.py:626
 msgid "Get Help Online..."
 msgstr ""
