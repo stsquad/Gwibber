@@ -48,7 +48,8 @@ class Message:
 
     self.time = support.parse_time(data.updated)
     self.bgcolor = "message_color"
-    self.url = data.link
+    if hasattr(data, "link"):
+      self.url = data.link
     self.profile_url = "" # feed.author_detail.href
     self.title = "%s <br /> <small>By %s</small>" % (data.title, self.sender)
 
