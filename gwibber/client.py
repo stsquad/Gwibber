@@ -101,8 +101,8 @@ class GwibberClient(gtk.Window):
     self.message_target = None
     
     self.errors = table.generate([
-      ["date", lambda t: t.time.strftime(_("%Y-%m-%d"))],
-      ["time", lambda t: t.time.strftime(_("%I:%M:%S %p"))],
+      ["date", lambda t: t.time.strftime("%x")],
+      ["time", lambda t: t.time.strftime("%X")],
       ["username"],
       ["protocol"],
       ["message", (gtk.CellRendererText(), {
@@ -917,7 +917,7 @@ class GwibberClient(gtk.Window):
         gtk.gdk.threads_leave()
 
         self.statusbar.pop(0)
-        self.statusbar.push(0, _("Last update: %s") % time.strftime(_("%I:%M:%S %p")))
+        self.statusbar.push(0, _("Last update: %s") % time.strftime("%X"))
         self.last_update = next_update
         
       finally: gobject.idle_add(self.throbber.clear)
