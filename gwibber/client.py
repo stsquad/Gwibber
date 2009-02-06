@@ -906,15 +906,11 @@ class GwibberClient(gtk.Window):
               view.data_retrieval_handler() if m.time > self.last_clear
               and m.time <= mx.DateTime.gmt()]
             self.flag_duplicates(view.message_store)
-            self.show_notification_bubbles(view.message_store)
-
-        gtk.gdk.threads_enter()
-        for tab in self.target_tabs:
-          view = tab.get_child()
-          if view:
+            gtk.gdk.threads_enter()
             view.load_messages()
             view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
-        gtk.gdk.threads_leave()
+            gtk.gdk.threads_leave()
+            self.show_notification_bubbles(view.message_store)
 
         self.statusbar.pop(0)
         self.statusbar.push(0, _("Last update: %s") % time.strftime("%X"))
