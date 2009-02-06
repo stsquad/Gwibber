@@ -78,6 +78,7 @@ class GwibberClient(gtk.Window):
     config.GCONF.add_dir(config.GCONF_PREFERENCES_DIR, config.gconf.CLIENT_PRELOAD_NONE)
     self.preferences = config.Preferences()
     self.last_update = None
+    self.last_focus_time = None
     self.last_clear = None
     self._reply_acct = None
     layout = gtk.VBox()
@@ -110,6 +111,7 @@ class GwibberClient(gtk.Window):
     ])
 
     self.connect("delete-event", self.on_window_close)
+    self.connect("focus-out-event", self.on_focus_out)
 
     for key, value in DEFAULT_PREFERENCES.items():
       if self.preferences[key] == None: self.preferences[key] = value
@@ -284,6 +286,13 @@ class GwibberClient(gtk.Window):
         else:
           entry.insert_text(short, entry.get_position())
           gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(short)))
+
+  def on_focus_out(self, widget, event):
+    if self.last_update:
+      self.last_focus_time = self.last_update
+    else:
+      self.last_focus_time= mx.DateTime.gmt()
+    return True
 
   def on_search(self, *a):
     dialog = gtk.MessageDialog(None,
@@ -810,7 +819,7 @@ class GwibberClient(gtk.Window):
       if result: 
         if hasattr(result, 'client'):
           self.post_process_message(result)
-          result.is_new = False
+          result.is_new = result.is_unread = False
           self.messages_view.message_store = [result] + self.messages_view.message_store
         self.messages_view.load_messages()
         self.messages_view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
@@ -832,10 +841,13 @@ class GwibberClient(gtk.Window):
     
     message.aId = message.account.id
 
+    if self.last_focus_time:
+      message.is_unread = message.time > self.last_focus_time
+
     if self.last_update:
       message.is_new = message.time > self.last_update
     else: message.is_new = False
-    
+
     message.time_string = microblog.support.generate_time_string(message.time)
 
     if not hasattr(message, "html_string"):
@@ -894,7 +906,6 @@ class GwibberClient(gtk.Window):
 
     def process():
       try:
-
         next_update = mx.DateTime.gmt()
         if not self.target_tabs:
           self.target_tabs = self.tabs.get_children()
