@@ -124,7 +124,10 @@ def image_cache(url, cache_dir = IMG_CACHE_DIR):
         print 'image_cache HTTP Error %s: %s whilst fetching %s' % (e.code, e.msg, e.url)
       else:
         print e
-      # if there were any problems getting the avatar img then return None
-      return None
+
+  # if there were any problems getting the avatar img and it still doesn't
+  # exist then return None
+  if not os.path.exists(img_path):
+    return None
 
   return img_path
