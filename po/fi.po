@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gwibber\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-01-28 12:25+0000\n"
-"PO-Revision-Date: 2009-01-29 17:53+0000\n"
+"POT-Creation-Date: 2009-02-04 12:49+0000\n"
+"PO-Revision-Date: 2009-02-04 20:19+0000\n"
 "Last-Translator: Miia Ranta <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-03 12:40+0000\n"
+"X-Launchpad-Export-Date: 2009-02-06 14:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
 msgid "Gwibber Microblogging Client"
-msgstr "Gwibber -mikrobloggausohjelma"
+msgstr "Gwibber-mikrobloggaus"
 
 #: ../gwibber.desktop.in.h:2
 msgid "Microblogging Client"
@@ -28,142 +28,158 @@ msgstr "Mikrobloggausohjelma"
 
 #: ../gwibber.desktop.in.h:3
 msgid "Microblogging client for GNOME"
-msgstr "Mikrobloggausohjelma GNOMElle"
+msgstr "Mikrobloggausohjelma Gnomelle"
+
+#: ../gwibber/client.py:45
+msgid "_Editor"
+msgstr "_Muokkain"
 
 #: ../gwibber/client.py:46
-msgid "_Editor"
-msgstr ""
-
-#: ../gwibber/client.py:47
 msgid "_Statusbar"
 msgstr "_Tilarivi"
 
-#: ../gwibber/client.py:48
+#: ../gwibber/client.py:47
 msgid "Tray _Icon"
-msgstr "Tarjot_inkuvake"
+msgstr "_Ilmoitusalueen kuvake"
 
 #. Translators: these are checkbox
-#: ../gwibber/client.py:53 ../ui/preferences.glade.h:52
+#: ../gwibber/client.py:52 ../ui/preferences.glade.h:56
 msgid "_Receive Messages"
-msgstr "_Vastaanottaa viestejä"
+msgstr "_Vastaanota viestejä"
 
-#: ../gwibber/client.py:54 ../ui/preferences.glade.h:53
+#: ../gwibber/client.py:53 ../ui/preferences.glade.h:57
 msgid "_Send Messages"
-msgstr "_Lähettää viestejä"
+msgstr "_Lähetä viestejä"
 
-#: ../gwibber/client.py:55
+#: ../gwibber/client.py:54
 msgid "Search _Messages"
-msgstr "_Haku viesteistä"
+msgstr "_Hae viesteistä"
 
-#: ../gwibber/client.py:74
+#: ../gwibber/client.py:76
 msgid "Gwibber"
 msgstr "Gwibber"
 
-#: ../gwibber/client.py:102
+#: ../gwibber/client.py:104
 msgid "%Y-%m-%d"
 msgstr "%Y-%m-%d"
 
-#: ../gwibber/client.py:103 ../gwibber/client.py:877
+#: ../gwibber/client.py:105 ../gwibber/client.py:920
 msgid "%I:%M:%S %p"
-msgstr "%I:%M:%S %p"
+msgstr "%H.%M.%S"
 
-#: ../gwibber/client.py:132
+#: ../gwibber/client.py:134
 msgid "Messages"
 msgstr "Viestit"
 
-#: ../gwibber/client.py:133
+#: ../gwibber/client.py:135
 msgid "Replies"
 msgstr "Vastaukset"
 
-#: ../gwibber/client.py:168
+#: ../gwibber/client.py:172
 msgid "Cancel"
-msgstr "Peruuta"
+msgstr "Peru"
 
-#: ../gwibber/client.py:279
+#: ../gwibber/client.py:296
 msgid "Enter a search query:"
 msgstr "Anna hakulauseke:"
 
-#: ../gwibber/client.py:412
+#: ../gwibber/client.py:432
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
 "\n"
 "%s"
 msgstr ""
+"%s viesti, lähettänyt %s %s\n"
+"\n"
+"%s"
 
-#: ../gwibber/client.py:492
+#: ../gwibber/client.py:518
 #, python-format
 msgid "Characters remaining: %s"
 msgstr "%s merkkiä jäljellä"
 
-#: ../gwibber/client.py:522
+#: ../gwibber/client.py:548
 msgid "_Manage"
-msgstr "_Hallinnoi"
+msgstr "_Hallitse"
 
-#: ../gwibber/client.py:526
+#: ../gwibber/client.py:552
 msgid "_Create"
 msgstr "_Luo"
 
-#: ../gwibber/client.py:587
+#: ../gwibber/client.py:613
 msgid "Refresh"
 msgstr "Päivitä"
 
-#: ../gwibber/client.py:588 ../gwibber/configui.py:123
+#: ../gwibber/client.py:614 ../gwibber/configui.py:130
 msgid "Search"
 msgstr "Etsi"
 
-#: ../gwibber/client.py:589
+#: ../gwibber/client.py:615
 msgid "Clear"
 msgstr "Tyhjennä"
 
-#: ../gwibber/client.py:590 ../ui/preferences.glade.h:33
+#: ../gwibber/client.py:616
+msgid "Close Window"
+msgstr "Sulje ikkuna"
+
+#: ../gwibber/client.py:618 ../ui/preferences.glade.h:37
 msgid "Preferences"
 msgstr "Asetukset"
 
-#: ../gwibber/client.py:591
+#: ../gwibber/client.py:620
 msgid "Quit"
 msgstr "Lopeta"
 
-#. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
-#. actThemeTest.connect("activate", self.theme_preview_test)
-#. menuHelp.append(actThemeTest.create_menu_item())
-#: ../gwibber/client.py:597
+#: ../gwibber/client.py:626
+msgid "Get Help Online..."
+msgstr ""
+
+#: ../gwibber/client.py:628
+msgid "Translate This Application..."
+msgstr "Käännä tämä ohjelma..."
+
+#: ../gwibber/client.py:630
+msgid "Report a Problem"
+msgstr "Ilmoita ongelmasta"
+
+#: ../gwibber/client.py:632
 msgid "_About"
 msgstr "_Tietoja"
 
-#: ../gwibber/client.py:607
+#: ../gwibber/client.py:647
 msgid "S_pellcheck"
 msgstr "O_ikoluku"
 
-#: ../gwibber/client.py:611
+#: ../gwibber/client.py:651
 msgid "E_rrors"
 msgstr "Vi_rheet"
 
-#: ../gwibber/client.py:616
+#: ../gwibber/client.py:656
 msgid "_Gwibber"
 msgstr "_Gwibber"
 
-#: ../gwibber/client.py:619
+#: ../gwibber/client.py:659
 msgid "_View"
 msgstr "_Näytä"
 
-#: ../gwibber/client.py:622
+#: ../gwibber/client.py:662
 msgid "_Accounts"
 msgstr "_Käyttäjätilit"
 
-#: ../gwibber/client.py:626
+#: ../gwibber/client.py:666
 msgid "_Help"
 msgstr "O_hje"
 
-#: ../gwibber/client.py:678
+#: ../gwibber/client.py:718
 msgid "Errors"
 msgstr "Virheet"
 
-#: ../gwibber/client.py:684
+#: ../gwibber/client.py:724
 msgid "Debug Output"
-msgstr "Debuggaustuloste"
+msgstr "Virheenjäljitystuloste"
 
-#: ../gwibber/client.py:877
+#: ../gwibber/client.py:920
 #, python-format
 msgid "Last update: %s"
 msgstr "Viimeisin päivitys: %s"
@@ -176,43 +192,43 @@ msgstr "Avaimet haettu onnistuneesti."
 msgid "Failed to obtain key."
 msgstr "Avaimen hakeminen epäonnistui."
 
-#: ../gwibber/configui.py:72
+#: ../gwibber/configui.py:77
 #, python-format
 msgid "Create %s account"
-msgstr "Luo %s tili"
+msgstr "Luo %s-tili"
 
-#: ../gwibber/configui.py:74
+#: ../gwibber/configui.py:79
 #, python-format
 msgid "Edit %s account"
-msgstr "Muokkaa %s tiliä"
+msgstr "Muokkaa %s-tiliä"
 
-#: ../gwibber/configui.py:83
+#: ../gwibber/configui.py:88
 msgid "Are you sure you want to cancel the creation of this account?"
-msgstr "Oletko varma että haluat peruuttaa tämän tilin luomisen?"
+msgstr "Oletko varma että haluat perua tämän tilin luomisen?"
 
-#: ../gwibber/configui.py:85
+#: ../gwibber/configui.py:90
 msgid "Are you sure you want to delete this account?"
 msgstr "Haluatko varmasti poistaa tämän tilin?"
 
-#: ../gwibber/configui.py:98
+#: ../gwibber/configui.py:103
 msgid "Manage Accounts"
 msgstr "Hallitse tilejä"
 
-#: ../gwibber/configui.py:116 ../gwibber/table.py:17
+#: ../gwibber/configui.py:121
 msgid "Username"
 msgstr "Käyttäjätunnus"
 
-#: ../gwibber/configui.py:117
+#: ../gwibber/configui.py:124
 msgid "Receive"
 msgstr "Vastaanota"
 
-#: ../gwibber/configui.py:120
+#: ../gwibber/configui.py:127
 msgid "Send"
 msgstr "Lähetä"
 
-#: ../gwibber/configui.py:127 ../gwibber/table.py:18
+#: ../gwibber/configui.py:131
 msgid "Protocol"
-msgstr "Protokolla"
+msgstr "Yhteyskäytäntö"
 
 #. Translators: this string appears when somebody reply to a message
 #. like '3 minutes ago in reply to angelina'
@@ -225,19 +241,6 @@ msgstr "vastauksena viestiin"
 #: ../gwibber/gwui.py:58
 msgid "from"
 msgstr "kohteesta"
-
-#. Translators: columns' names in the Error dialog
-#: ../gwibber/table.py:15
-msgid "Date"
-msgstr "Päiväys"
-
-#: ../gwibber/table.py:16
-msgid "Time"
-msgstr "Kellonaika"
-
-#: ../gwibber/table.py:19
-msgid "Message"
-msgstr "Viesti"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
@@ -255,74 +258,88 @@ msgstr "viestiketjun nouto"
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:85
 msgid "retrieve responses"
-msgstr "vastauksien haku"
+msgstr "vastauksien nouto"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:92
 msgid "retrieve messages"
-msgstr "viestien haku"
+msgstr "viestien nouto"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:99
 msgid "retrieve positions"
-msgstr "sijaintien haku"
+msgstr "sijaintien nouto"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:106
+#: ../gwibber/microblog/__init__.py:106 ../gwibber/microblog/__init__.py:113
 msgid "perform search query"
 msgstr "hakukyselyn suoritus"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:113
+#: ../gwibber/microblog/__init__.py:120
 msgid "perform tag query"
-msgstr "tagihaun suoritus"
+msgstr "merkintähaun suoritus"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:120
+#: ../gwibber/microblog/__init__.py:132
 msgid "perform group query"
 msgstr "ryhmähaun suoritus"
 
-#: ../gwibber/microblog/support/__init__.py:56
+#: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
+msgid "This user has protected their updates."
+msgstr "Tämä käyttäjä on suojannut päivityksensä."
+
+#: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
+msgid ""
+"You need to send a request before you can view this person's timeline."
+msgstr ""
+"Tämän henkilön aikajanan seuraamiseen tarvitaan lupa, jonka saa pyytämällä."
+
+#: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
+msgid "Send request..."
+msgstr "Lähetä pyyntö..."
+
+#: ../gwibber/microblog/support/__init__.py:59
 #, python-format
 msgid "%(year)d year ago"
 msgid_plural "%(year)d years ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(year)d vuosi sitten"
+msgstr[1] "%(year)d vuotta sitten"
 
-#: ../gwibber/microblog/support/__init__.py:59
+#: ../gwibber/microblog/support/__init__.py:62
 #, python-format
 msgid "%(day)d day ago"
 msgid_plural "%(day)d days ago"
 msgstr[0] "%(day)d päivä sitten"
 msgstr[1] "%(day)d päivää sitten"
 
-#: ../gwibber/microblog/support/__init__.py:62
+#: ../gwibber/microblog/support/__init__.py:65
 #, python-format
 msgid "%(hour)d hour ago"
 msgid_plural "%(hour)d hours ago"
 msgstr[0] "%(hour)d tunti sitten"
 msgstr[1] "%(hour)d tuntia sitten"
 
-#: ../gwibber/microblog/support/__init__.py:65
+#: ../gwibber/microblog/support/__init__.py:68
 #, python-format
 msgid "%(minute)d minute ago"
 msgid_plural "%(minute)d minutes ago"
 msgstr[0] "%(minute)d minuutti sitten"
 msgstr[1] "%(minute)d minuuttia sitten"
 
-#: ../gwibber/microblog/support/__init__.py:68
+#: ../gwibber/microblog/support/__init__.py:71
 #, python-format
 msgid "%(sec)d second ago"
 msgid_plural "%(sec)d seconds ago"
 msgstr[0] "%(sec)d sekunti sitten"
 msgstr[1] "%(sec)d sekuntia sitten"
 
-#: ../gwibber/microblog/support/__init__.py:70
+#: ../gwibber/microblog/support/__init__.py:73
 #, python-format
 msgid "BUG: %s"
 msgstr "VIRHE: %s"
@@ -332,143 +349,174 @@ msgid ""
 "<b>1.</b> Click the button below to request\n"
 "a Gwibber login code from Facebook."
 msgstr ""
+"<b>1.</b> Alapuolella olevalla painikkeella voit pyytää\n"
+"Gwibberille sisäänkirjautumiskoodia Facebookilta."
 
 #: ../ui/preferences.glade.h:3
 msgid ""
 "<b>2.</b> Copy and paste the one-time code into the entry field below and "
 "then click the Apply button."
 msgstr ""
+"<b>2.</b> Kopioi ja liitä kertakäyttöinen koodi alapuolella olevaan kenttään "
+"ja napsauta Toteuta-painiketta."
 
 #: ../ui/preferences.glade.h:4
 msgid ""
 "<b>3.</b> Click the button below to give Gwibber permission to set your "
 "Facebook status."
 msgstr ""
+"<b>3.</b> Alapuolella olevalla painikkeella annat Gwibberille luvan asettaa "
+"Facebook-tilasi."
 
 #: ../ui/preferences.glade.h:5
 msgid "<b>Account Information</b>"
-msgstr ""
+msgstr "<b>Tilin tiedot</b>"
 
 #: ../ui/preferences.glade.h:6
 msgid "<b>Account Status</b>"
-msgstr ""
+msgstr "<b>Tilin tila</b>"
 
 #: ../ui/preferences.glade.h:7
 msgid "<b>Appearance</b>"
-msgstr ""
+msgstr "<b>Ulkoasu</b>"
 
 #: ../ui/preferences.glade.h:8
 msgid "<b>Experimental</b>"
-msgstr ""
+msgstr "<b>Kokeelliset</b>"
 
 #: ../ui/preferences.glade.h:9
 msgid "<b>Notification</b>"
-msgstr ""
+msgstr "<b>Ilmoitukset</b>"
 
 #: ../ui/preferences.glade.h:10
 msgid "<b>Theme</b>"
-msgstr ""
+msgstr "<b>Teema</b>"
 
 #: ../ui/preferences.glade.h:11
 msgid "<b>Update</b>"
-msgstr ""
+msgstr "<b>Päivitys</b>"
 
 #: ../ui/preferences.glade.h:12
 msgid "<b>Window Behavior</b>"
-msgstr ""
+msgstr "<b>Ikkunan käyttäytyminen</b>"
 
 #: ../ui/preferences.glade.h:13
 msgid "API key:"
-msgstr ""
+msgstr "API-avain:"
 
 #: ../ui/preferences.glade.h:14
 msgid "About Gwibber"
-msgstr ""
+msgstr "Tietoja Gwibberistä"
 
 #: ../ui/preferences.glade.h:15
 msgid "App Key:"
-msgstr ""
+msgstr "Sovellusavain:"
 
 #: ../ui/preferences.glade.h:16
 msgid "Append colon to username when replying"
-msgstr ""
+msgstr "Lisää kaksoispiste käyttäjänimen perään vastatessa"
 
 #: ../ui/preferences.glade.h:17
 msgid "Authorize Status Changes"
-msgstr ""
+msgstr "Salli tilamuutokset"
 
 #: ../ui/preferences.glade.h:18
 msgid "Automatically shorten pasted URLs"
-msgstr ""
+msgstr "Lyhennä URL-osoitteet automaattisesti"
 
 #: ../ui/preferences.glade.h:19
-msgid "Comment Color:"
+msgid ""
+"Click the link below to navigate to the Facebook friends page and then copy "
+"the \"Friend's Status Feed\" link from the left-hand side of the page and "
+"paste it into the Feed URL textbox."
 msgstr ""
+"Napsauta alapuolella olevaa linkkiä siirtyäksesi Facebookin kaverisivulle. "
+"Kopioi sitten ”Kaverien tilapäivitykset” -linkki sivun vasemmasta reunasta "
+"ja liitä se Syötteen URL -tekstikenttään."
 
 #: ../ui/preferences.glade.h:20
-msgid "Copyright (C) 2007-2008 Ryan Paul"
-msgstr ""
+msgid "Comment Color:"
+msgstr "Kommenttiväri:"
 
 #: ../ui/preferences.glade.h:21
-msgid "Digg Color:"
-msgstr ""
+msgid "Copyright (C) 2007-2009 Gwibber Team"
+msgstr "Tekijänoikeudet (C) 2007-2009 Gwibber-tiimi"
 
 #: ../ui/preferences.glade.h:22
-msgid "Display bubbles"
-msgstr ""
+msgid "Digg Color:"
+msgstr "Digg-väri:"
 
 #: ../ui/preferences.glade.h:23
-msgid "Domain:"
-msgstr ""
+msgid "Display bubbles"
+msgstr "Näytä kuplat"
 
 #: ../ui/preferences.glade.h:24
-msgid "Facebook Authorization"
-msgstr ""
+msgid "Domain:"
+msgstr "Verkkoalue:"
 
 #: ../ui/preferences.glade.h:25
-msgid "Feed URL:"
-msgstr ""
+msgid "Facebook Authorization"
+msgstr "Facebook-valtuutus"
 
 #: ../ui/preferences.glade.h:26
-msgid "Gwibber Web Site"
-msgstr ""
+msgid "Feed URL:"
+msgstr "Syötteen URL"
 
 #: ../ui/preferences.glade.h:27
+msgid "Get Feed"
+msgstr "Nouda syöte"
+
+#: ../ui/preferences.glade.h:28
+msgid "Get Jaiku API key"
+msgstr "Nouda Jaikun API-avain"
+
+#: ../ui/preferences.glade.h:29
+msgid "Get Ping.fm key"
+msgstr "Nouda Ping.fm-avain"
+
+#: ../ui/preferences.glade.h:30
+msgid "Gwibber Web Site"
+msgstr "Gwibberin WWW-sivut"
+
+#: ../ui/preferences.glade.h:31
 msgid ""
 "Gwibber is an open source microblogging client for GNOME that supports "
 "Twitter, Jaiku, Facebook, Pownce, Identi.ca and other popular social web "
 "services."
 msgstr ""
-
-#: ../ui/preferences.glade.h:28
-msgid "Hide taskbar entry"
-msgstr ""
-
-#: ../ui/preferences.glade.h:29
-msgid "Message Color:"
-msgstr ""
-
-#: ../ui/preferences.glade.h:30
-msgid "Minimize to tray on close"
-msgstr ""
-
-#: ../ui/preferences.glade.h:31
-msgid "Minutes between refresh:  "
-msgstr ""
+"Gwibber on avoimen lähdekoodin mikrobloggausohjelma Gnomelle, joka tukee "
+"Twitteriä, Jaikua, Facebookia, Powncea, Identi.caa ja muita suosittuja "
+"sosiaalisen webin palveluita."
 
 #: ../ui/preferences.glade.h:32
-msgid "Password:"
-msgstr ""
+msgid "Hide taskbar entry"
+msgstr "Piilota ikkunaluettelosta"
+
+#: ../ui/preferences.glade.h:33
+msgid "Message Color:"
+msgstr "Viestin väri:"
 
 #: ../ui/preferences.glade.h:34
-msgid "Request Login Code"
-msgstr ""
+msgid "Minimize to tray on close"
+msgstr "Pienennä tilariville suljettaessa"
 
 #: ../ui/preferences.glade.h:35
-msgid "Show tray icon"
-msgstr ""
+msgid "Minutes between refresh:  "
+msgstr "Minuutteja päivitysten välillä:  "
 
 #: ../ui/preferences.glade.h:36
+msgid "Password:"
+msgstr "Salasana:"
+
+#: ../ui/preferences.glade.h:38
+msgid "Request Login Code"
+msgstr "Pyydä sisäänkirjautumistunnusta"
+
+#: ../ui/preferences.glade.h:39
+msgid "Show tray icon"
+msgstr "Näytä ilmoitusalueen kuvake"
+
+#: ../ui/preferences.glade.h:40
 msgid ""
 "This program is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -485,17 +533,31 @@ msgid ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, "
 "USA.\n"
 msgstr ""
+"Tämä on vapaa ohjelma; sitä on sallittu levittää edelleen ja/tai\n"
+"muuttaa GNU yleisen lisenssin (GPL-lisenssin) ehtojen mukaan \n"
+"sellaisina kuin Free Software Foundation on ne julkaissut; joko \n"
+"lisenssin version 2, tai (valinnan mukaan) minkä tahansa \n"
+"myöhemmän version mukaisesti.\n"
+"\n"
+"Tätä ohjelmaa levitetään siinä toivossa, että se olisi hyödyllinen, \n"
+"mutta ilman mitään takuuta; ilman edes hiljaista takuuta \n"
+"kaupallisesti hyväksyttävästä laadusta tai soveltuvuudesta tiettyyn \n"
+"tarkoitukseen. Katso GPL-lisenssistä lisää yksityiskohtia.\n"
+"\n"
+"Tämän ohjelman mukana pitäisi tulla kopio GPL-lisenssistä; \n"
+"jos näin ei ole, kirjoita osoitteeseen Free Software Foundation Inc., \n"
+"51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.\n"
 
-#: ../ui/preferences.glade.h:50
+#: ../ui/preferences.glade.h:54
 msgid "Username:"
-msgstr ""
+msgstr "Käyttäjänimi:"
 
-#: ../ui/preferences.glade.h:51
+#: ../ui/preferences.glade.h:55
 msgid "_Authorize Gwibber"
-msgstr ""
+msgstr "_Valtuuta Gwibber"
 
 #. Translators: insert your name here as Name Surname <email>, year
-#: ../ui/preferences.glade.h:55
+#: ../ui/preferences.glade.h:59
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -507,4 +569,5 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Dominic Evans https://launchpad.net/~oldman\n"
-"  Miia Ranta https://launchpad.net/~myrtti"
+"  Miia Ranta https://launchpad.net/~myrtti\n"
+"  Timo Jyrinki https://launchpad.net/~timo-jyrinki"

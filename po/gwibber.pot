@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-04 12:49+0000\n"
+"POT-Creation-Date: 2009-02-06 14:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,60 +29,52 @@ msgstr ""
 msgid "Microblogging client for GNOME"
 msgstr ""
 
-#: ../gwibber/client.py:45
+#: ../gwibber/client.py:46
 msgid "_Editor"
 msgstr ""
 
-#: ../gwibber/client.py:46
+#: ../gwibber/client.py:47
 msgid "_Statusbar"
 msgstr ""
 
-#: ../gwibber/client.py:47
+#: ../gwibber/client.py:48
 msgid "Tray _Icon"
 msgstr ""
 
 #. Translators: these are checkbox
-#: ../gwibber/client.py:52 ../ui/preferences.glade.h:56
+#: ../gwibber/client.py:53 ../ui/preferences.glade.h:56
 msgid "_Receive Messages"
 msgstr ""
 
-#: ../gwibber/client.py:53 ../ui/preferences.glade.h:57
+#: ../gwibber/client.py:54 ../ui/preferences.glade.h:57
 msgid "_Send Messages"
 msgstr ""
 
-#: ../gwibber/client.py:54
+#: ../gwibber/client.py:55
 msgid "Search _Messages"
 msgstr ""
 
-#: ../gwibber/client.py:76
+#: ../gwibber/client.py:78
 msgid "Gwibber"
 msgstr ""
 
-#: ../gwibber/client.py:104
-msgid "%Y-%m-%d"
-msgstr ""
-
-#: ../gwibber/client.py:105 ../gwibber/client.py:920
-msgid "%I:%M:%S %p"
-msgstr ""
-
-#: ../gwibber/client.py:134
+#: ../gwibber/client.py:136
 msgid "Messages"
 msgstr ""
 
-#: ../gwibber/client.py:135
+#: ../gwibber/client.py:137
 msgid "Replies"
 msgstr ""
 
-#: ../gwibber/client.py:172
+#: ../gwibber/client.py:174
 msgid "Cancel"
 msgstr ""
 
-#: ../gwibber/client.py:296
+#: ../gwibber/client.py:298
 msgid "Enter a search query:"
 msgstr ""
 
-#: ../gwibber/client.py:432
+#: ../gwibber/client.py:434
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
@@ -90,92 +82,92 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../gwibber/client.py:518
+#: ../gwibber/client.py:520
 #, python-format
 msgid "Characters remaining: %s"
 msgstr ""
 
-#: ../gwibber/client.py:548
+#: ../gwibber/client.py:550
 msgid "_Manage"
 msgstr ""
 
-#: ../gwibber/client.py:552
+#: ../gwibber/client.py:554
 msgid "_Create"
 msgstr ""
 
-#: ../gwibber/client.py:613
+#: ../gwibber/client.py:615
 msgid "Refresh"
 msgstr ""
 
-#: ../gwibber/client.py:614 ../gwibber/configui.py:130
+#: ../gwibber/client.py:616 ../gwibber/configui.py:130
 msgid "Search"
 msgstr ""
 
-#: ../gwibber/client.py:615
+#: ../gwibber/client.py:617
 msgid "Clear"
 msgstr ""
 
-#: ../gwibber/client.py:616
+#: ../gwibber/client.py:618
 msgid "Close Window"
 msgstr ""
 
-#: ../gwibber/client.py:618 ../ui/preferences.glade.h:37
+#: ../gwibber/client.py:620 ../ui/preferences.glade.h:37
 msgid "Preferences"
 msgstr ""
 
-#: ../gwibber/client.py:620
+#: ../gwibber/client.py:622
 msgid "Quit"
 msgstr ""
 
-#: ../gwibber/client.py:626
+#: ../gwibber/client.py:624
 msgid "Get Help Online..."
 msgstr ""
 
-#: ../gwibber/client.py:628
+#: ../gwibber/client.py:626
 msgid "Translate This Application..."
 msgstr ""
 
-#: ../gwibber/client.py:630
+#: ../gwibber/client.py:628
 msgid "Report a Problem"
 msgstr ""
 
-#: ../gwibber/client.py:632
+#: ../gwibber/client.py:630
 msgid "_About"
 msgstr ""
 
-#: ../gwibber/client.py:647
+#: ../gwibber/client.py:645
 msgid "S_pellcheck"
 msgstr ""
 
-#: ../gwibber/client.py:651
+#: ../gwibber/client.py:649
 msgid "E_rrors"
 msgstr ""
 
-#: ../gwibber/client.py:656
+#: ../gwibber/client.py:654
 msgid "_Gwibber"
 msgstr ""
 
-#: ../gwibber/client.py:659
+#: ../gwibber/client.py:657
 msgid "_View"
 msgstr ""
 
-#: ../gwibber/client.py:662
+#: ../gwibber/client.py:660
 msgid "_Accounts"
 msgstr ""
 
-#: ../gwibber/client.py:666
+#: ../gwibber/client.py:664
 msgid "_Help"
 msgstr ""
 
-#: ../gwibber/client.py:718
+#: ../gwibber/client.py:716
 msgid "Errors"
 msgstr ""
 
-#: ../gwibber/client.py:724
+#: ../gwibber/client.py:722
 msgid "Debug Output"
 msgstr ""
 
-#: ../gwibber/client.py:920
+#: ../gwibber/client.py:918
 #, python-format
 msgid "Last update: %s"
 msgstr ""

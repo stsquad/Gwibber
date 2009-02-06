@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gwibber\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-01-28 12:25+0000\n"
-"PO-Revision-Date: 2009-02-01 15:28+0000\n"
-"Last-Translator: Yigit Güneli <gro.tiiy@yiit.org>\n"
+"POT-Creation-Date: 2009-02-04 12:49+0000\n"
+"PO-Revision-Date: 2009-02-05 00:22+0000\n"
+"Last-Translator: Volkan Esgel <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-02-03 12:40+0000\n"
+"X-Launchpad-Export-Date: 2009-02-06 14:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
@@ -30,60 +30,60 @@ msgstr "Mikroblog İstemcisi"
 msgid "Microblogging client for GNOME"
 msgstr "GNOME için mikroblog istemcisi"
 
-#: ../gwibber/client.py:46
+#: ../gwibber/client.py:45
 msgid "_Editor"
 msgstr "_Düzenleyici"
 
-#: ../gwibber/client.py:47
+#: ../gwibber/client.py:46
 msgid "_Statusbar"
 msgstr "_Durum Çubuğu"
 
-#: ../gwibber/client.py:48
+#: ../gwibber/client.py:47
 msgid "Tray _Icon"
 msgstr "Simgesi"
 
 #. Translators: these are checkbox
-#: ../gwibber/client.py:53 ../ui/preferences.glade.h:52
+#: ../gwibber/client.py:52 ../ui/preferences.glade.h:56
 msgid "_Receive Messages"
 msgstr "_Mesajları Al"
 
-#: ../gwibber/client.py:54 ../ui/preferences.glade.h:53
+#: ../gwibber/client.py:53 ../ui/preferences.glade.h:57
 msgid "_Send Messages"
 msgstr "Mesajları _Gönder"
 
-#: ../gwibber/client.py:55
+#: ../gwibber/client.py:54
 msgid "Search _Messages"
 msgstr "Mesajlarda _Ara"
 
-#: ../gwibber/client.py:74
+#: ../gwibber/client.py:76
 msgid "Gwibber"
 msgstr "Gwibber"
 
-#: ../gwibber/client.py:102
+#: ../gwibber/client.py:104
 msgid "%Y-%m-%d"
 msgstr "%Y-%m-%d"
 
-#: ../gwibber/client.py:103 ../gwibber/client.py:877
+#: ../gwibber/client.py:105 ../gwibber/client.py:920
 msgid "%I:%M:%S %p"
 msgstr "%I:%M:%S %p"
 
-#: ../gwibber/client.py:132
+#: ../gwibber/client.py:134
 msgid "Messages"
 msgstr "Mesajlar"
 
-#: ../gwibber/client.py:133
+#: ../gwibber/client.py:135
 msgid "Replies"
 msgstr "Cevaplar"
 
-#: ../gwibber/client.py:168
+#: ../gwibber/client.py:172
 msgid "Cancel"
 msgstr "Vazgeç"
 
-#: ../gwibber/client.py:279
+#: ../gwibber/client.py:296
 msgid "Enter a search query:"
 msgstr "Arama terimini girin"
 
-#: ../gwibber/client.py:412
+#: ../gwibber/client.py:432
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
@@ -91,79 +91,92 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../gwibber/client.py:492
+#: ../gwibber/client.py:518
 #, python-format
 msgid "Characters remaining: %s"
 msgstr "Kalan karakterler: %s"
 
-#: ../gwibber/client.py:522
+#: ../gwibber/client.py:548
 msgid "_Manage"
 msgstr "_Yönet"
 
-#: ../gwibber/client.py:526
+#: ../gwibber/client.py:552
 msgid "_Create"
 msgstr "_Oluştur"
 
-#: ../gwibber/client.py:587
+#: ../gwibber/client.py:613
 msgid "Refresh"
 msgstr "Yenile"
 
-#: ../gwibber/client.py:588 ../gwibber/configui.py:123
+#: ../gwibber/client.py:614 ../gwibber/configui.py:130
 msgid "Search"
 msgstr "Ara"
 
-#: ../gwibber/client.py:589
+#: ../gwibber/client.py:615
 msgid "Clear"
 msgstr "Temizle"
 
-#: ../gwibber/client.py:590 ../ui/preferences.glade.h:33
+#: ../gwibber/client.py:616
+msgid "Close Window"
+msgstr ""
+
+#: ../gwibber/client.py:618 ../ui/preferences.glade.h:37
 msgid "Preferences"
 msgstr "Ayarlar"
 
-#: ../gwibber/client.py:591
+#: ../gwibber/client.py:620
 msgid "Quit"
 msgstr "Çık"
 
-#. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
-#. actThemeTest.connect("activate", self.theme_preview_test)
-#. menuHelp.append(actThemeTest.create_menu_item())
-#: ../gwibber/client.py:597
+#: ../gwibber/client.py:626
+msgid "Get Help Online..."
+msgstr ""
+
+#: ../gwibber/client.py:628
+msgid "Translate This Application..."
+msgstr ""
+
+#: ../gwibber/client.py:630
+msgid "Report a Problem"
+msgstr ""
+
+#: ../gwibber/client.py:632
 msgid "_About"
 msgstr "_Hakkında"
 
-#: ../gwibber/client.py:607
+#: ../gwibber/client.py:647
 msgid "S_pellcheck"
 msgstr "Yazım kontrolu"
 
-#: ../gwibber/client.py:611
+#: ../gwibber/client.py:651
 msgid "E_rrors"
 msgstr "Ha_talar"
 
-#: ../gwibber/client.py:616
+#: ../gwibber/client.py:656
 msgid "_Gwibber"
 msgstr "_Gwibber"
 
-#: ../gwibber/client.py:619
+#: ../gwibber/client.py:659
 msgid "_View"
 msgstr "_Görünüm"
 
-#: ../gwibber/client.py:622
+#: ../gwibber/client.py:662
 msgid "_Accounts"
 msgstr "_Hesaplar"
 
-#: ../gwibber/client.py:626
+#: ../gwibber/client.py:666
 msgid "_Help"
 msgstr "_Yardım"
 
-#: ../gwibber/client.py:678
+#: ../gwibber/client.py:718
 msgid "Errors"
 msgstr "Hatalar"
 
-#: ../gwibber/client.py:684
+#: ../gwibber/client.py:724
 msgid "Debug Output"
 msgstr "Hata Ayıklama Çıktısı"
 
-#: ../gwibber/client.py:877
+#: ../gwibber/client.py:920
 #, python-format
 msgid "Last update: %s"
 msgstr "Son Güncelleme: %s"
@@ -176,41 +189,41 @@ msgstr "Anahtarlar başarıyla alındı."
 msgid "Failed to obtain key."
 msgstr "Anahtarlar alınamadı."
 
-#: ../gwibber/configui.py:72
+#: ../gwibber/configui.py:77
 #, python-format
 msgid "Create %s account"
 msgstr "Yeni %s hesabı yarat"
 
-#: ../gwibber/configui.py:74
+#: ../gwibber/configui.py:79
 #, python-format
 msgid "Edit %s account"
 msgstr "%s hesabını düzenle"
 
-#: ../gwibber/configui.py:83
+#: ../gwibber/configui.py:88
 msgid "Are you sure you want to cancel the creation of this account?"
 msgstr "Bu hesabın yaratılmasını iptal etmek istediğinizden emin misiniz?"
 
-#: ../gwibber/configui.py:85
+#: ../gwibber/configui.py:90
 msgid "Are you sure you want to delete this account?"
 msgstr "Bu hesabı silmek istediğinizden emin misiniz?"
 
-#: ../gwibber/configui.py:98
+#: ../gwibber/configui.py:103
 msgid "Manage Accounts"
 msgstr "Hesapları Yönet"
 
-#: ../gwibber/configui.py:116 ../gwibber/table.py:17
+#: ../gwibber/configui.py:121
 msgid "Username"
 msgstr "Kullanıcı Adı"
 
-#: ../gwibber/configui.py:117
+#: ../gwibber/configui.py:124
 msgid "Receive"
 msgstr "Al"
 
-#: ../gwibber/configui.py:120
+#: ../gwibber/configui.py:127
 msgid "Send"
 msgstr "Gönder"
 
-#: ../gwibber/configui.py:127 ../gwibber/table.py:18
+#: ../gwibber/configui.py:131
 msgid "Protocol"
 msgstr "İletişim Kuralları"
 
@@ -225,19 +238,6 @@ msgstr "-e cevap olarak"
 #: ../gwibber/gwui.py:58
 msgid "from"
 msgstr "Nereden"
-
-#. Translators: columns' names in the Error dialog
-#: ../gwibber/table.py:15
-msgid "Date"
-msgstr "Tarih"
-
-#: ../gwibber/table.py:16
-msgid "Time"
-msgstr "saat"
-
-#: ../gwibber/table.py:19
-msgid "Message"
-msgstr "Mesaj"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
@@ -271,53 +271,66 @@ msgstr "pozisyonları al"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:106
+#: ../gwibber/microblog/__init__.py:106 ../gwibber/microblog/__init__.py:113
 msgid "perform search query"
 msgstr "arama yap"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:113
+#: ../gwibber/microblog/__init__.py:120
 msgid "perform tag query"
 msgstr "etiket sorgulaması yap"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:120
+#: ../gwibber/microblog/__init__.py:132
 msgid "perform group query"
 msgstr "grup sorgulaması yap"
 
-#: ../gwibber/microblog/support/__init__.py:56
+#: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
+msgid "This user has protected their updates."
+msgstr "Bu kullanıcı kendi güncelleştirmelerini koruyor."
+
+#: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
+msgid ""
+"You need to send a request before you can view this person's timeline."
+msgstr ""
+
+#: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
+msgid "Send request..."
+msgstr "İstek gönder..."
+
+#: ../gwibber/microblog/support/__init__.py:59
 #, python-format
 msgid "%(year)d year ago"
 msgid_plural "%(year)d years ago"
 msgstr[0] "%(year)d yıl önce"
 
-#: ../gwibber/microblog/support/__init__.py:59
+#: ../gwibber/microblog/support/__init__.py:62
 #, python-format
 msgid "%(day)d day ago"
 msgid_plural "%(day)d days ago"
 msgstr[0] "%(day)d gün önce"
 
-#: ../gwibber/microblog/support/__init__.py:62
+#: ../gwibber/microblog/support/__init__.py:65
 #, python-format
 msgid "%(hour)d hour ago"
 msgid_plural "%(hour)d hours ago"
 msgstr[0] "%(hour)d saat önce"
 
-#: ../gwibber/microblog/support/__init__.py:65
+#: ../gwibber/microblog/support/__init__.py:68
 #, python-format
 msgid "%(minute)d minute ago"
 msgid_plural "%(minute)d minutes ago"
 msgstr[0] "%(minute)d dakika önce"
 
-#: ../gwibber/microblog/support/__init__.py:68
+#: ../gwibber/microblog/support/__init__.py:71
 #, python-format
 msgid "%(sec)d second ago"
 msgid_plural "%(sec)d seconds ago"
 msgstr[0] "%(sec)d saniye önce"
 
-#: ../gwibber/microblog/support/__init__.py:70
+#: ../gwibber/microblog/support/__init__.py:73
 #, python-format
 msgid "BUG: %s"
 msgstr "Böcek: %s"
@@ -403,38 +416,57 @@ msgid "Automatically shorten pasted URLs"
 msgstr "Yapıştırılan linkleri otomatik olarak kısalt."
 
 #: ../ui/preferences.glade.h:19
+msgid ""
+"Click the link below to navigate to the Facebook friends page and then copy "
+"the \"Friend's Status Feed\" link from the left-hand side of the page and "
+"paste it into the Feed URL textbox."
+msgstr ""
+
+#: ../ui/preferences.glade.h:20
 msgid "Comment Color:"
 msgstr "Yorum Rengi:"
 
-#: ../ui/preferences.glade.h:20
-msgid "Copyright (C) 2007-2008 Ryan Paul"
-msgstr "Telif Hakkı 2007-2008 Ryan Paul' a aittir."
-
 #: ../ui/preferences.glade.h:21
+msgid "Copyright (C) 2007-2009 Gwibber Team"
+msgstr "Telif Hakkı (C) 2007-2009 Gwibber Team"
+
+#: ../ui/preferences.glade.h:22
 msgid "Digg Color:"
 msgstr "Digg Rengi:"
 
-#: ../ui/preferences.glade.h:22
+#: ../ui/preferences.glade.h:23
 msgid "Display bubbles"
 msgstr "Bildiri balonlarını göster"
 
-#: ../ui/preferences.glade.h:23
+#: ../ui/preferences.glade.h:24
 msgid "Domain:"
 msgstr "Alan adı:"
 
-#: ../ui/preferences.glade.h:24
+#: ../ui/preferences.glade.h:25
 msgid "Facebook Authorization"
 msgstr "Facebook yetkilendirmesi"
 
-#: ../ui/preferences.glade.h:25
+#: ../ui/preferences.glade.h:26
 msgid "Feed URL:"
 msgstr "Besleme adresi:"
 
-#: ../ui/preferences.glade.h:26
+#: ../ui/preferences.glade.h:27
+msgid "Get Feed"
+msgstr ""
+
+#: ../ui/preferences.glade.h:28
+msgid "Get Jaiku API key"
+msgstr ""
+
+#: ../ui/preferences.glade.h:29
+msgid "Get Ping.fm key"
+msgstr ""
+
+#: ../ui/preferences.glade.h:30
 msgid "Gwibber Web Site"
 msgstr "Gwibber Web Sitesi"
 
-#: ../ui/preferences.glade.h:27
+#: ../ui/preferences.glade.h:31
 msgid ""
 "Gwibber is an open source microblogging client for GNOME that supports "
 "Twitter, Jaiku, Facebook, Pownce, Identi.ca and other popular social web "
@@ -444,35 +476,35 @@ msgstr ""
 "ve diğer popüler sosyal ağları destekleyen bir açık kaynak kodlu mikrogünlük "
 "istemcisidir"
 
-#: ../ui/preferences.glade.h:28
+#: ../ui/preferences.glade.h:32
 msgid "Hide taskbar entry"
 msgstr "Görev çubuğunda gösterme"
 
-#: ../ui/preferences.glade.h:29
+#: ../ui/preferences.glade.h:33
 msgid "Message Color:"
 msgstr "Mesaj Rengi:"
 
-#: ../ui/preferences.glade.h:30
+#: ../ui/preferences.glade.h:34
 msgid "Minimize to tray on close"
 msgstr "Kapattığımda simge durumuna küçült"
 
-#: ../ui/preferences.glade.h:31
+#: ../ui/preferences.glade.h:35
 msgid "Minutes between refresh:  "
 msgstr "Yenileme için bekleme süresi:  "
 
-#: ../ui/preferences.glade.h:32
+#: ../ui/preferences.glade.h:36
 msgid "Password:"
 msgstr "Şifre:"
 
-#: ../ui/preferences.glade.h:34
+#: ../ui/preferences.glade.h:38
 msgid "Request Login Code"
 msgstr "Giriş Kodu İste"
 
-#: ../ui/preferences.glade.h:35
+#: ../ui/preferences.glade.h:39
 msgid "Show tray icon"
 msgstr "Sistem çekmecesi simgesini göster"
 
-#: ../ui/preferences.glade.h:36
+#: ../ui/preferences.glade.h:40
 msgid ""
 "This program is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -490,18 +522,19 @@ msgid ""
 "USA.\n"
 msgstr ""
 
-#: ../ui/preferences.glade.h:50
+#: ../ui/preferences.glade.h:54
 msgid "Username:"
 msgstr "Kullanıcı Adı:"
 
-#: ../ui/preferences.glade.h:51
+#: ../ui/preferences.glade.h:55
 msgid "_Authorize Gwibber"
 msgstr "Gwibber'a yetki ver"
 
 #. Translators: insert your name here as Name Surname <email>, year
-#: ../ui/preferences.glade.h:55
+#: ../ui/preferences.glade.h:59
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
 "  Eylül Cavaç https://launchpad.net/~eylulcavac\n"
+"  Volkan Esgel https://launchpad.net/~vesgel\n"
 "  Yigit Güneli https://launchpad.net/~yiit"
