@@ -864,18 +864,23 @@ class GwibberClient(gtk.Window):
       getattr(self.get_style(), i)[gtk.STATE_NORMAL].to_string()))
         for i in ["base", "text", "fg", "bg"])
 
-  def show_notification_bubbles(self, data):
-    for message in data:
+  def show_notification_bubbles(self, messages):
+    new_messages = []
+    for message in messages:
       if message.is_new and self.preferences["show_notifications"] and \
         message.first_seen and gintegration.can_notify and \
           message.username != message.sender_nick:
-        gtk.gdk.threads_enter()
-        body = microblog.support.linkify(microblog.support.xml_escape(message.text))
-        n = gintegration.notify(message.sender, body,
-          hasattr(message, "image_path") and message.image_path or '', ["reply", "Reply"])
-        gtk.gdk.threads_leave()
+          new_messages.append(message)
 
-        self.notification_bubbles[n] = message
+    new_messages.reverse()
+    gtk.gdk.threads_enter()
+    if len(new_messages) > 0:
+        for message in new_messages:
+            body = microblog.support.linkify(microblog.support.xml_escape(message.text))
+            n = gintegration.notify(message.sender, body,
+              hasattr(message, "image_path") and message.image_path or '', ["reply", "Reply"])
+            self.notification_bubbles[n] = message
+    gtk.gdk.threads_leave()
 
   def flag_duplicates(self, data):
     seen = []
