@@ -29,7 +29,7 @@ def get_theme_paths():
   for base in DATA_DIRS:
     theme_root = os.path.join(base, THEME_DIR_NAME)
     if os.path.exists(theme_root):
-      for f in os.listdir(theme_root):
+      for f in sorted(os.listdir(theme_root)):
         if not f.startswith('.'):
           theme_dir = os.path.join(theme_root, f)
           if os.path.isdir(theme_dir):
