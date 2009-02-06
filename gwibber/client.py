@@ -211,7 +211,7 @@ class GwibberClient(gtk.Window):
       bus = dbus.SessionBus()
       bus.add_signal_receiver(on_notify_close,
         dbus_interface="org.freedesktop.Notifications",
-        signal_name="CloseNotification")
+        signal_name="NotificationClosed")
       
       bus.add_signal_receiver(on_notify_action,
         dbus_interface="org.freedesktop.Notifications",
