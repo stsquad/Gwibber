@@ -200,7 +200,8 @@ class GwibberClient(gtk.Window):
       # FIXME: Move this to DBusManager
       import dbus
 
-      def on_notify_close(nId):
+      # http://galago-project.org/specs/notification/0.9/x408.html#signal-notification-closed
+      def on_notify_close(nId, reason = 1):
         if self.notification_bubbles.has_key(nId):
           del self.notification_bubbles[nId]
 
@@ -213,7 +214,7 @@ class GwibberClient(gtk.Window):
       bus = dbus.SessionBus()
       bus.add_signal_receiver(on_notify_close,
         dbus_interface="org.freedesktop.Notifications",
-        signal_name="CloseNotification")
+        signal_name="NotificationClosed")
       
       bus.add_signal_receiver(on_notify_action,
         dbus_interface="org.freedesktop.Notifications",
@@ -876,18 +877,23 @@ class GwibberClient(gtk.Window):
       getattr(self.get_style(), i)[gtk.STATE_NORMAL].to_string()))
         for i in ["base", "text", "fg", "bg"])
 
-  def show_notification_bubbles(self, data):
-    for message in data:
+  def show_notification_bubbles(self, messages):
+    new_messages = []
+    for message in messages:
       if message.is_new and self.preferences["show_notifications"] and \
         message.first_seen and gintegration.can_notify and \
           message.username != message.sender_nick:
-        gtk.gdk.threads_enter()
-        body = microblog.support.linkify(microblog.support.xml_escape(message.text))
-        n = gintegration.notify(message.sender, body,
-          hasattr(message, "image_path") and message.image_path or '', ["reply", "Reply"])
-        gtk.gdk.threads_leave()
+          new_messages.append(message)
 
-        self.notification_bubbles[n] = message
+    new_messages.reverse()
+    gtk.gdk.threads_enter()
+    if len(new_messages) > 0:
+        for message in new_messages:
+            body = microblog.support.linkify(microblog.support.xml_escape(message.text))
+            n = gintegration.notify(message.sender, body,
+              hasattr(message, "image_path") and message.image_path or '', ["reply", "Reply"])
+            self.notification_bubbles[n] = message
+    gtk.gdk.threads_leave()
 
   def flag_duplicates(self, data):
     seen = []
@@ -917,15 +923,11 @@ class GwibberClient(gtk.Window):
               view.data_retrieval_handler() if m.time > self.last_clear
               and m.time <= mx.DateTime.gmt()]
             self.flag_duplicates(view.message_store)
-            self.show_notification_bubbles(view.message_store)
-
-        gtk.gdk.threads_enter()
-        for tab in self.target_tabs:
-          view = tab.get_child()
-          if view:
+            gtk.gdk.threads_enter()
             view.load_messages()
             view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
-        gtk.gdk.threads_leave()
+            gtk.gdk.threads_leave()
+            self.show_notification_bubbles(view.message_store)
 
         self.statusbar.pop(0)
         self.statusbar.push(0, _("Last update: %s") % time.strftime("%X"))
