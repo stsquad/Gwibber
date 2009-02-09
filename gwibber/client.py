@@ -888,10 +888,11 @@ class GwibberClient(gtk.Window):
     new_messages.reverse()
     gtk.gdk.threads_enter()
     if len(new_messages) > 0:
-        for message in new_messages:
+        for index, message in enumerate(new_messages):
             body = microblog.support.linkify(microblog.support.xml_escape(message.text))
-            n = gintegration.notify(message.sender, body,
-              hasattr(message, "image_path") and message.image_path or '', ["reply", "Reply"])
+            image = hasattr(message, "image_path") and message.image_path or ''
+            expire_timeout = 5000 + (index*2000) # default to 5 second timeout and increase by 2 second for each notification
+            n = gintegration.notify(message.sender, body, image , ["reply", "Reply"], expire_timeout)
             self.notification_bubbles[n] = message
     gtk.gdk.threads_leave()
 
