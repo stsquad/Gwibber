@@ -90,7 +90,7 @@
         font-size: large;
       }
 
-      .new {
+      .unread {
         border: 3px solid rgba(110, 240, 255, 0.8);
         border-style: ridge;
       }
@@ -196,8 +196,8 @@
         if (data.protocol == "digg")
           addDiggCount($(".diggbox:last"), data);
 
-        if (data.is_new)
-          $(".message:last").addClass("new");          
+        if (data.is_unread)
+          $(".message:last").addClass("unread");          
 
         if (data.is_reply)
           $(".message:last").addClass("reply");

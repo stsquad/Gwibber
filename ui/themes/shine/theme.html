@@ -73,7 +73,7 @@
         display: none;
       }
 
-      .new h1 {
+      .unread h1 {
         color: cyan;
       }
 
@@ -152,8 +152,8 @@
             function() {$(this).parent().parent().parent().find(".dupes").hide(100)});
         } else $(".messages").append(html);
 
-        if (data.is_new)
-          $(".message:last").addClass("new");          
+        if (data.is_unread)
+          $(".message:last").addClass("unread");          
 
         if (data.is_reply)
           $(".message:last").addClass("reply");
