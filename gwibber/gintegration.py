@@ -26,7 +26,7 @@ try:
     "org.freedesktop.Notifications", "/org/freedesktop/Notifications"),
     "org.freedesktop.Notifications")
 
-  def notify(title, text, icon = None, actions = [], timer = 9000):
+  def notify(title, text, icon = None, actions = [], timer = 5000):
     return notifier.Notify("Gwibber", 0, icon, title, text, actions, {}, timer)
 
   can_notify = True
