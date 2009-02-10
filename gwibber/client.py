@@ -797,7 +797,7 @@ class GwibberClient(gtk.Window):
       "time": mx.DateTime.gmt(),
       "username": acct["username"],
       "protocol": acct["protocol"],
-      "message": "%s\n<i><span foreground='red'>%s</span></i>" % (msg, err.split("\n")[-2]),
+      "message": "%s\n<i><span foreground='red'>%s</span></i>" % (msg, microblog.support.xml_escape(err.split("\n")[-2])),
       "error": err,
     }
 
