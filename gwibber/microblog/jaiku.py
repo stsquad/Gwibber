@@ -13,7 +13,7 @@ PROTOCOL_INFO = {
   "version": 0.1,
   
   "config": [
-    "password",
+    "private:password",
     "username",
     "message_color",
     "comment_color",
@@ -87,24 +87,24 @@ class Client:
   def send_enabled(self):
     return self.account["send_enabled"] and \
       self.account["username"] != None and \
-      self.account["password"] != None
+      self.account["private:password"] != None
 
   def receive_enabled(self):
     return self.account["receive_enabled"] and \
       self.account["username"] != None and \
-      self.account["password"] != None
+      self.account["private:password"] != None
 
   def get_messages(self):
     return simplejson.loads(urllib2.urlopen(urllib2.Request(
       "http://%s.jaiku.com/contacts/feed/json" % self.account["username"],
         urllib.urlencode({"user": self.account["username"],
-          "personal_key":self.account["password"]}))).read())
+          "personal_key":self.account["private:password"]}))).read())
 
   def get_thread_data(self, msg):
     return simplejson.loads(urllib2.urlopen(urllib2.Request(
       "%s/json" % ("#" in msg.url and msg.url.split("#")[0] or msg.url),
         urllib.urlencode({"user": self.account["username"],
-          "personal_key":self.account["password"]}))).read())
+          "personal_key":self.account["private:password"]}))).read())
 
   def get_thread(self, msg):
     thread_content = self.get_thread_data(msg)
@@ -122,7 +122,7 @@ class Client:
       page = urllib2.urlopen(urllib2.Request(
         ("#" in msg.url and msg.url.split("#")[0] or msg.url),
           urllib.urlencode({"user": self.account["username"], 
-            "personal_key":self.account["password"]}))).read()
+            "personal_key":self.account["private:password"]}))).read()
       
       return NONCE_PARSE.match(page, 1).group(1)
     except: return None
@@ -133,11 +133,11 @@ class Client:
       return urllib2.urlopen(urllib2.Request(
         ("#" in msg.url and msg.url.split("#")[0] or msg.url),
           urllib.urlencode({"user": self.account["username"], "_nonce": nonce, 
-            "personal_key":self.account["password"], "comment": message}))).read()
+            "personal_key":self.account["private:password"], "comment": message}))).read()
 
   def send(self, message):
     return urllib2.urlopen(urllib2.Request(
       "http://api.jaiku.com/json", urllib.urlencode({"user": self.account["username"],
-      "personal_key":self.account["password"],
+      "personal_key":self.account["private:password"],
       "message": message, "method": "presence.send"}))).read()
 

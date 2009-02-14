@@ -48,6 +48,9 @@ __copyright__ = "Copyright 2005, Tiago Cogumbreiro"
 import gconf
 import gobject
 import gtk
+try:
+  import gnomekeyring
+except: pass
 
 from swp import *
 
@@ -108,7 +111,9 @@ class GConfValue(object):
 
         self.client = client
     
-        self.key = key
+        self.private = "private:" in key
+        
+        self.key = key.replace("private:", "")
         
         self.data_spec = data_spec
         
@@ -130,6 +135,13 @@ class GConfValue(object):
     #######
     # data
     def get_data(self):
+
+        if self.private:
+            try:
+                return gnomekeyring.find_items_sync(
+                  gnomekeyring.ITEM_GENERIC_SECRET, {"id": self.key})[0].secret
+            except gnomekeyring.NoMatchError: pass
+        
         try:
             val = self._getter(self.key)
         except gobject.GError:
@@ -140,6 +152,17 @@ class GConfValue(object):
         return val
     
     def set_data(self, value):
+
+        if self.private:
+            try:
+                token = gnomekeyring.item_create_sync(
+                  gnomekeyring.get_default_keyring_sync(),
+                  gnomekeyring.ITEM_GENERIC_SECRET, "Protected Gwibber preference",
+                  {"id": self.key}, value, True)
+                self._setter(self.key, ":KEYRING:%s" % token)
+            except gnomekeyring.NoMatchError:
+                pass
+
         assert isinstance(value, self.data_spec.py_type)
         val = self.get_data()
         if val != value:

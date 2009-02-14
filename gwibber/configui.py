@@ -50,9 +50,10 @@ class AccountManager(config.Accounts):
     dialog.show_all()
 
     for widget in microblog.PROTOCOLS[acct["protocol"]].PROTOCOL_INFO["config"]:
-      w = glade.get_widget("%s_%s" % (acct["protocol"], widget))
-      if isinstance(w, gtk.ColorButton): acct.bind(w, widget, default="#729FCF")
-      else: acct.bind(w, widget)
+      w = glade.get_widget("%s_%s" % (acct["protocol"], widget.replace("private:", "")))
+      if w:
+        if isinstance(w, gtk.ColorButton): acct.bind(w, widget, default="#729FCF")
+        else: acct.bind(w, widget)
 
     glade.get_widget("%s_btnclose" % acct["protocol"]).connect("clicked",
       lambda a: dialog.destroy())
