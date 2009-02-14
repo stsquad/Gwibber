@@ -9,6 +9,7 @@ import time, os, threading, logging, mx.DateTime, hashlib
 import gtk, gtk.glade, gobject, table, functools, traceback
 import microblog, gwui, config, gintegration, configui
 import xdg.BaseDirectory, resources, urllib2, urlparse
+import urlshorter
 
 # Setup Pidgin
 import pidgin
@@ -62,6 +63,7 @@ DEFAULT_PREFERENCES = {
   "hide_taskbar_entry": False,
   "spellcheck_enabled": True,
   "theme": "default",
+  "urlshorter": "",
 }
 
 for _i in CONFIGURABLE_UI_ELEMENTS.keys():
@@ -272,14 +274,24 @@ class GwibberClient(gtk.Window):
 
   def on_add_text(self, entry, text, txtlen, pos):
     if self.preferences["shorten_urls"]:
-      if text and text.startswith("http") and not " " in text and not "http://is.gd" in text \
-          and not "http://tinyurl.com" in text and len(text) > 20:
+      if text and text.startswith("http") and not " " in text \
+          and len(text) > 20:
+        # >>>>>>>>>>>>>>>>>>>>>>>
+        # 2009-02-13: macno
+        #
+        # Verify url is not already shorted
+        #
+        for us in urlshorter.PROTOCOLS.keys():
+	  if text.startswith(urlshorter.PROTOCOLS[us].PROTOCOL_INFO["fqdn"]): return
         entry.stop_emission("insert-text")
         try:
-          short = urllib2.urlopen("http://is.gd/api.php?longurl=%s" % urllib2.quote(text)).read()
+          self.urlshorter = urlshorter.PROTOCOLS[self.preferences["urlshorter"]].URLShorter()
+          short = self.urlshorter.short(text)
         except:
-          self.handle_error({"username": "None", "protocol": "is.gd"},
-            traceback.format_exc(), "Failed to shorten URL")
+          # Translators: this message appears in the Errors dialog
+          # Indicates with wich action the error happened
+          self.handle_error({"username": "None", "protocol": urlshorter.PROTOCOLS[self.preferences["urlshorter"]].PROTOCOL_INFO["name"]},
+            traceback.format_exc(), _("Failed to shorten URL"))
           self.preferences["shorten_urls"] = False
           entry.insert_text(text, entry.get_position())
           gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(text)))
@@ -788,6 +800,20 @@ class GwibberClient(gtk.Window):
     glade.get_widget("containerThemeSelector").pack_start(theme_selector, True, True)
     self.preferences.bind(theme_selector, "theme")
     theme_selector.show_all()
+
+    #>>>>>>>>>>>>>>>>>>>>>>>>>
+    #
+    # 2009.02.13 macno
+    # 
+    # add combo box with url shorter services
+    #
+    urlshorter_selector = gtk.combo_box_new_text()
+    for us in urlshorter.PROTOCOLS.keys():
+       urlshorter_name = urlshorter.PROTOCOLS[us].PROTOCOL_INFO["name"]
+       urlshorter_selector.append_text(urlshorter_name)
+    glade.get_widget("containerURLShorterSelector").pack_start(urlshorter_selector, True, True)
+    self.preferences.bind(urlshorter_selector, "urlshorter")
+    urlshorter_selector.show_all()
 
     glade.get_widget("button_close").connect("clicked", lambda *a: dialog.destroy())
   
