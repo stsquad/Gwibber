@@ -66,7 +66,7 @@ class Account(Wrapper):
 
       token = gnomekeyring.item_create_sync(
         gnomekeyring.get_default_keyring_sync(),
-        gnomekeyring.ITEM_GENERIC_SECRET, "Protected Gwibber preference",
+        gnomekeyring.ITEM_GENERIC_SECRET, "Gwibber preference: %s/%s" % (self.id, self.key),
         {"id": "%s/%s/%s" % (self.path, self.id, key)}, value, True)
       Wrapper.__setitem__(self, "%s/%s" % (self.id, key), ":KEYRING:%s" % token)
     else:

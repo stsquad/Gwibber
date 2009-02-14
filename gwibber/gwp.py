@@ -157,7 +157,7 @@ class GConfValue(object):
             try:
                 token = gnomekeyring.item_create_sync(
                   gnomekeyring.get_default_keyring_sync(),
-                  gnomekeyring.ITEM_GENERIC_SECRET, "Protected Gwibber preference",
+                  gnomekeyring.ITEM_GENERIC_SECRET, "Gwibber preference %s" % self.key,
                   {"id": self.key}, value, True)
                 self._setter(self.key, ":KEYRING:%s" % token)
             except gnomekeyring.NoMatchError:
