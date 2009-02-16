@@ -27,7 +27,11 @@ try:
     "org.freedesktop.Notifications")
 
   def notify(title, text, icon = None, actions = [], timer = 5000):
-    return notifier.Notify("Gwibber", 0, icon, title, text, actions, {}, timer)
+    caps = notifier.GetCapabilities()
+    if "actions" in caps:
+        return notifier.Notify("Gwibber", 0, icon, title, text, actions, {}, timer)
+    else:
+        return notifier.Notify("Gwibber", 0, icon, title, text, [], {}, timer)
 
   can_notify = True
 except:
