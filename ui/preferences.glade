@@ -2294,29 +2294,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="response_id">0</property>
                           </widget>
                         </child>
-                        <child>
-                          <widget class="GtkHBox" id="hbox6">
-                            <property name="visible">True</property>
-                            <child>
-                              <widget class="GtkLabel" id="label45">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">Feed URL:</property>
-                              </widget>
-                            </child>
-                            <child>
-                              <widget class="GtkEntry" id="facebook_feed_url">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                              </widget>
-                              <packing>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
                       </widget>
                     </child>
                   </widget>
