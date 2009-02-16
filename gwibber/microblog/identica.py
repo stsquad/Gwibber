@@ -13,7 +13,7 @@ PROTOCOL_INFO = {
   "version": 0.1,
   
   "config": [
-    "password",
+    "private:password",
     "username",
     "message_color",
     "receive_enabled",
@@ -110,7 +110,7 @@ class Client:
 
   def get_auth(self):
     return "Basic %s" % base64.encodestring(
-      ("%s:%s" % (self.account["username"], self.account["password"]))).strip()
+      ("%s:%s" % (self.account["username"], self.account["private:password"]))).strip()
 
   def connect(self, url, data = None):
     return urllib2.urlopen(urllib2.Request(

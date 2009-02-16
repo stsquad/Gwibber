@@ -36,7 +36,6 @@ except:
 
 ######################################################################
 
-
 try:
   import sexy
   SPELLCHECK_ENABLED = True

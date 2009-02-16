@@ -12,7 +12,7 @@ PROTOCOL_INFO = {
   "version": 0.1,
   
   "config": [
-    "app_key",
+    "private:app_key",
     "send_enabled"
   ],
 
@@ -31,7 +31,7 @@ class Client:
     return self.account["send_enabled"] and self.account["app_key"]
 
   def connect(self, url, data = None):
-    data.update({"api_key": API_KEY, "user_app_key": self.account["app_key"]})
+    data.update({"api_key": API_KEY, "user_app_key": self.account["private:app_key"]})
     urllib2.urlopen(urllib2.Request(url, urllib.urlencode(data))).read()
 
   def send(self, message):

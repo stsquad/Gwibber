@@ -3,6 +3,9 @@ try: import gconf
 except: from gnome import gconf
 
 import gwp, microblog
+try:
+  import gnomekeyring
+except: pass
 
 GCONF_DIR = "/apps/gwibber"
 GCONF_PREFERENCES_DIR = GCONF_DIR + "/preferences"
@@ -46,10 +49,28 @@ class Account(Wrapper):
     self.id = id
 
   def __getitem__(self, key):
-    return Wrapper.__getitem__(self, "%s/%s" % (self.id, key))
+    if key.startswith("private:"):
+      try:
+        key = key.replace("private:", "")
+        return gnomekeyring.find_items_sync(
+          gnomekeyring.ITEM_GENERIC_SECRET,
+          {"id": "%s/%s/%s" % (self.path, self.id, key)})[0].secret
+      except gnomekeyring.NoMatchError:
+        return Wrapper.__getitem__(self, "%s/%s" % (self.id, key))
+    else:
+      return Wrapper.__getitem__(self, "%s/%s" % (self.id, key))
 
   def __setitem__(self, key, value):
-    Wrapper.__setitem__(self, "%s/%s" % (self.id, key), value)
+    if key.startswith("private:"):
+      key = key.replace("private:", "")
+
+      token = gnomekeyring.item_create_sync(
+        gnomekeyring.get_default_keyring_sync(),
+        gnomekeyring.ITEM_GENERIC_SECRET, "Gwibber preference: %s/%s" % (self.id, self.key),
+        {"id": "%s/%s/%s" % (self.path, self.id, key)}, value, True)
+      Wrapper.__setitem__(self, "%s/%s" % (self.id, key), ":KEYRING:%s" % token)
+    else:
+      Wrapper.__setitem__(self, "%s/%s" % (self.id, key), value)
 
   def clear_values(self):
     for entry in GCONF.all_entries("%s/%s" % (self.path, self.id)):
