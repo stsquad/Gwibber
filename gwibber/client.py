@@ -63,7 +63,7 @@ DEFAULT_PREFERENCES = {
   "hide_taskbar_entry": False,
   "spellcheck_enabled": True,
   "theme": "default",
-  "urlshorter": "",
+  "urlshorter": "is.gd",
 }
 
 for _i in CONFIGURABLE_UI_ELEMENTS.keys():
@@ -285,6 +285,8 @@ class GwibberClient(gtk.Window):
 	  if text.startswith(urlshorter.PROTOCOLS[us].PROTOCOL_INFO["fqdn"]): return
         entry.stop_emission("insert-text")
         try:
+          if not self.preferences["urlshorter"]:
+            self.preferences["urlshorter"] = "is.gd"
           self.urlshorter = urlshorter.PROTOCOLS[self.preferences["urlshorter"]].URLShorter()
           short = self.urlshorter.short(text)
         except:
