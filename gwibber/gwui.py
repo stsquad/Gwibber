@@ -16,6 +16,7 @@ _ = gettext.lgettext
 
 DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
 IMG_CACHE_DIR = os.path.join(resources.CACHE_BASE_DIR, "gwibber", "images")
+DEFAULT_AVATAR = 'http://digg.com/img/udl.png'
 
 class MapView(webkit.WebView):
   def __init__(self):
@@ -124,8 +125,9 @@ def image_cache(url, cache_dir = IMG_CACHE_DIR):
         print 'image_cache HTTP Error %s: %s whilst fetching %s' % (e.code, e.msg, e.url)
       else:
         print e
-      # if there were any problems getting the avatar img and it still doesn't then return None
-      os.remove(img_path)
-      return None
+      # if there were any problems getting the avatar img replace it with default
+      output.write(urllib2.urlopen(DEFAULT_AVATAR).read())
+    finally:
+      output.close()
 
   return img_path
