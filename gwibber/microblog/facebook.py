@@ -62,7 +62,7 @@ class Client:
     
     self.facebook = support.facelib.Facebook(APP_KEY, SECRET_KEY)
     self.facebook.session_key = self.account["session_key"]
-    self.facebook.secret = self.account["secret_key"]
+    self.facebook.secret = self.account["private:secret_key"]
 
   def get_images(self):
     friends = self.facebook.users.getInfo(self.facebook.friends.get(), ['name', 'pic_square'])
@@ -71,7 +71,7 @@ class Client:
   def send_enabled(self):
     return self.account["send_enabled"] and \
       self.account["session_key"] != None and \
-      self.account["secret_key"] != None
+      self.account["private:secret_key"] != None
 
   def receive_enabled(self):
     return self.account["receive_enabled"] and \
