@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: gwibber\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-02-04 12:49+0000\n"
-"PO-Revision-Date: 2009-02-06 12:19+0000\n"
+"PO-Revision-Date: 2009-02-11 13:52+0000\n"
 "Last-Translator: rob <linuxned@gmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-06 14:16+0000\n"
+"X-Launchpad-Export-Date: 2009-02-17 09:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
@@ -276,19 +276,19 @@ msgstr "Posities ophalen"
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:106 ../gwibber/microblog/__init__.py:113
 msgid "perform search query"
-msgstr ""
+msgstr "Zoeken"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:120
 msgid "perform tag query"
-msgstr ""
+msgstr "Label zoeken"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:132
 msgid "perform group query"
-msgstr ""
+msgstr "Groep zoeken"
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid "This user has protected their updates."
@@ -464,7 +464,7 @@ msgstr "Feed-URL:"
 
 #: ../ui/preferences.glade.h:27
 msgid "Get Feed"
-msgstr ""
+msgstr "Feed ophalen"
 
 #: ../ui/preferences.glade.h:28
 msgid "Get Jaiku API key"
