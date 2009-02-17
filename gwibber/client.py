@@ -510,7 +510,6 @@ class GwibberClient(gtk.Window):
         self.update([view.get_parent()])
         return True
       elif uri.startswith("gwibber:read"):
-        query = uri.split("/")[-1]
         msg = view.message_store[int(uri.split("/")[-1])]
         acct = msg.account
         if acct.supports(microblog.can.READ):
