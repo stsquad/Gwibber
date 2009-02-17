@@ -2,6 +2,7 @@
 import operator, traceback, can
 import twitter, jaiku, identica, laconica, pownce
 import digg, flickr, brightkite, rss, pingfm, facebook
+import greader
 
 # i18n magic
 import gettext
@@ -19,6 +20,7 @@ PROTOCOLS = {
   "laconica": laconica,
   "rss": rss,
   "pingfm": pingfm,
+  "greader": greader,
   #"brightkite": brightkite,
 }
 

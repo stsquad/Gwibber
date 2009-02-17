@@ -183,7 +183,7 @@
             </td>' : '') + '<td> \
               <p class="content"> \
                 <span class="title">'+ (data.title == undefined ? data.sender : data.title) +'</span> \
-                <span class="time"> (<a href="'+ data.url +'">'+ data.time_string +'</a>' +
+                <span class="time"> (<a href="'+ 'gwibber:read/' + data.message_index  +'">'+ data.time_string +'</a>' +
                     (data.reply_nick ? ' <a href="'+ data.reply_url +'">'+ msg.reply +' '+ data.reply_nick +'</a>' : '') +
                     ')</span><br /> \
                 <span class="text">'+ data.html_string +'</span> \
