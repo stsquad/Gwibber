@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: gwibber\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-02-04 12:49+0000\n"
-"PO-Revision-Date: 2009-01-29 06:02+0000\n"
-"Last-Translator: Alexander Telenga <telenga@gmail.com>\n"
+"PO-Revision-Date: 2009-02-15 12:32+0000\n"
+"Last-Translator: [lol]2Fast4U <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-02-06 14:16+0000\n"
+"X-Launchpad-Export-Date: 2009-02-17 09:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
@@ -37,7 +37,7 @@ msgstr "_Редактор"
 
 #: ../gwibber/client.py:46
 msgid "_Statusbar"
-msgstr "Строка _состояния"
+msgstr "_Строка состояния"
 
 #: ../gwibber/client.py:47
 msgid "Tray _Icon"
@@ -50,7 +50,7 @@ msgstr "_Получать сообщения"
 
 #: ../gwibber/client.py:53 ../ui/preferences.glade.h:57
 msgid "_Send Messages"
-msgstr "_Отсылать сообщения"
+msgstr "_Посылать сообщения"
 
 #: ../gwibber/client.py:54
 msgid "Search _Messages"
@@ -122,11 +122,11 @@ msgstr "Очистить"
 
 #: ../gwibber/client.py:616
 msgid "Close Window"
-msgstr ""
+msgstr "Закрыть окно"
 
 #: ../gwibber/client.py:618 ../ui/preferences.glade.h:37
 msgid "Preferences"
-msgstr "Параметры"
+msgstr "Настройки"
 
 #: ../gwibber/client.py:620
 msgid "Quit"
@@ -134,19 +134,19 @@ msgstr "Выйти"
 
 #: ../gwibber/client.py:626
 msgid "Get Help Online..."
-msgstr ""
+msgstr "Помощь в Интернете..."
 
 #: ../gwibber/client.py:628
 msgid "Translate This Application..."
-msgstr ""
+msgstr "Перевести это приложение..."
 
 #: ../gwibber/client.py:630
 msgid "Report a Problem"
-msgstr ""
+msgstr "Сообщить об ошибке"
 
 #: ../gwibber/client.py:632
 msgid "_About"
-msgstr "О п_рограмме"
+msgstr "_O программе"
 
 #: ../gwibber/client.py:647
 msgid "S_pellcheck"
@@ -166,7 +166,7 @@ msgstr "_Вид"
 
 #: ../gwibber/client.py:662
 msgid "_Accounts"
-msgstr "У_чётные записи"
+msgstr "_Учётные записи"
 
 #: ../gwibber/client.py:666
 msgid "_Help"
@@ -217,7 +217,7 @@ msgstr "Управление учётными записями"
 
 #: ../gwibber/configui.py:121
 msgid "Username"
-msgstr "Имя пользователя"
+msgstr "Логин"
 
 #: ../gwibber/configui.py:124
 msgid "Receive"
@@ -235,7 +235,7 @@ msgstr "Протокол"
 #. like '3 minutes ago in reply to angelina'
 #: ../gwibber/gwui.py:55
 msgid "in reply to"
-msgstr "в ответ на"
+msgstr "в ответ на сообщение"
 
 #. Translators: this string indicates where the message arrived from
 #. like 'from api', 'from Gwibber'
@@ -293,7 +293,7 @@ msgstr ""
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid "This user has protected their updates."
-msgstr ""
+msgstr "Этот пользователь не показывает свои обновления."
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid ""
@@ -302,42 +302,47 @@ msgstr ""
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid "Send request..."
-msgstr ""
+msgstr "Отправить запрос..."
 
 #: ../gwibber/microblog/support/__init__.py:59
 #, python-format
 msgid "%(year)d year ago"
 msgid_plural "%(year)d years ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(year)d год назад"
+msgstr[1] "%(year)d года назад"
+msgstr[2] "%(year)d лет назад"
 
 #: ../gwibber/microblog/support/__init__.py:62
 #, python-format
 msgid "%(day)d day ago"
 msgid_plural "%(day)d days ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(day)d день назад"
+msgstr[1] "%(day)d дня назад"
+msgstr[2] "%(day)d дней назад"
 
 #: ../gwibber/microblog/support/__init__.py:65
 #, python-format
 msgid "%(hour)d hour ago"
 msgid_plural "%(hour)d hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(hour)d час назад"
+msgstr[1] "%(hour)d часа назад"
+msgstr[2] "%(hour)d часов назад"
 
 #: ../gwibber/microblog/support/__init__.py:68
 #, python-format
 msgid "%(minute)d minute ago"
 msgid_plural "%(minute)d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(minute)d минуту назад"
+msgstr[1] "%(minute)d минуты назад"
+msgstr[2] "%(minute)d минут назад"
 
 #: ../gwibber/microblog/support/__init__.py:71
 #, python-format
 msgid "%(sec)d second ago"
 msgid_plural "%(sec)d seconds ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(sec)d секунду назад"
+msgstr[1] "%(sec)d секунды назад"
+msgstr[2] "%(sec)d секунд назад"
 
 #: ../gwibber/microblog/support/__init__.py:73
 #, python-format
@@ -349,6 +354,8 @@ msgid ""
 "<b>1.</b> Click the button below to request\n"
 "a Gwibber login code from Facebook."
 msgstr ""
+"<b>1.</b> Нажми кнопку внизу, чтобы запросить\n"
+"код авторизации для Gwibber на Facebook."
 
 #: ../ui/preferences.glade.h:3
 msgid ""
@@ -368,11 +375,11 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:6
 msgid "<b>Account Status</b>"
-msgstr ""
+msgstr "<b>Статус учётной записи</b>"
 
 #: ../ui/preferences.glade.h:7
 msgid "<b>Appearance</b>"
-msgstr ""
+msgstr "<b>Внешний вид</b>"
 
 #: ../ui/preferences.glade.h:8
 msgid "<b>Experimental</b>"
@@ -380,11 +387,11 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:9
 msgid "<b>Notification</b>"
-msgstr ""
+msgstr "<b>Уведомление</b>"
 
 #: ../ui/preferences.glade.h:10
 msgid "<b>Theme</b>"
-msgstr ""
+msgstr "<b>Тема</b>"
 
 #: ../ui/preferences.glade.h:11
 msgid "<b>Update</b>"
@@ -396,15 +403,15 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:13
 msgid "API key:"
-msgstr ""
+msgstr "API ключ:"
 
 #: ../ui/preferences.glade.h:14
 msgid "About Gwibber"
-msgstr ""
+msgstr "О Gwibber"
 
 #: ../ui/preferences.glade.h:15
 msgid "App Key:"
-msgstr ""
+msgstr "Ключ прилож.:"
 
 #: ../ui/preferences.glade.h:16
 msgid "Append colon to username when replying"
@@ -416,7 +423,7 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:18
 msgid "Automatically shorten pasted URLs"
-msgstr ""
+msgstr "Автоматически сокращать вставленные URL-адреса"
 
 #: ../ui/preferences.glade.h:19
 msgid ""
@@ -427,11 +434,11 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:20
 msgid "Comment Color:"
-msgstr ""
+msgstr "Цвет комментария:"
 
 #: ../ui/preferences.glade.h:21
 msgid "Copyright (C) 2007-2009 Gwibber Team"
-msgstr ""
+msgstr "Copyright (C) 2007-2009 Gwibber Team"
 
 #: ../ui/preferences.glade.h:22
 msgid "Digg Color:"
@@ -443,31 +450,31 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:24
 msgid "Domain:"
-msgstr ""
+msgstr "Домен:"
 
 #: ../ui/preferences.glade.h:25
 msgid "Facebook Authorization"
-msgstr ""
+msgstr "Авторизация Facebook"
 
 #: ../ui/preferences.glade.h:26
 msgid "Feed URL:"
-msgstr ""
+msgstr "URL ленты:"
 
 #: ../ui/preferences.glade.h:27
 msgid "Get Feed"
-msgstr ""
+msgstr "Получить ленту"
 
 #: ../ui/preferences.glade.h:28
 msgid "Get Jaiku API key"
-msgstr ""
+msgstr "Получить API-ключ для Jaiku"
 
 #: ../ui/preferences.glade.h:29
 msgid "Get Ping.fm key"
-msgstr ""
+msgstr "Получить ключ для Ping.fm"
 
 #: ../ui/preferences.glade.h:30
 msgid "Gwibber Web Site"
-msgstr ""
+msgstr "Веб-сайт Gwibber"
 
 #: ../ui/preferences.glade.h:31
 msgid ""
@@ -478,15 +485,15 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:32
 msgid "Hide taskbar entry"
-msgstr ""
+msgstr "Не показывать на панели задач"
 
 #: ../ui/preferences.glade.h:33
 msgid "Message Color:"
-msgstr ""
+msgstr "Цвет сообщений:"
 
 #: ../ui/preferences.glade.h:34
 msgid "Minimize to tray on close"
-msgstr ""
+msgstr "Сворачивать в область уведомлений при закрытии"
 
 #: ../ui/preferences.glade.h:35
 msgid "Minutes between refresh:  "
@@ -494,7 +501,7 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:36
 msgid "Password:"
-msgstr ""
+msgstr "Пароль:"
 
 #: ../ui/preferences.glade.h:38
 msgid "Request Login Code"
@@ -502,7 +509,7 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:39
 msgid "Show tray icon"
-msgstr ""
+msgstr "Показывать иконку в области уведомлений"
 
 #: ../ui/preferences.glade.h:40
 msgid ""
@@ -524,15 +531,16 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:54
 msgid "Username:"
-msgstr ""
+msgstr "Логин:"
 
 #: ../ui/preferences.glade.h:55
 msgid "_Authorize Gwibber"
-msgstr ""
+msgstr "_Авторизовать Gwibber"
 
 #. Translators: insert your name here as Name Surname <email>, year
 #: ../ui/preferences.glade.h:59
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Alexander Telenga https://launchpad.net/~telenga"
+"  Alexander Telenga https://launchpad.net/~telenga\n"
+"  [lol]2Fast4U https://launchpad.net/~lol2fast4u"

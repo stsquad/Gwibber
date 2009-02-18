@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: gwibber 0.7.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-04 12:49+0000\n"
-"PO-Revision-Date: 2009-01-28 15:35+0000\n"
-"Last-Translator: Milo Casagrande <milo@milo.name>\n"
+"PO-Revision-Date: 2009-02-09 02:56+0000\n"
+"Last-Translator: Federico Alfredo Moretti <fm@federicomoretti.name>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-06 14:16+0000\n"
+"X-Launchpad-Export-Date: 2009-02-17 09:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
@@ -123,7 +123,7 @@ msgstr "Pulisci"
 
 #: ../gwibber/client.py:616
 msgid "Close Window"
-msgstr ""
+msgstr "Chiudi la finestra"
 
 #: ../gwibber/client.py:618 ../ui/preferences.glade.h:37
 msgid "Preferences"
@@ -135,15 +135,15 @@ msgstr "Esci"
 
 #: ../gwibber/client.py:626
 msgid "Get Help Online..."
-msgstr ""
+msgstr "Chiedi aiuto in linea..."
 
 #: ../gwibber/client.py:628
 msgid "Translate This Application..."
-msgstr ""
+msgstr "Traduci questa applicazione..."
 
 #: ../gwibber/client.py:630
 msgid "Report a Problem"
-msgstr ""
+msgstr "Segnala un problema"
 
 #: ../gwibber/client.py:632
 msgid "_About"
@@ -295,16 +295,18 @@ msgstr "esecuzione interrogazione sul gruppo"
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid "This user has protected their updates."
-msgstr ""
+msgstr "Questo utente ha protetto i suoi aggiornamenti."
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid ""
 "You need to send a request before you can view this person's timeline."
 msgstr ""
+"Devi inviare una richiesta prima di poter vedere gli aggiornamenti di questa "
+"persona."
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid "Send request..."
-msgstr ""
+msgstr "Invia richiesta..."
 
 #: ../gwibber/microblog/support/__init__.py:59
 #, python-format
@@ -434,6 +436,9 @@ msgid ""
 "the \"Friend's Status Feed\" link from the left-hand side of the page and "
 "paste it into the Feed URL textbox."
 msgstr ""
+"Clicca sul link qui sotto per aprire la pagina degli amici di Facebook, "
+"copia l'indirizzo del link \"Feed stato amici\" dal lato sinistro della "
+"pagina e incollalo nel campo Feed URL."
 
 #: ../ui/preferences.glade.h:20
 msgid "Comment Color:"
@@ -441,7 +446,7 @@ msgstr "Colore commento:"
 
 #: ../ui/preferences.glade.h:21
 msgid "Copyright (C) 2007-2009 Gwibber Team"
-msgstr ""
+msgstr "Copyright (C) 2007-2009 Gwibber Team"
 
 #: ../ui/preferences.glade.h:22
 msgid "Digg Color:"
@@ -465,15 +470,15 @@ msgstr "URL del feed:"
 
 #: ../ui/preferences.glade.h:27
 msgid "Get Feed"
-msgstr ""
+msgstr "Ottieni il feed"
 
 #: ../ui/preferences.glade.h:28
 msgid "Get Jaiku API key"
-msgstr ""
+msgstr "Ottieni la chiave delle API di Jaiku"
 
 #: ../ui/preferences.glade.h:29
 msgid "Get Ping.fm key"
-msgstr ""
+msgstr "Ottieni la chiave di Ping.fm"
 
 #: ../ui/preferences.glade.h:30
 msgid "Gwibber Web Site"
@@ -571,6 +576,7 @@ msgstr ""
 "  Milo Casagrande https://launchpad.net/~milo\n"
 "\n"
 "Launchpad Contributions:\n"
+"  Federico Alfredo Moretti https://launchpad.net/~fedmor\n"
 "  Milo Casagrande https://launchpad.net/~milo"
 
 #~ msgid "Date"

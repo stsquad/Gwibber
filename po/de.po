@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: gwibber\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-02-04 12:49+0000\n"
-"PO-Revision-Date: 2009-02-02 17:47+0000\n"
-"Last-Translator: Thomas Schewe <Unknown>\n"
+"PO-Revision-Date: 2009-02-14 22:46+0000\n"
+"Last-Translator: Vinzenz Vietzke <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-06 14:16+0000\n"
+"X-Launchpad-Export-Date: 2009-02-17 09:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
@@ -118,7 +118,7 @@ msgstr "Leeren"
 
 #: ../gwibber/client.py:616
 msgid "Close Window"
-msgstr ""
+msgstr "Fenster schliessen"
 
 #: ../gwibber/client.py:618 ../ui/preferences.glade.h:37
 msgid "Preferences"
@@ -130,15 +130,15 @@ msgstr "Beenden"
 
 #: ../gwibber/client.py:626
 msgid "Get Help Online..."
-msgstr ""
+msgstr "Online Hilfe erhalten …"
 
 #: ../gwibber/client.py:628
 msgid "Translate This Application..."
-msgstr ""
+msgstr "Diese Anwendung übersetzen ..."
 
 #: ../gwibber/client.py:630
 msgid "Report a Problem"
-msgstr ""
+msgstr "Fehler melden"
 
 #: ../gwibber/client.py:632
 msgid "_About"
@@ -280,13 +280,13 @@ msgstr "Suchanfrage bearbeiten"
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:120
 msgid "perform tag query"
-msgstr ""
+msgstr "Stichwortsuche durchführen"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:132
 msgid "perform group query"
-msgstr ""
+msgstr "Gruppensuche durchführen"
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid "This user has protected their updates."
@@ -296,10 +296,12 @@ msgstr ""
 msgid ""
 "You need to send a request before you can view this person's timeline."
 msgstr ""
+"Du musst eine Anfrage senden, bevor du die Zeitleiste dieser Person sehen "
+"kannst."
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid "Send request..."
-msgstr ""
+msgstr "Anfrage senden..."
 
 #: ../gwibber/microblog/support/__init__.py:59
 #, python-format
@@ -346,6 +348,8 @@ msgid ""
 "<b>1.</b> Click the button below to request\n"
 "a Gwibber login code from Facebook."
 msgstr ""
+"<b>1.</b> Klicke den Knopf unten um einen\n"
+"Gwibber-Anmeldeschlüssel von Facebook anzufordern."
 
 #: ../ui/preferences.glade.h:3
 msgid ""
@@ -432,7 +436,7 @@ msgstr "Kommentar-Farbe:"
 
 #: ../ui/preferences.glade.h:21
 msgid "Copyright (C) 2007-2009 Gwibber Team"
-msgstr ""
+msgstr "Copyright (C) 2007-2009 Gwibber Team"
 
 #: ../ui/preferences.glade.h:22
 msgid "Digg Color:"
@@ -460,11 +464,11 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:28
 msgid "Get Jaiku API key"
-msgstr ""
+msgstr "Jaiku API-Schlüssel bekommen"
 
 #: ../ui/preferences.glade.h:29
 msgid "Get Ping.fm key"
-msgstr ""
+msgstr "Ping.fm-Schlüssel bekommen"
 
 #: ../ui/preferences.glade.h:30
 msgid "Gwibber Web Site"
@@ -525,6 +529,22 @@ msgid ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, "
 "USA.\n"
 msgstr ""
+"Dieses Programm ist freie Software, du kannst es zu den Bedingungen \n"
+"der GNU General Public License, veröffentlicht von der Free Software "
+"Foundation,\n"
+"entweder Version 2 der Lizenz oder (nach deiner Wahl) jeder späteren "
+"Version, \n"
+"weitergeben und / oder verändern.\n"
+"\n"
+"Dieses Programm wird in der Hoffnung, nützlich zu sein,\n"
+"aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie \n"
+"der Marktgängigkeit oder Eignung für einen bestimmten Zweck. \n"
+"Beachte auch die GNU General Public License für weitere Details.\n"
+"\n"
+"Du solltest eine Kopie der GNU General Public License \n"
+"zusammen mit diesem Programm erhalten haben. Falls nicht, schreibe an \n"
+"die Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
+"MA 02110-1301, USA.\n"
 
 #: ../ui/preferences.glade.h:54
 msgid "Username:"
@@ -549,6 +569,7 @@ msgstr ""
 "  Dominic Evans https://launchpad.net/~oldman\n"
 "  Philip Stewart https://launchpad.net/~sodoku\n"
 "  Thomas Schewe https://launchpad.net/~thosch66\n"
+"  Vinzenz Vietzke https://launchpad.net/~v1nz\n"
 "  patrihito https://launchpad.net/~patrick-nell"
 
 #~ msgid "Date"

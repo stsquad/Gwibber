@@ -177,9 +177,9 @@ class Client:
         urllib.urlencode({"status":message, "source": "Gwibber"})))
     return Message(self, data)
 
-  def send_thread(self, msg, message):
+  def send_thread(self, message, target):
     data = simplejson.loads(self.connect(
       "https://identi.ca/api/statuses/update.json",
         urllib.urlencode({"status":message,
-            "in_reply_to_status_id":msg.id, "source": "Gwibber"})))
+            "in_reply_to_status_id":target.id, "source": "Gwibber"})))
     return Message(self, data)

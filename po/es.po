@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-06 14:16+0000\n"
+"X-Launchpad-Export-Date: 2009-02-17 09:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
@@ -578,7 +578,7 @@ msgstr ""
 "  Dominic Evans https://launchpad.net/~oldman\n"
 "  Juan J. Martínez https://launchpad.net/~reidrac\n"
 "  Julián Alarcón https://launchpad.net/~alarconj\n"
-"  Mario César Señoranis Ayala https://launchpad.net/~mariocesar-sa\n"
+"  Mario César Señoranis https://launchpad.net/~mariocesar\n"
 "  Paco Molinero https://launchpad.net/~franciscomol\n"
 "  ecubuntu https://launchpad.net/~ecubuntu"
 

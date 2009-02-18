@@ -809,19 +809,22 @@ class GwibberClient(gtk.Window):
         account = self.message_target.account
         if account:
           if account.supports(microblog.can.THREAD_REPLY) and hasattr(self.message_target, "id"):
-            result = account.get_client().send_thread(self.message_target, text)
+            result = self.client.send_thread(text, self.message_target, [account["protocol"]])
           else:
             result = self.client.reply(text, [account["protocol"]])
       # else standard post
       else:
         result = self.client.send(text, microblog.PROTOCOLS.keys())
 
-      # if we get a returned msg we may be able to display it to the user immediately
+      # if we get returned message info for the posts we should be able
+      # to display them to the user immediately
       if result: 
-        if hasattr(result, 'client'):
-          self.post_process_message(result)
-          result.is_new = result.is_unread = False
-          self.messages_view.message_store = [result] + self.messages_view.message_store
+        for msg in result:
+          if hasattr(msg, 'text'):
+            self.post_process_message(msg)
+            msg.is_new = msg.is_unread = False
+        self.flag_duplicates(result)
+        self.messages_view.message_store = result + self.messages_view.message_store
         self.messages_view.load_messages()
         self.messages_view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
     
