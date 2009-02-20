@@ -127,11 +127,11 @@ class Client:
       return NONCE_PARSE.match(page, 1).group(1)
     except: return None
 
-  def send_thread(self, msg, message):
-    nonce = self.get_nonce(msg)
+  def send_thread(self, message, target):
+    nonce = self.get_nonce(target)
     if nonce:
       return urllib2.urlopen(urllib2.Request(
-        ("#" in msg.url and msg.url.split("#")[0] or msg.url),
+        ("#" in target.url and target.url.split("#")[0] or target.url),
           urllib.urlencode({"user": self.account["username"], "_nonce": nonce, 
             "personal_key":self.account["private:password"], "comment": message}))).read()
 

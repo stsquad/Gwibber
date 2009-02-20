@@ -62,6 +62,13 @@ class Client:
       # Indicates with wich action the error happened 
       lambda c: c.send(message), _("send message"), filter, False))
 
+  def send_thread(self, message, target, filter=PROTOCOLS.keys()):
+    return list(self.get_data(
+      lambda a: a["send_enabled"] and supports(a, can.THREAD_REPLY),
+      # Translators: this message appears in the Errors dialog
+      # Indicates with wich action the error happened 
+      lambda c: c.send_thread(message, target), _("send message"), filter, False))
+
   def reply(self, message, filter=PROTOCOLS.keys()):
     return list(self.get_data(
       lambda a: supports(a, can.SEND),
