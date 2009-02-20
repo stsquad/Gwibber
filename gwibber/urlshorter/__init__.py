@@ -1,5 +1,5 @@
 
-import tinyurlcom, isgd, trim, ur1ca
+import tinyurlcom, isgd, trim, ur1ca, zima, cligs
 #import snipurlcom
 
 PROTOCOLS = {
@@ -9,6 +9,8 @@ PROTOCOLS = {
   #"snipurl.com": snipurlcom,
   "tr.im": trim,
   "ur1.ca": ur1ca,
+  "zi.ma": zima,
+  "cli.gs": cligs,
 
 }
 
