@@ -1,6 +1,7 @@
 
 import gobject, dbus.glib, os, sys
 import dbus, dbus.service
+from microblog import support
 
 ######################################################################
 # DBus integration
@@ -29,6 +30,7 @@ try:
   def notify(title, text, icon = None, actions = [], timer = 5000):
     caps = notifier.GetCapabilities()
     if "actions" in caps:
+        text = support.linkify(text)
         return notifier.Notify("Gwibber", 0, icon, title, text, actions, {}, timer)
     else:
         return notifier.Notify("Gwibber", 0, icon, title, text, [], {}, timer)
