@@ -44,7 +44,6 @@ http://undefined.org/python/#simplejson to download it, or do
 apt-get install python-simplejson on a Debian-like system.
 """
 
-import md5
 import sys
 import time
 import urllib
@@ -655,7 +654,13 @@ class Facebook(object):
 
     def _hash_args(self, args, secret=None):
         """Hashes arguments by joining key=value pairs, appending a secret, and then taking the MD5 hex digest."""
-        hasher = md5.new(''.join(['%s=%s' % (x, args[x]) for x in sorted(args.keys())]))
+        try:
+            import hashlib
+            hasher = hashlib.md5(''.join(['%s=%s' % (x, args[x]) for x in sorted(args.keys())]))
+        except ImportError:
+            import md5
+            hasher = md5.new(''.join(['%s=%s' % (x, args[x]) for x in sorted(args.keys())]))
+
         if secret:
             hasher.update(secret)
         elif self.secret:
