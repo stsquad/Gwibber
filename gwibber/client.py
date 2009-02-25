@@ -886,9 +886,16 @@ class GwibberClient(gtk.Window):
     return {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
 
   def get_gtk_theme_prefs(self):
-    return dict((i, self.color_to_dict(
-      getattr(self.get_style(), i)[gtk.STATE_NORMAL].to_string()))
-        for i in ["base", "text", "fg", "bg"])
+    d = {}
+    
+    for i in ["base", "text", "fg", "bg"]:
+      d[i] = self.color_to_dict(
+        getattr(self.get_style(), i)[gtk.STATE_NORMAL].to_string())
+
+      d["%s_selected" % i] = self.color_to_dict(
+        getattr(self.get_style(), i)[gtk.STATE_SELECTED].to_string())
+
+    return d
 
   def show_notification_bubbles(self, messages):
     new_messages = []
