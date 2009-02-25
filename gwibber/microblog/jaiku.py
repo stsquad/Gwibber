@@ -136,7 +136,7 @@ class Client:
             "personal_key":self.account["private:password"], "comment": message}))).read()
 
   def send(self, message):
-    return urllib2.urlopen(urllib2.Request(
+    urllib2.urlopen(urllib2.Request(
       "http://api.jaiku.com/json", urllib.urlencode({"user": self.account["username"],
       "personal_key":self.account["private:password"],
       "message": message, "method": "presence.send"}))).read()
