@@ -6,17 +6,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gwibber\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-02-04 12:49+0000\n"
-"PO-Revision-Date: 2009-02-01 10:00+0000\n"
-"Last-Translator: Josef Assad <Unknown>\n"
+"Report-Msgid-Bugs-To: gwibber-team@lists.launchpad.net\n"
+"POT-Creation-Date: 2009-02-28 15:47+0000\n"
+"PO-Revision-Date: 2009-02-23 12:13+0000\n"
+"Last-Translator: MaXeR <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"X-Launchpad-Export-Date: 2009-02-17 09:04+0000\n"
+"X-Launchpad-Export-Date: 2009-02-28 16:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
@@ -29,62 +29,54 @@ msgstr "خادم المدونات القصيرة"
 
 #: ../gwibber.desktop.in.h:3
 msgid "Microblogging client for GNOME"
-msgstr "خادم المدونات القصيرة لGNOME"
+msgstr "خادم المدونات القصيرة لجنوم"
 
-#: ../gwibber/client.py:45
+#: ../gwibber/client.py:46
 msgid "_Editor"
 msgstr "_محرر"
 
-#: ../gwibber/client.py:46
+#: ../gwibber/client.py:47
 msgid "_Statusbar"
 msgstr "شريط الحالة"
 
-#: ../gwibber/client.py:47
+#: ../gwibber/client.py:48
 msgid "Tray _Icon"
-msgstr ""
+msgstr "أيقونة شريط المهام"
 
 #. Translators: these are checkbox
-#: ../gwibber/client.py:52 ../ui/preferences.glade.h:56
+#: ../gwibber/client.py:53 ../ui/preferences.glade.h:56
 msgid "_Receive Messages"
 msgstr "_إستقبل الرسائل"
 
-#: ../gwibber/client.py:53 ../ui/preferences.glade.h:57
+#: ../gwibber/client.py:54 ../ui/preferences.glade.h:57
 msgid "_Send Messages"
 msgstr "_أرسل الرسائل"
 
-#: ../gwibber/client.py:54
+#: ../gwibber/client.py:55
 msgid "Search _Messages"
 msgstr "إبحث الرسائل"
 
-#: ../gwibber/client.py:76
+#: ../gwibber/client.py:77
 msgid "Gwibber"
 msgstr "Gwibber"
 
-#: ../gwibber/client.py:104
-msgid "%Y-%m-%d"
-msgstr "%Y-%m-%d"
-
-#: ../gwibber/client.py:105 ../gwibber/client.py:920
-msgid "%I:%M:%S %p"
-msgstr "%I:%M:%S %p"
-
-#: ../gwibber/client.py:134
+#: ../gwibber/client.py:137
 msgid "Messages"
 msgstr "الرسائل"
 
-#: ../gwibber/client.py:135
+#: ../gwibber/client.py:138
 msgid "Replies"
 msgstr "الردود"
 
-#: ../gwibber/client.py:172
+#: ../gwibber/client.py:175
 msgid "Cancel"
 msgstr "إلغاء"
 
-#: ../gwibber/client.py:296
+#: ../gwibber/client.py:314
 msgid "Enter a search query:"
 msgstr "أكتب طلب البحث"
 
-#: ../gwibber/client.py:432
+#: ../gwibber/client.py:450
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
@@ -95,95 +87,102 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../gwibber/client.py:518
+#: ../gwibber/client.py:552 ../gwibber/client.py:558
 #, python-format
 msgid "Characters remaining: %s"
 msgstr "عدد الحروف المتبقية : %s"
 
-#: ../gwibber/client.py:548
+#: ../gwibber/client.py:588
 msgid "_Manage"
-msgstr ""
+msgstr "_إدارة"
 
-#: ../gwibber/client.py:552
+#: ../gwibber/client.py:592
 msgid "_Create"
 msgstr "_أنشئ"
 
-#: ../gwibber/client.py:613
+#: ../gwibber/client.py:652
 msgid "Refresh"
-msgstr "أنعش"
+msgstr "تحديث"
 
-#: ../gwibber/client.py:614 ../gwibber/configui.py:130
+#: ../gwibber/client.py:653 ../gwibber/configui.py:131
 msgid "Search"
-msgstr "إبحث"
+msgstr "بحث"
 
-#: ../gwibber/client.py:615
+#: ../gwibber/client.py:654
 msgid "Clear"
-msgstr "إمسح"
+msgstr "امسح"
 
-#: ../gwibber/client.py:616
+#: ../gwibber/client.py:655
 msgid "Close Window"
-msgstr ""
+msgstr "أغلق النافذة"
 
-#: ../gwibber/client.py:618 ../ui/preferences.glade.h:37
+#: ../gwibber/client.py:657 ../ui/preferences.glade.h:37
 msgid "Preferences"
 msgstr "التفضيلات"
 
-#: ../gwibber/client.py:620
+#: ../gwibber/client.py:659
 msgid "Quit"
-msgstr "غلق"
+msgstr "إغلاق"
 
-#: ../gwibber/client.py:626
+#. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
+#. actThemeTest.connect("activate", self.theme_preview_test)
+#. menuHelp.append(actThemeTest.create_menu_item())
+#: ../gwibber/client.py:665
 msgid "Get Help Online..."
-msgstr ""
+msgstr "مساعدة عن طريق الانترنت..."
 
-#: ../gwibber/client.py:628
+#: ../gwibber/client.py:667
 msgid "Translate This Application..."
-msgstr ""
+msgstr "ترجم هذا البرنامج..."
 
-#: ../gwibber/client.py:630
+#: ../gwibber/client.py:669
 msgid "Report a Problem"
-msgstr ""
+msgstr "أبلغ عن مشكلة"
 
-#: ../gwibber/client.py:632
+#: ../gwibber/client.py:671
 msgid "_About"
 msgstr "_حوْل"
 
-#: ../gwibber/client.py:647
+#: ../gwibber/client.py:686
 msgid "S_pellcheck"
 msgstr ""
 
-#: ../gwibber/client.py:651
+#: ../gwibber/client.py:690
 msgid "E_rrors"
 msgstr "أ_خطاء"
 
-#: ../gwibber/client.py:656
+#: ../gwibber/client.py:695
 msgid "_Gwibber"
 msgstr "_Gwibber"
 
-#: ../gwibber/client.py:659
+#: ../gwibber/client.py:698
 msgid "_View"
 msgstr "إ_عرض"
 
-#: ../gwibber/client.py:662
+#: ../gwibber/client.py:701
 msgid "_Accounts"
 msgstr "ال_حسابات"
 
-#: ../gwibber/client.py:666
+#: ../gwibber/client.py:705
 msgid "_Help"
 msgstr "_مساعدة"
 
-#: ../gwibber/client.py:718
+#: ../gwibber/client.py:714 ../ui/preferences.glade.h:23
+msgid "Display bubbles"
+msgstr "إظهار فقاعات"
+
+#: ../gwibber/client.py:765
 msgid "Errors"
 msgstr "الأخطاء"
 
-#: ../gwibber/client.py:724
+#: ../gwibber/client.py:771
 msgid "Debug Output"
 msgstr ""
 
-#: ../gwibber/client.py:920
+#: ../gwibber/client.py:987
 #, python-format
 msgid "Last update: %s"
-msgstr "آخر تجديد : %s"
+msgstr "آخر تحديث: %s"
 
 #: ../gwibber/configui.py:30
 msgid "Keys obtained successfully."
@@ -193,116 +192,117 @@ msgstr "تمّّ الحصول على المفتاح بنجاح."
 msgid "Failed to obtain key."
 msgstr "فشل الحصول على المفتاح."
 
-#: ../gwibber/configui.py:77
+#: ../gwibber/configui.py:78
 #, python-format
 msgid "Create %s account"
-msgstr "إفتح الحساب %s"
+msgstr "أنشئ الحساب %s"
 
-#: ../gwibber/configui.py:79
+#: ../gwibber/configui.py:80
 #, python-format
 msgid "Edit %s account"
-msgstr "غيّّر الحساب %s"
+msgstr "تعديل الحساب %s"
 
-#: ../gwibber/configui.py:88
+#: ../gwibber/configui.py:89
 msgid "Are you sure you want to cancel the creation of this account?"
-msgstr ""
+msgstr "هل أنت متأكد من الغاء عملية انشاء هذا الحساب؟"
 
-#: ../gwibber/configui.py:90
+#: ../gwibber/configui.py:91
 msgid "Are you sure you want to delete this account?"
 msgstr "هل أنت متأكد من أنك تريد حذف هذا الحساب؟"
 
-#: ../gwibber/configui.py:103
+#: ../gwibber/configui.py:104
 msgid "Manage Accounts"
 msgstr "إدارة الحسابات"
 
-#: ../gwibber/configui.py:121
+#: ../gwibber/configui.py:122
 msgid "Username"
 msgstr "إسم المستخدم"
 
-#: ../gwibber/configui.py:124
+#: ../gwibber/configui.py:125
 msgid "Receive"
 msgstr "إستقبال"
 
-#: ../gwibber/configui.py:127
+#: ../gwibber/configui.py:128
 msgid "Send"
 msgstr "أرسل"
 
-#: ../gwibber/configui.py:131
+#: ../gwibber/configui.py:132
 msgid "Protocol"
 msgstr "البروتوكول"
 
 #. Translators: this string appears when somebody reply to a message
 #. like '3 minutes ago in reply to angelina'
-#: ../gwibber/gwui.py:55
+#: ../gwibber/gwui.py:56
 msgid "in reply to"
 msgstr "في جواب ل"
 
 #. Translators: this string indicates where the message arrived from
 #. like 'from api', 'from Gwibber'
-#: ../gwibber/gwui.py:58
+#: ../gwibber/gwui.py:59
 msgid "from"
 msgstr "من"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:63 ../gwibber/microblog/__init__.py:70
+#: ../gwibber/microblog/__init__.py:65 ../gwibber/microblog/__init__.py:72
+#: ../gwibber/microblog/__init__.py:79
 msgid "send message"
 msgstr "أرسل الرسالة"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:78
+#: ../gwibber/microblog/__init__.py:87
 msgid "retrieve thread"
 msgstr ""
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:85
+#: ../gwibber/microblog/__init__.py:94
 msgid "retrieve responses"
 msgstr "إستقبل الإجابات"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:92
+#: ../gwibber/microblog/__init__.py:101
 msgid "retrieve messages"
 msgstr "إستقبل الرسائل"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:99
+#: ../gwibber/microblog/__init__.py:108
 msgid "retrieve positions"
 msgstr ""
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:106 ../gwibber/microblog/__init__.py:113
+#: ../gwibber/microblog/__init__.py:115 ../gwibber/microblog/__init__.py:122
 msgid "perform search query"
 msgstr "قم بطلب البحث"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:120
+#: ../gwibber/microblog/__init__.py:129
 msgid "perform tag query"
 msgstr ""
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:132
+#: ../gwibber/microblog/__init__.py:142
 msgid "perform group query"
 msgstr ""
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid "This user has protected their updates."
-msgstr ""
+msgstr "هذا المستخدم يحمي تحديثاته."
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid ""
 "You need to send a request before you can view this person's timeline."
-msgstr ""
+msgstr "يجب أن ترسل طلباً قبل أن تتمكن من مشاهدة الخط الزمني لهذا الشخص."
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid "Send request..."
-msgstr ""
+msgstr "إرسال طلب..."
 
 #: ../gwibber/microblog/support/__init__.py:59
 #, python-format
@@ -320,9 +320,9 @@ msgstr[5] "منذ %(year)d سنوات"
 msgid "%(day)d day ago"
 msgid_plural "%(day)d days ago"
 msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] "منذ %(day)d أيّّام"
+msgstr[1] "منذ يوم واحد"
+msgstr[2] "منذ يومين"
+msgstr[3] ""
 msgstr[4] "منذ %(day)d أيّّام"
 msgstr[5] "منذ %(day)d أيّّام"
 
@@ -396,7 +396,7 @@ msgstr "<b>المظهر</b>"
 
 #: ../ui/preferences.glade.h:8
 msgid "<b>Experimental</b>"
-msgstr ""
+msgstr "<b>تجريبي</b>"
 
 #: ../ui/preferences.glade.h:9
 msgid "<b>Notification</b>"
@@ -404,11 +404,11 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:10
 msgid "<b>Theme</b>"
-msgstr ""
+msgstr "<b>القالب</b>"
 
 #: ../ui/preferences.glade.h:11
 msgid "<b>Update</b>"
-msgstr ""
+msgstr "<b>تحديث</b>"
 
 #: ../ui/preferences.glade.h:12
 msgid "<b>Window Behavior</b>"
@@ -436,7 +436,7 @@ msgstr "إسمح بتغيير الحالة"
 
 #: ../ui/preferences.glade.h:18
 msgid "Automatically shorten pasted URLs"
-msgstr ""
+msgstr "إختصار الروابط المرسلة تلقائياً"
 
 #: ../ui/preferences.glade.h:19
 msgid ""
@@ -451,15 +451,11 @@ msgstr "لون التّّعليق:"
 
 #: ../ui/preferences.glade.h:21
 msgid "Copyright (C) 2007-2009 Gwibber Team"
-msgstr ""
+msgstr "الحقوق محفوظة (C) 2007-2009 Gwibber Team"
 
 #: ../ui/preferences.glade.h:22
 msgid "Digg Color:"
 msgstr "لون Digg:"
-
-#: ../ui/preferences.glade.h:23
-msgid "Display bubbles"
-msgstr ""
 
 #: ../ui/preferences.glade.h:24
 msgid "Domain:"
@@ -475,15 +471,15 @@ msgstr "عنوان التلقيمة:"
 
 #: ../ui/preferences.glade.h:27
 msgid "Get Feed"
-msgstr ""
+msgstr "جلب خلاصات"
 
 #: ../ui/preferences.glade.h:28
 msgid "Get Jaiku API key"
-msgstr ""
+msgstr "جلب مفتاح Jaiku API"
 
 #: ../ui/preferences.glade.h:29
 msgid "Get Ping.fm key"
-msgstr ""
+msgstr "جلب مفتاح Ping.fm"
 
 #: ../ui/preferences.glade.h:30
 msgid "Gwibber Web Site"
@@ -500,7 +496,7 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:32
 msgid "Hide taskbar entry"
-msgstr ""
+msgstr "إخفاء أيقونة شريط المهام"
 
 #: ../ui/preferences.glade.h:33
 msgid "Message Color:"
@@ -512,7 +508,7 @@ msgstr "صغّر الى لوحة النظام"
 
 #: ../ui/preferences.glade.h:35
 msgid "Minutes between refresh:  "
-msgstr ""
+msgstr "الدقائق بين التحديثات:  "
 
 #: ../ui/preferences.glade.h:36
 msgid "Password:"
@@ -561,7 +557,15 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Josef Assad https://launchpad.net/~josefassad\n"
-"  Kaïs Bejaoui https://launchpad.net/~kais"
+"  Kaïs Bejaoui https://launchpad.net/~kais\n"
+"  MaXeR https://launchpad.net/~themaxer\n"
+"  MaXo https://launchpad.net/~mahmood-188"
+
+#~ msgid "%Y-%m-%d"
+#~ msgstr "%Y-%m-%d"
+
+#~ msgid "%I:%M:%S %p"
+#~ msgstr "%I:%M:%S %p"
 
 #~ msgid "Date"
 #~ msgstr "التاريخ"
