@@ -9,6 +9,7 @@ import time, os, threading, logging, mx.DateTime, hashlib
 import gtk, gtk.glade, gobject, table, functools, traceback
 import microblog, gwui, config, gintegration, configui
 import xdg.BaseDirectory, resources, urllib2, urlparse
+import webbrowser
 
 # Setup Pidgin
 import pidgin
@@ -516,6 +517,15 @@ class GwibberClient(gtk.Window):
           query, True, gtk.STOCK_INFO, True)
         self.update([view.get_parent()])
         return True
+      elif uri.startswith("gwibber:read"):
+        msg = view.message_store[int(uri.split("/")[-1])]
+        acct = msg.account
+        if acct.supports(microblog.can.READ):
+          if(msg.client.read_message(msg)):
+            self.update([view.get_parent()])
+        else:
+          webbrowser.open (msg.url)
+        return True
     else: return False
 
   def on_input_context_menu(self, obj, menu):
@@ -879,7 +889,7 @@ class GwibberClient(gtk.Window):
     message.aId = message.account.id
 
     if self.last_focus_time:
-      message.is_unread = message.time > self.last_focus_time
+      message.is_unread = (message.time > self.last_focus_time) or (hasattr(message,"is_unread") and message.is_unread)
 
     if self.last_update:
       message.is_new = message.time > self.last_update
