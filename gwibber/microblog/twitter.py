@@ -76,7 +76,7 @@ class Message:
       self.sender_followers_count = data["user"]["followers_count"]
       self.image = data["user"]["profile_image_url"]
       self.url = "https://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
-      self.profile_url = "gwibber:user/%s" % data["user"]["screen_name"]
+      self.profile_url = "gwibber:user/%s/%s" % (self.account.id, data["user"]["screen_name"])
       self.external_profile_url = "https://twitter.com/%s" % data["user"]["screen_name"]
 
     if data.has_key("name"):
@@ -98,7 +98,7 @@ class Message:
       self.text = data["text"]
       self.html_string = '<span class="text">%s</span>' % \
           HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
-          NICK_PARSE.sub('@<a class="inlinenick" href="gwibber:user/\\1">\\1</a>',
+          NICK_PARSE.sub('@<a class="inlinenick" href="gwibber:user/'+self.account.id+'/\\1">\\1</a>',
           support.linkify(self.text)))
       self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
       self.reply_nick = ''
@@ -125,7 +125,7 @@ class SearchResult:
     self.image = data["profile_image_url"]
     self.bgcolor = "message_color"
     self.url = "https://twitter.com/%s/statuses/%s" % (data["from_user"], data["id"])
-    self.profile_url = "gwibber:user/%s" % data["from_user"]
+    self.profile_url = "gwibber:user/%s/%s" % (self.account.id, data["from_user"])
     self.external_profile_url = "https://twitter.com/%s" % data["from_user"]
 
     if query: html = support.highlight_search_results(self.text, query)
@@ -133,7 +133,7 @@ class SearchResult:
     
     self.html_string = '<span class="text">%s</span>' % \
       HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
-      NICK_PARSE.sub('@<a class="inlinenick" href="gwibber:user/\\1">\\1</a>',
+      NICK_PARSE.sub('@<a class="inlinenick" href="gwibber:user/'+self.account.id+'/\\1">\\1</a>',
         support.linkify(self.text)))
 
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text) 

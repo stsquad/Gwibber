@@ -33,6 +33,7 @@ PROTOCOL_INFO = {
     can.GROUP,
     #can.THREAD,
     can.THREAD_REPLY,
+    can.USER_MESSAGES,
   ],
 }
 
@@ -70,14 +71,17 @@ class Message:
     self.sender = user["name"]
     self.sender_nick = user["screen_name"]
     self.sender_id = user["id"]
+    self.sender_location = data["user"]["location"]
+    self.sender_followers_count = data["user"]["followers_count"]
     self.time = support.parse_time(data["created_at"])
     self.image = user["profile_image_url"]
     self.bgcolor = "message_color"
     self.url = "http://identi.ca/notice/%s" % data["id"]
-    self.profile_url = "http://identi.ca/%s" % user["screen_name"]
+    self.profile_url = "gwibber:user/%s/%s" % (self.account.id, user["screen_name"])
+    self.external_profile_url = "http://identi.ca/%s" % user["screen_name"]
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
-        NICK_PARSE.sub('@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>',
+        NICK_PARSE.sub('@<a class="inlinenick" href="gwibber:user/'+self.account.id+'/\\1">\\1</a>',
         GROUP_PARSE.sub('!<a class="inlinegroup" href="gwibber:group/\\1">\\1</a>',
           support.linkify(self.text))))
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
@@ -120,6 +124,16 @@ class Client:
     return simplejson.loads(self.connect(
       "https://identi.ca/api/statuses/friends_timeline.json",
         urllib.urlencode({"count": self.account["receive_count"] or "20"})))
+
+  def get_user_messages(self, screen_name):
+    try:
+      return simplejson.loads(self.connect(
+        "https://identi.ca/api/statuses/user_timeline/"+ screen_name + ".json",
+          urllib.urlencode({"count": self.account["receive_count"] or "20"})))
+    except Exception:
+      profile = [simplejson.loads(self.connect(
+        "https://identi.ca/api/users/show/"+ screen_name +".json"))]
+      return profile
 
   def get_responses(self):
     return simplejson.loads(self.connect(
@@ -169,6 +183,10 @@ class Client:
 
   def receive(self):
     for data in self.get_messages():
+      yield Message(self, data)
+
+  def user_messages(self, screen_name):
+    for data in self.get_user_messages(screen_name):
       yield Message(self, data)
 
   def send(self, message):
