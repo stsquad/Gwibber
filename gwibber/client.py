@@ -511,7 +511,8 @@ class GwibberClient(gtk.Window):
         return True
       elif uri.startswith("gwibber:user"):
         query = uri.split("/")[-1]
-        view = self.add_user_tab(lambda: self.client.user_messages(query),
+        account_id = uri.split("/")[-2]
+        view = self.add_user_tab(lambda: self.client.user_messages(query, account_id),
           query, True, gtk.STOCK_INFO, True)
         self.update([view.get_parent()])
         return True
