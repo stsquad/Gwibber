@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-17 09:24+0000\n"
+"POT-Creation-Date: 2009-02-28 15:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,52 +29,52 @@ msgstr ""
 msgid "Microblogging client for GNOME"
 msgstr ""
 
-#: ../gwibber/client.py:45
+#: ../gwibber/client.py:46
 msgid "_Editor"
 msgstr ""
 
-#: ../gwibber/client.py:46
+#: ../gwibber/client.py:47
 msgid "_Statusbar"
 msgstr ""
 
-#: ../gwibber/client.py:47
+#: ../gwibber/client.py:48
 msgid "Tray _Icon"
 msgstr ""
 
 #. Translators: these are checkbox
-#: ../gwibber/client.py:52 ../ui/preferences.glade.h:56
+#: ../gwibber/client.py:53 ../ui/preferences.glade.h:56
 msgid "_Receive Messages"
 msgstr ""
 
-#: ../gwibber/client.py:53 ../ui/preferences.glade.h:57
+#: ../gwibber/client.py:54 ../ui/preferences.glade.h:57
 msgid "_Send Messages"
 msgstr ""
 
-#: ../gwibber/client.py:54
+#: ../gwibber/client.py:55
 msgid "Search _Messages"
 msgstr ""
 
-#: ../gwibber/client.py:76
+#: ../gwibber/client.py:77
 msgid "Gwibber"
 msgstr ""
 
-#: ../gwibber/client.py:136
+#: ../gwibber/client.py:137
 msgid "Messages"
 msgstr ""
 
-#: ../gwibber/client.py:137
+#: ../gwibber/client.py:138
 msgid "Replies"
 msgstr ""
 
-#: ../gwibber/client.py:174
+#: ../gwibber/client.py:175
 msgid "Cancel"
 msgstr ""
 
-#: ../gwibber/client.py:306
+#: ../gwibber/client.py:314
 msgid "Enter a search query:"
 msgstr ""
 
-#: ../gwibber/client.py:442
+#: ../gwibber/client.py:450
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
@@ -82,95 +82,99 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../gwibber/client.py:528
+#: ../gwibber/client.py:552 ../gwibber/client.py:558
 #, python-format
 msgid "Characters remaining: %s"
 msgstr ""
 
-#: ../gwibber/client.py:558
+#: ../gwibber/client.py:588
 msgid "_Manage"
 msgstr ""
 
-#: ../gwibber/client.py:562
+#: ../gwibber/client.py:592
 msgid "_Create"
 msgstr ""
 
-#: ../gwibber/client.py:623
+#: ../gwibber/client.py:652
 msgid "Refresh"
 msgstr ""
 
-#: ../gwibber/client.py:624 ../gwibber/configui.py:131
+#: ../gwibber/client.py:653 ../gwibber/configui.py:131
 msgid "Search"
 msgstr ""
 
-#: ../gwibber/client.py:625
+#: ../gwibber/client.py:654
 msgid "Clear"
 msgstr ""
 
-#: ../gwibber/client.py:626
+#: ../gwibber/client.py:655
 msgid "Close Window"
 msgstr ""
 
-#: ../gwibber/client.py:628 ../ui/preferences.glade.h:37
+#: ../gwibber/client.py:657 ../ui/preferences.glade.h:37
 msgid "Preferences"
 msgstr ""
 
-#: ../gwibber/client.py:630
+#: ../gwibber/client.py:659
 msgid "Quit"
 msgstr ""
 
 #. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
 #. actThemeTest.connect("activate", self.theme_preview_test)
 #. menuHelp.append(actThemeTest.create_menu_item())
-#: ../gwibber/client.py:636
+#: ../gwibber/client.py:665
 msgid "Get Help Online..."
 msgstr ""
 
-#: ../gwibber/client.py:638
+#: ../gwibber/client.py:667
 msgid "Translate This Application..."
 msgstr ""
 
-#: ../gwibber/client.py:640
+#: ../gwibber/client.py:669
 msgid "Report a Problem"
 msgstr ""
 
-#: ../gwibber/client.py:642
+#: ../gwibber/client.py:671
 msgid "_About"
 msgstr ""
 
-#: ../gwibber/client.py:657
+#: ../gwibber/client.py:686
 msgid "S_pellcheck"
 msgstr ""
 
-#: ../gwibber/client.py:661
+#: ../gwibber/client.py:690
 msgid "E_rrors"
 msgstr ""
 
-#: ../gwibber/client.py:666
+#: ../gwibber/client.py:695
 msgid "_Gwibber"
 msgstr ""
 
-#: ../gwibber/client.py:669
+#: ../gwibber/client.py:698
 msgid "_View"
 msgstr ""
 
-#: ../gwibber/client.py:672
+#: ../gwibber/client.py:701
 msgid "_Accounts"
 msgstr ""
 
-#: ../gwibber/client.py:676
+#: ../gwibber/client.py:705
 msgid "_Help"
 msgstr ""
 
-#: ../gwibber/client.py:728
+#: ../gwibber/client.py:714 ../ui/preferences.glade.h:23
+msgid "Display bubbles"
+msgstr ""
+
+#: ../gwibber/client.py:765
 msgid "Errors"
 msgstr ""
 
-#: ../gwibber/client.py:734
+#: ../gwibber/client.py:771
 msgid "Debug Output"
 msgstr ""
 
-#: ../gwibber/client.py:934
+#: ../gwibber/client.py:987
 #, python-format
 msgid "Last update: %s"
 msgstr ""
@@ -235,49 +239,50 @@ msgstr ""
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:63 ../gwibber/microblog/__init__.py:70
+#: ../gwibber/microblog/__init__.py:65 ../gwibber/microblog/__init__.py:72
+#: ../gwibber/microblog/__init__.py:79
 msgid "send message"
 msgstr ""
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:78
+#: ../gwibber/microblog/__init__.py:87
 msgid "retrieve thread"
 msgstr ""
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:85
+#: ../gwibber/microblog/__init__.py:94
 msgid "retrieve responses"
 msgstr ""
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:92
+#: ../gwibber/microblog/__init__.py:101
 msgid "retrieve messages"
 msgstr ""
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:99
+#: ../gwibber/microblog/__init__.py:108
 msgid "retrieve positions"
 msgstr ""
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:106 ../gwibber/microblog/__init__.py:113
+#: ../gwibber/microblog/__init__.py:115 ../gwibber/microblog/__init__.py:122
 msgid "perform search query"
 msgstr ""
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:120
+#: ../gwibber/microblog/__init__.py:129
 msgid "perform tag query"
 msgstr ""
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:132
+#: ../gwibber/microblog/__init__.py:142
 msgid "perform group query"
 msgstr ""
 
@@ -424,10 +429,6 @@ msgstr ""
 
 #: ../ui/preferences.glade.h:22
 msgid "Digg Color:"
-msgstr ""
-
-#: ../ui/preferences.glade.h:23
-msgid "Display bubbles"
 msgstr ""
 
 #: ../ui/preferences.glade.h:24
