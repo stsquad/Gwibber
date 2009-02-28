@@ -845,6 +845,9 @@ class GwibberClient(gtk.Window):
       else:
         result = self.client.send(text, microblog.PROTOCOLS.keys())
 
+      # Strip empties out of the result
+      result = [x for x in result if x]
+
       # if we get returned message info for the posts we should be able
       # to display them to the user immediately
       if result: 
@@ -905,9 +908,16 @@ class GwibberClient(gtk.Window):
     return {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
 
   def get_gtk_theme_prefs(self):
-    return dict((i, self.color_to_dict(
-      getattr(self.get_style(), i)[gtk.STATE_NORMAL].to_string()))
-        for i in ["base", "text", "fg", "bg"])
+    d = {}
+    
+    for i in ["base", "text", "fg", "bg"]:
+      d[i] = self.color_to_dict(
+        getattr(self.get_style(), i)[gtk.STATE_NORMAL].to_string())
+
+      d["%s_selected" % i] = self.color_to_dict(
+        getattr(self.get_style(), i)[gtk.STATE_SELECTED].to_string())
+
+    return d
 
   def show_notification_bubbles(self, messages):
     new_messages = []
@@ -931,7 +941,7 @@ class GwibberClient(gtk.Window):
   def flag_duplicates(self, data):
     seen = []
     for message in data:
-      if message.gId:
+      if hasattr(message, "gId"):
         message.is_duplicate = message.gId in seen
         message.first_seen = False
         if not message.is_duplicate:
