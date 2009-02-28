@@ -169,7 +169,7 @@ class GwibberClient(gtk.Window):
     self.input.connect("populate-popup", self.on_input_context_menu)
     self.input.connect("activate", self.on_input_activate)
     self.input.connect("changed", self.on_input_change)
-    self.input.set_max_length(140)
+    self.input.set_max_length(MAX_MESSAGE_LENGTH)
 
     self.cancel_button = gtk.Button(_("Cancel"))
     self.cancel_button.connect("clicked", self.on_cancel_reply)
@@ -281,12 +281,19 @@ class GwibberClient(gtk.Window):
           self.handle_error({"username": "None", "protocol": "is.gd"},
             traceback.format_exc(), "Failed to shorten URL")
           self.preferences["shorten_urls"] = False
-          entry.insert_text(text, entry.get_position())
-          gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(text)))
+          self.add_url(entry, text)
           self.preferences["shorten_urls"] = True
         else:
-          entry.insert_text(short, entry.get_position())
-          gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(short)))
+          self.add_url(entry, short)
+
+  def add_url(self, entry, text):
+    # check if current text is longer than MAX_MESSAGE_LENGTH
+    c_text_len=(len(unicode(entry.get_text(), "utf-8")) + len(text))
+    # if so increase input.max_length and allow insertion
+    if c_text_len > MAX_MESSAGE_LENGTH: 
+       self.input.set_max_length(c_text_len)
+    entry.insert_text(text, entry.get_position())
+    gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(text)))
 
   def on_focus_out(self, widget, event):
     if self.last_update:
@@ -525,8 +532,20 @@ class GwibberClient(gtk.Window):
   def on_input_change(self, widget):
     self.statusbar.pop(1)
     if len(widget.get_text()) > 0:
-      self.statusbar.push(1, _("Characters remaining: %s") % (
-        widget.get_max_length() - len(unicode(widget.get_text(), "utf-8"))))
+      # get current text length
+      i_textlen=len(unicode(widget.get_text(), "utf-8"))
+      # if current text is longer than MAX_MESSAGE_LENGTH
+      if i_textlen > MAX_MESSAGE_LENGTH:
+        # count chars above MAX_MESSAGE_LENGTH
+        chars=i_textlen - MAX_MESSAGE_LENGTH
+        self.statusbar.push(1, _("Characters remaining: %s" % -chars))
+      else:
+        # if current input.max_length if bigger then MAX_MESSAGE_LENGTH
+        # can reset back to MAX_MESSAGE_LENGTH to prevent typing
+        if self.input.get_max_length() > MAX_MESSAGE_LENGTH:
+          self.input.set_max_length(MAX_MESSAGE_LENGTH)
+        self.statusbar.push(1, _("Characters remaining: %s") % (
+        self.input.get_max_length() - i_textlen))
 
   def on_theme_change(self, *args):
     def on_load_finished(view, frame):
@@ -811,6 +830,9 @@ class GwibberClient(gtk.Window):
   def on_input_activate(self, e):
     text = self.input.get_text().strip()
     if text:
+      # don't allow submission if text length is greater than allowed
+      if len(text) > MAX_MESSAGE_LENGTH:
+         return
       # check if reply and target accordingly
       if self.message_target:
         account = self.message_target.account
