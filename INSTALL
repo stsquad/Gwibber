@@ -18,6 +18,7 @@ Installing Gwibber
     * python-simplejson (1.9.1)
     * python-egenix-mxdatetime (3.0.0)
     * python-distutils-extra
+    * python-feedparser
 
   Installation
   ------------
