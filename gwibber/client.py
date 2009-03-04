@@ -153,7 +153,7 @@ class GwibberClient(gtk.Window):
           self.add_msg_tab(functools.partial(self.client.tag, query),
             query.replace("#", ""), True, gtk.STOCK_INFO, False, query)
         elif microblog.support.LINK_PARSE.match(query):
-          self.add_tab(functools.partial(self.client.search_url, query),
+          self.add_msg_tab(functools.partial(self.client.search_url, query),
             urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
         elif len(query) > 0:
           self.add_msg_tab(functools.partial(self.client.search, query),
@@ -323,7 +323,7 @@ class GwibberClient(gtk.Window):
         view = self.add_msg_tab(functools.partial(self.client.tag, query),
           query.replace("#", ""), True, gtk.STOCK_INFO, True, query)
       elif microblog.support.LINK_PARSE.match(query):
-        view = self.add_tab(functools.partial(self.client.search_url, query),
+        view = self.add_msg_tab(functools.partial(self.client.search_url, query),
           urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
       elif len(query) > 0:
         view = self.add_msg_tab(functools.partial(self.client.search, query),
@@ -497,7 +497,7 @@ class GwibberClient(gtk.Window):
         return True
       elif uri.startswith("gwibber:group"):
         query = uri.split("/")[-1]
-        view = self.add_tab(lambda: self.client.group(query),
+        view = self.add_msg_tab(lambda: self.client.group(query),
           query, True, gtk.STOCK_INFO, True, query)
         self.update([view.get_parent()])
         return True
