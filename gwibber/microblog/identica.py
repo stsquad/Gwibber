@@ -71,8 +71,8 @@ class Message:
     self.sender = user["name"]
     self.sender_nick = user["screen_name"]
     self.sender_id = user["id"]
-    self.sender_location = data["user"]["location"]
-    self.sender_followers_count = data["user"]["followers_count"]
+    self.sender_location = user["location"]
+    self.sender_followers_count = user["followers_count"]
     self.time = support.parse_time(data["created_at"])
     self.image = user["profile_image_url"]
     self.bgcolor = "message_color"
