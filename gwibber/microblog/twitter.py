@@ -104,9 +104,9 @@ class Message:
       self.reply_nick = ''
       self.reply_url = ''
 
-    if data.has_key("in_reply_to_screen_name"):
+    if data.has_key("in_reply_to_screen_name") and data.has_key("in_reply_to_status_id") and data["in_reply_to_status_id"]:
       self.reply_nick = data["in_reply_to_screen_name"]
-      self.reply_url = "https://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
+      self.reply_url = "https://twitter.com/%s/statuses/%s" % (self.reply_nick, data["in_reply_to_status_id"])
    except Exception:
     from traceback import format_exc
     print format_exc()
