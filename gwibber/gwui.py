@@ -116,10 +116,10 @@ def image_cache(url, cache_dir = IMG_CACHE_DIR):
             image = image.convert('RGBA') 
           image = image.resize((48, 48), Image.ANTIALIAS)
           image.save(img_path)
-      except Exception as e:
+      except Exception, e:
         from traceback import format_exc
         print(format_exc())
-    except IOError as e:
+    except IOError, e:
       if hasattr(e, 'reason'): # URLError
         print('image_cache URL Error: %s whilst fetching %s' % (e.reason, url))
       elif hasattr(e, 'code') and hasattr(e, 'msg') and hasattr(e, 'url'): # HTTPError
