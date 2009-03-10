@@ -110,7 +110,7 @@ class Message:
       self.reply_url = "https://twitter.com/%s/statuses/%s" % (self.reply_nick, data["in_reply_to_status_id"])
    except Exception:
     from traceback import format_exc
-    print format_exc()
+    print(format_exc())
 
 class SearchResult:
   def __init__(self, client, data, query = None):

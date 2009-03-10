@@ -60,7 +60,7 @@ class Message:
       self.image = "http://digg.com/img/udl.png"
    except Exception:
     from traceback import format_exc
-    print format_exc()
+    print(format_exc())
 
 class Client:
   def __init__(self, acct):
