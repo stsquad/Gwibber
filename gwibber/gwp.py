@@ -192,7 +192,7 @@ class GConfValue(object):
     # Other methods
     def set_callback(self, on_changed):
     
-        assert on_changed is None or callable(on_changed)
+        assert on_changed is None or hasattr(on_changed, '__call__')
         
         if self._notify_id is not None:
             self.client_notify_remove(self._notify_id)

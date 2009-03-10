@@ -22,7 +22,7 @@ class AccountManager(config.Accounts):
         glade.get_widget("entry_auth_token").get_text().strip())
 
       data = fb.auth.getSession()
-      if data and data.has_key("session_key"):
+      if data and "session_key" in data:
         account["secret_key"] = str(data["secret"])
         account["session_key"] = str(data["session_key"])
         

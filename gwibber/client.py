@@ -139,11 +139,11 @@ class GwibberClient(gtk.Window):
 
     saved_position = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_position"), config.gconf.VALUE_INT)
     if saved_position:
-      apply(self.move, saved_position)
+      self.move(*saved_position)
 
     saved_size = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_size"), config.gconf.VALUE_INT)
     if saved_size:
-      apply(self.resize, saved_size)
+      self.resize(*saved_size)
 
     saved_queries = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_searches"),
       config.gconf.VALUE_STRING)
@@ -203,7 +203,7 @@ class GwibberClient(gtk.Window):
 
       # http://galago-project.org/specs/notification/0.9/x408.html#signal-notification-closed
       def on_notify_close(nId, reason = 1):
-        if self.notification_bubbles.has_key(nId):
+        if nId in self.notification_bubbles:
           del self.notification_bubbles[nId]
 
       def on_notify_action(nId, action):
@@ -211,7 +211,7 @@ class GwibberClient(gtk.Window):
           self.reply(self.notification_bubbles[nId])
           self.window.show()
           self.present()
-      
+
       bus = dbus.SessionBus()
       bus.add_signal_receiver(on_notify_close,
         dbus_interface="org.freedesktop.Notifications",
@@ -911,12 +911,12 @@ class GwibberClient(gtk.Window):
           if "color" in c:
             if acct[c]: color = gtk.gdk.color_parse(acct[c])
             else: color = gtk.gdk.color_parse("#72729f9fcfcf")
-            data[c] = {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
+            data[c] = {"red": color.red//255, "green": color.green//255, "blue": color.blue//255}
         yield data
 
   def color_to_dict(self, c):
     color = gtk.gdk.color_parse(c)
-    return {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
+    return {"red": color.red//255, "green": color.green//255, "blue": color.blue//255}
 
   def get_gtk_theme_prefs(self):
     d = {}
@@ -974,7 +974,7 @@ class GwibberClient(gtk.Window):
           view = tab.get_child()
           if view:
             view.message_store = [m for m in
-              view.data_retrieval_handler() if m.time > self.last_clear
+              view.data_retrieval_handler() if not self.last_clear or m.time > self.last_clear
               and m.time <= mx.DateTime.gmt()]
             self.flag_duplicates(view.message_store)
             gtk.gdk.threads_enter()

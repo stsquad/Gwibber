@@ -68,7 +68,7 @@ class Message:
     self.sender_nick = user["screen_name"]
     self.sender_id = user["id"]
 
-    if data.has_key("user"):
+    if "user" in data:
       self.sender = data["user"]["name"]
       self.sender_nick = data["user"]["screen_name"]
       self.sender_id = data["user"]["id"]
@@ -79,7 +79,7 @@ class Message:
       self.profile_url = "gwibber:user/%s/%s" % (self.account.id, data["user"]["screen_name"])
       self.external_profile_url = "https://twitter.com/%s" % data["user"]["screen_name"]
 
-    if data.has_key("name"):
+    if "name" in data:
       self.sender = data["name"]
       self.sender_nick = data["screen_name"]
       self.sender_id = data["id"]
@@ -94,7 +94,7 @@ class Message:
       else:
         self.text = self.html_string = ''
 
-    if data.has_key("text"):
+    if "text" in data:
       self.text = data["text"]
       self.html_string = '<span class="text">%s</span>' % \
           HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
@@ -104,7 +104,7 @@ class Message:
       self.reply_nick = ''
       self.reply_url = ''
 
-    if data.has_key("in_reply_to_screen_name") and data.has_key("in_reply_to_status_id") and data["in_reply_to_status_id"]:
+    if "in_reply_to_screen_name" in data and "in_reply_to_status_id" in data and data["in_reply_to_status_id"]:
       self.reply_nick = data["in_reply_to_screen_name"]
       self.reply_url = "https://twitter.com/%s/statuses/%s" % (self.reply_nick, data["in_reply_to_status_id"])
    except Exception:

@@ -39,13 +39,13 @@ class Message:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    if data.has_key("id"): self.id = data["id"]
+    if "id" in data: self.id = data["id"]
     self.sender = "%s %s" % (data["user"]["first_name"], data["user"]["last_name"])
     self.sender_nick = data["user"]["nick"]
     self.sender_id = data["user"]["nick"]
     self.time = support.parse_time(data["created_at"])
     self.text = ""
-    if data.has_key("title"):
+    if "title" in data:
       self.text = data["title"]
       #self.html_string = LINK_MARKUP_PARSE.sub('<a href="\\2">\\1</a>', self.text.replace(
       #  "&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
@@ -53,7 +53,7 @@ class Message:
     self.bgcolor = "message_color"
     self.url = data["url"]
     self.profile_url = "http://%s.jaiku.com" % data["user"]["nick"]
-    if data.has_key("icon") and data["icon"] != "": self.icon = data["icon"]
+    if "icon" in data and data["icon"] != "": self.icon = data["icon"]
     self.can_thread = True
     self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text) or \
       (urlparse.urlparse(self.url)[1].split(".")[0].strip() == self.username and \
@@ -70,13 +70,13 @@ class Comment(Message):
     #self.html_string = support.LINK_PARSE.sub('<a href="\\1">\\1</a>', LINK_MARKUP_PARSE.sub('<a href="\\2">\\1</a>', self.text.replace(
     #  "&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")))
 
-    if data.has_key("entry_title"):
+    if "entry_title" in data:
       self.original_title = data["entry_title"]
       self.title = "<small>Comment by</small> %s <small>on %s</small>" % (
         self.sender, support.truncate(data["entry_title"],
           client.account["comment_title_length"] or 20))
 
-    if data.has_key("comment_id"):
+    if "comment_id" in data:
       self.id = data["comment_id"]
     else: self.id = data["id"]
 
@@ -114,7 +114,7 @@ class Client:
 
   def receive(self):
     for data in self.get_messages()["stream"]:
-      if data.has_key("id"): yield Message(self, data)
+      if "id" in data: yield Message(self, data)
       else: yield Comment(self, data)
 
   def get_nonce(self, msg):
