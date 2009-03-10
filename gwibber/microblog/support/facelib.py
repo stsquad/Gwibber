@@ -709,7 +709,7 @@ class Facebook(object):
 
     def _check_error(self, response):
         """Checks if the given Facebook response is an error, and then raises the appropriate exception."""
-        if type(response) is dict and 'error_code' in response:
+        if isinstance(response, dict) and 'error_code' in response:
             raise FacebookError(response['error_code'], response['error_msg'], response['request_args'])
 
 
@@ -719,9 +719,9 @@ class Facebook(object):
             args = {}
 
         for arg in list(args.items()):
-            if type(arg[1]) == list:
+            if isinstance(arg[1], list):
                 args[arg[0]] = ','.join(str(a) for a in arg[1])
-            elif type(arg[1]) == unicode:
+            elif isinstance(arg[1], unicode):
                 args[arg[0]] = arg[1].encode("UTF-8")
 
         args['method'] = method
