@@ -249,7 +249,7 @@ class RadioButtonPersistencyLink:
         self.gconf_value.set_callback(self._on_gconf_changed)
         
         notify_widget = False
-        for key, widget in widgets.iteritems():
+        for key, widget in widgets.items():
             if not notify_widget:
                 widget.connect("toggled", self._on_widget_changed)
                 notify_widget = True

@@ -65,7 +65,7 @@ DEFAULT_PREFERENCES = {
   "theme": "default",
 }
 
-for _i in CONFIGURABLE_UI_ELEMENTS.keys():
+for _i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
   DEFAULT_PREFERENCES["show_%s" % _i] = True
 
 class GwibberClient(gtk.Window):
@@ -114,7 +114,7 @@ class GwibberClient(gtk.Window):
     self.connect("delete-event", self.on_window_close)
     self.connect("focus-out-event", self.on_focus_out)
 
-    for key, value in DEFAULT_PREFERENCES.items():
+    for key, value in list(DEFAULT_PREFERENCES.items()):
       if self.preferences[key] == None: self.preferences[key] = value
 
     self.preferences["version"] = VERSION_NUMBER
@@ -221,7 +221,7 @@ class GwibberClient(gtk.Window):
         dbus_interface="org.freedesktop.Notifications",
         signal_name="ActionInvoked")
 
-    for i in CONFIGURABLE_UI_ELEMENTS.keys():
+    for i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
         lambda *a: self.apply_ui_element_settings())
     
@@ -430,7 +430,7 @@ class GwibberClient(gtk.Window):
       self.move(*self.last_position)
 
   def apply_ui_element_settings(self):
-    for i in CONFIGURABLE_UI_ELEMENTS.keys():
+    for i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
       if hasattr(self, i):
         getattr(self, i).set_property(
           "visible", self.preferences["show_%s" % i])
@@ -531,7 +531,7 @@ class GwibberClient(gtk.Window):
   def on_input_context_menu(self, obj, menu):
     menu.append(gtk.SeparatorMenuItem())
     for acct in self.accounts:
-      if acct["protocol"] in microblog.PROTOCOLS.keys():
+      if acct["protocol"] in list(microblog.PROTOCOLS.keys()):
         if acct.supports(microblog.can.SEND):
           mi = gtk.CheckMenuItem("%s (%s)" % (acct["username"],
             acct.get_protocol().PROTOCOL_INFO["name"]))
@@ -593,7 +593,7 @@ class GwibberClient(gtk.Window):
     menu.append(menuAccountsCreate)
     mac = gtk.Menu()
 
-    for p in microblog.PROTOCOLS.keys():
+    for p in list(microblog.PROTOCOLS.keys()):
       mi = gtk.MenuItem("%s" % microblog.PROTOCOLS[p].PROTOCOL_INFO["name"])
       mi.connect("activate", self.accounts.on_account_create, p)
       mac.append(mi)
@@ -602,10 +602,10 @@ class GwibberClient(gtk.Window):
     menu.append(gtk.SeparatorMenuItem())
     
     for acct in self.accounts:
-      if acct["protocol"] in microblog.PROTOCOLS.keys():
+      if acct["protocol"] in list(microblog.PROTOCOLS.keys()):
         sm = gtk.Menu()
 
-        for key in CONFIGURABLE_ACCOUNT_ACTIONS.keys():
+        for key in list(CONFIGURABLE_ACCOUNT_ACTIONS.keys()):
           if acct.supports(getattr(microblog.can, key.upper())):
             mi = gtk.CheckMenuItem(_(CONFIGURABLE_ACCOUNT_ACTIONS[key]))
             acct.bind(mi, "%s_enabled" % key)
@@ -677,7 +677,7 @@ class GwibberClient(gtk.Window):
     menuHelp.append(gtk.SeparatorMenuItem())
     menuHelp.append(actAbout.create_menu_item())
 
-    for w, n in CONFIGURABLE_UI_ELEMENTS.items():
+    for w, n in list(CONFIGURABLE_UI_ELEMENTS.items()):
       mi = gtk.CheckMenuItem(_(n))
       self.preferences.bind(mi, "show_%s" % w)
       menuView.append(mi)
@@ -854,7 +854,7 @@ class GwibberClient(gtk.Window):
             result = self.client.reply(text, [account["protocol"]])
       # else standard post
       else:
-        result = self.client.send(text, microblog.PROTOCOLS.keys())
+        result = self.client.send(text, list(microblog.PROTOCOLS.keys()))
 
       # Strip empties out of the result
       result = [x for x in result if x]

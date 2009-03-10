@@ -152,7 +152,7 @@ class AccountManager(config.Accounts):
 
       elif stock == gtk.STOCK_ADD:
         mac = gtk.Menu()
-        for p in microblog.PROTOCOLS.keys():
+        for p in list(microblog.PROTOCOLS.keys()):
           mi = gtk.MenuItem(microblog.PROTOCOLS[p].PROTOCOL_INFO["name"])
           mi.connect("activate", self.on_account_create, p)
           mac.append(mi)

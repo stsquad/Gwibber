@@ -505,7 +505,7 @@ class PhotosProxy(PhotosProxy):
             data = StringIO.StringIO()
             img.save(data, img.format)
 
-        content_type, body = self.__encode_multipart_formdata(list(args.iteritems()), [(image, data)])
+        content_type, body = self.__encode_multipart_formdata(list(args.items()), [(image, data)])
         h = httplib.HTTP('api.facebook.com')
         h.putrequest('POST', '/restserver.php')
         h.putheader('Content-Type', content_type)
@@ -718,7 +718,7 @@ class Facebook(object):
         if args is None:
             args = {}
 
-        for arg in args.items():
+        for arg in list(args.items()):
             if type(arg[1]) == list:
                 args[arg[0]] = ','.join(str(a) for a in arg[1])
             elif type(arg[1]) == unicode:
@@ -943,7 +943,7 @@ class Facebook(object):
         if timeout and '%s_time' % prefix in post and time.time() - float(post['%s_time' % prefix]) > timeout:
             return None
 
-        args = dict([(key[len(prefix + '_'):], value) for key, value in args.items() if key.startswith(prefix)])
+        args = dict([(key[len(prefix + '_'):], value) for key, value in list(args.items()) if key.startswith(prefix)])
 
         hash = self._hash_args(args)
 

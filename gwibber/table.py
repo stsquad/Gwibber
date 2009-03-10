@@ -35,7 +35,7 @@ class Style:
     i = tree.filter.convert_iter_to_child_iter(iter)
     o = tree.filter.get_model().get_obj(i)
 
-    for k, f in fns.items(): cell.set_property(k, f(o))
+    for k, f in list(fns.items()): cell.set_property(k, f(o))
     
   def make_columns(self, tree):
     for ci, c in enumerate(self.columns):
