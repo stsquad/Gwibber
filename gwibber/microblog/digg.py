@@ -6,7 +6,8 @@ SegPhault (Ryan Paul) - 01/06/2008
 
 """
 
-import urllib2, support, re, can
+from . import can
+import urllib2, support, re
 import time, simplejson
 
 PROTOCOL_INFO = {

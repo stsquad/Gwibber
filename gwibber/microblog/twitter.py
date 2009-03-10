@@ -6,7 +6,8 @@ SegPhault (Ryan Paul) - 12/22/2007
 
 """
 
-import urllib2, urllib, base64, re, support, can, simplejson
+from . import can, support
+import urllib2, urllib, base64, re, simplejson
 import gettext
 _ = gettext.lgettext
 

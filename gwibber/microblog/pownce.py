@@ -6,7 +6,8 @@ SegPhault (Ryan Paul) - 03/01/2008
 
 """
 
-import urllib2, urllib, base64, support, mx.DateTime, can, simplejson
+from . import can, support
+import urllib2, urllib, base64, mx.DateTime, simplejson
 
 PROTOCOL_INFO = {
   "name": "Pownce",

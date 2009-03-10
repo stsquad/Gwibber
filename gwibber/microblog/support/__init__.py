@@ -6,7 +6,8 @@ SegPhault (Ryan Paul) - 07/25/2008
 
 """
 
-import re, os, facelib, locale, mx.DateTime, urllib2
+from . import facelib
+import re, os, locale, mx.DateTime, urllib2
 
 import gettext
 

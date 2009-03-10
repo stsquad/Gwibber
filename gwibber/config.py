@@ -2,7 +2,8 @@
 try: import gconf
 except: from gnome import gconf
 
-import gwp, microblog
+from . import gwp
+import microblog
 try:
   import gnomekeyring
 except: pass

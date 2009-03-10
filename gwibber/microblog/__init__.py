@@ -1,8 +1,9 @@
 
-import operator, traceback, can
-import twitter, jaiku, identica, laconica, pownce
-import digg, flickr, brightkite, rss, pingfm, facebook
-import greader
+import operator, traceback 
+from . import can
+from . import twitter, jaiku, identica, laconica, pownce
+from . import digg, flickr, brightkite, rss, pingfm, facebook
+from . import greader
 
 # i18n magic
 import gettext

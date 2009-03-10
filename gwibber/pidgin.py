@@ -5,7 +5,8 @@ Pidgin interface for Gwibber
 SegPhault (Ryan Paul) - 11/09/2008
 
 """
-import dbus, gintegration
+from . import gintegration
+import dbus
 from microblog import can
 
 PROTOCOL_INFO = {

@@ -5,7 +5,8 @@ Ping.fm interface for Gwibber
 SegPhault (Ryan Paul) - 11/09/2008
 
 """
-import urllib2, urllib, can
+from . import can
+import urllib2, urllib
 
 PROTOCOL_INFO = {
   "name": "Ping.fm",

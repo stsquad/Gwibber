@@ -4,7 +4,8 @@ Facebook interface for Gwibber
 SegPhault (Ryan Paul) - 12/22/2007
 """
 
-import urllib2, urllib, re, support, can, mx.DateTime
+from . import can, support
+import urllib2, urllib, re, mx.DateTime
 
 PROTOCOL_INFO = {
   "name": "Facebook",

@@ -6,7 +6,8 @@ SegPhault (Ryan Paul) - 01/05/2008
 
 """
 
-import urllib2, urllib, support, re, can, simplejson, urlparse
+from . import can, support
+import urllib2, urllib, re, simplejson, urlparse
 
 PROTOCOL_INFO = {
   "name": "Jaiku",

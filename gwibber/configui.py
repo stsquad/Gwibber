@@ -1,5 +1,7 @@
 
-import gtk, config, gtk.glade, microblog, table, gintegration, resources
+import microblog
+from . import config, table, gintegration, resources
+import gtk, gtk.glade
 
 import gettext
 

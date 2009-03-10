@@ -5,7 +5,8 @@ SegPhault (Ryan Paul) - 05/26/2007
 
 """
 
-import webkit, gintegration, resources
+from . import gintegration, resources
+import webkit 
 import urllib2, hashlib, os, simplejson
 import Image
 

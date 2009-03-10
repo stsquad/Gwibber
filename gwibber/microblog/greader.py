@@ -9,7 +9,8 @@ SegPhault (Ryan Paul) - 11/08/2008
 
 """
 
-import urlparse, logging, feedparser, can, support
+from . import can, support
+import urlparse, logging, feedparser
 import urllib, urllib2, re
 import webbrowser
 

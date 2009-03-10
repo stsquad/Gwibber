@@ -52,7 +52,7 @@ try:
   import gnomekeyring
 except: pass
 
-from swp import *
+from .swp import *
 
 class Spec:
     """

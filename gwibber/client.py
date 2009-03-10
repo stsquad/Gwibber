@@ -6,13 +6,15 @@ SegPhault (Ryan Paul) - 01/05/2008
 """
 
 import time, os, threading, logging, mx.DateTime, hashlib
-import gtk, gtk.glade, gobject, table, functools, traceback
-import microblog, gwui, config, gintegration, configui
-import xdg.BaseDirectory, resources, urllib2, urlparse
+from . import table
+import gtk, gtk.glade, gobject, functools, traceback
+import microblog
+from . import gwui, config, gintegration, configui, resources
+import xdg.BaseDirectory, urllib2, urlparse
 import webbrowser
 
 # Setup Pidgin
-import pidgin
+from . import pidgin
 microblog.PROTOCOLS["pidgin"] = pidgin
 
 # i18n magic

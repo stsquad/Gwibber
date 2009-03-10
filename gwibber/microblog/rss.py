@@ -6,7 +6,8 @@ SegPhault (Ryan Paul) - 11/08/2008
 
 """
 
-import urlparse, feedparser, can, support
+from . import can, support
+import urlparse, feedparser
 
 PROTOCOL_INFO = {
   "name": "RSS/Atom",
