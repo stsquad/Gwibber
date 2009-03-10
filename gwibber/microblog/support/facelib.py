@@ -682,7 +682,7 @@ class Facebook(object):
             node.hasAttribute('list') and \
             node.getAttribute('list')=="true":
             return self._parse_response_list(node)
-        elif len(filter(lambda x: x.nodeType == x.ELEMENT_NODE, node.childNodes)) > 0:
+        elif len([x for x in node.childNodes if x.nodeType == x.ELEMENT_NODE]) > 0:
             return self._parse_response_dict(node)
         else:
             return ''.join(node.data for node in node.childNodes if node.nodeType == node.TEXT_NODE)
@@ -691,7 +691,7 @@ class Facebook(object):
     def _parse_response_dict(self, node):
         """Parses an XML dictionary response node from Facebook."""
         result = {}
-        for item in filter(lambda x: x.nodeType == x.ELEMENT_NODE, node.childNodes):
+        for item in [x for x in node.childNodes if x.nodeType == x.ELEMENT_NODE]:
             result[item.nodeName] = self._parse_response_item(item)
         if node.nodeType == node.ELEMENT_NODE and node.hasAttributes():
             if node.hasAttribute('id'):
@@ -702,7 +702,7 @@ class Facebook(object):
     def _parse_response_list(self, node):
         """Parses an XML list response node from Facebook."""
         result = []
-        for item in filter(lambda x: x.nodeType == x.ELEMENT_NODE, node.childNodes):
+        for item in [x for x in node.childNodes if x.nodeType == x.ELEMENT_NODE]:
             result.append(self._parse_response_item(item))
         return result
 
