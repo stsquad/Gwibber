@@ -888,7 +888,7 @@ class Facebook(object):
 
                 try:
                     self.auth.getSession()
-                except FacebookError, e:
+                except FacebookError as e:
                     self.auth_token = None
                     return False
 
