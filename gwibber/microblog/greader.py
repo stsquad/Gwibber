@@ -41,18 +41,18 @@ class Message:
     
     self.source = ""
     self.sender = data.get("author", "")
-    if hasattr(data,"source"):
-        self.source = data.source.get("title","")
-        self.sender = data.source.get("title","")
+    if hasattr(data, "source"):
+        self.source = data.source.get("title", "")
+        self.sender = data.source.get("title", "")
         
-    self.gr_id = data.get("id","")
+    self.gr_id = data.get("id", "")
     
     self.sender_nick = data.get("author", "")
     self.sender_id = self.sender
             
     self.time = support.parse_time(data.updated)
     self.bgcolor = "message_color"
-    self.url = data.get("link","")
+    self.url = data.get("link", "")
     self.profile_url = ""
     
     if(self.source == ""):
@@ -68,7 +68,7 @@ class Message:
       elif((category.term.find("user/")>=0) and (category.term.find("/label/")>=0)):
         self.categories.append(category.label)
     
-    self.summary = data.get("summary","")
+    self.summary = data.get("summary", "")
 
     self.is_unread = False        
     if(self.read):
@@ -125,7 +125,7 @@ class Client:
             res = None
         return res
     
-    def read_message(self,message):
+    def read_message(self, message):
         webbrowser.open (message.url)
         if message.is_unread:
             token = self.get_results('http://www.google.com/reader/api/0/token')
@@ -135,7 +135,7 @@ class Client:
                                             'a' : 'user/-/state/com.google/read' })
                                         
             url = 'http://www.google.com/reader/api/0/edit-tag'
-            res = self.get_results(url,post_data)
+            res = self.get_results(url, post_data)
             message.is_unread = False
             return True
         return False

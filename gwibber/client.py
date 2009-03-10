@@ -725,7 +725,7 @@ class GwibberClient(gtk.Window):
     menuTray.append(actQuit.create_menu_item())
     menuTray.show_all()
 
-    self.tray_icon.connect("popup-menu", lambda i,b,a: menuTray.popup(
+    self.tray_icon.connect("popup-menu", lambda i, b, a: menuTray.popup(
       None, None, gtk.status_icon_position_menu, b, a, self.tray_icon))
     
     menubar = gtk.MenuBar()
@@ -891,7 +891,7 @@ class GwibberClient(gtk.Window):
     message.aId = message.account.id
 
     if self.last_focus_time:
-      message.is_unread = (message.time > self.last_focus_time) or (hasattr(message,"is_unread") and message.is_unread)
+      message.is_unread = (message.time > self.last_focus_time) or (hasattr(message, "is_unread") and message.is_unread)
 
     if self.last_update:
       message.is_new = message.time > self.last_update
@@ -947,7 +947,7 @@ class GwibberClient(gtk.Window):
             body = microblog.support.xml_escape(message.text)
             image = hasattr(message, "image_path") and message.image_path or ''
             expire_timeout = 5000 + (index*2000) # default to 5 second timeout and increase by 2 second for each notification
-            n = gintegration.notify(message.sender, body, image , ["reply", "Reply"], expire_timeout)
+            n = gintegration.notify(message.sender, body, image, ["reply", "Reply"], expire_timeout)
             self.notification_bubbles[n] = message
     gtk.gdk.threads_leave()
 

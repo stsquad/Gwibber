@@ -105,7 +105,7 @@ class AccountManager(config.Accounts):
     manager = gtk.Window()
     manager.set_title(_("Manage Accounts"))
     manager.set_border_width(10)
-    manager.resize(390,240)
+    manager.resize(390, 240)
 
     def toggle_table_checkbox(cr, i, key, table):
       a = table.tree_store.get_obj(i)

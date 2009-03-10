@@ -40,7 +40,7 @@ class Message:
     self.data = data
     self.sender = data['name']
     self.sender_nick = self.sender
-    self.sender_id = self.sender.replace(" ","_")
+    self.sender_id = self.sender.replace(" ", "_")
     self.profile_url = data['profile_url']
     self.url = data['profile_url']
     if data['status']:

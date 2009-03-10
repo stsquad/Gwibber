@@ -101,7 +101,7 @@ def image_cache(url, cache_dir = IMG_CACHE_DIR):
   encoded_url = hashlib.sha1(url).hexdigest()
   if len(encoded_url) > 200: encoded_url = encoded_url[::-1][:200]
   fmt = url.split('.')[-1] # jpg/png etc.
-  img_path = os.path.join(cache_dir, encoded_url + '.' + fmt).replace("\n","")
+  img_path = os.path.join(cache_dir, encoded_url + '.' + fmt).replace("\n", "")
 
   if not os.path.exists(img_path):
     output = open(img_path, "w+")
