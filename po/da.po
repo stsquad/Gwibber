@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gwibber\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-02-04 12:49+0000\n"
+"Report-Msgid-Bugs-To: gwibber-team@lists.launchpad.net\n"
+"POT-Creation-Date: 2009-02-28 15:47+0000\n"
 "PO-Revision-Date: 2009-02-05 12:22+0000\n"
 "Last-Translator: Josef Assad <Unknown>\n"
 "Language-Team: Danish <da@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-17 09:04+0000\n"
+"X-Launchpad-Export-Date: 2009-02-28 16:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
@@ -30,60 +30,52 @@ msgstr "Mikroblogging klient"
 msgid "Microblogging client for GNOME"
 msgstr "Mikroblogging klient til GNOME"
 
-#: ../gwibber/client.py:45
+#: ../gwibber/client.py:46
 msgid "_Editor"
 msgstr "Tekstbehandler"
 
-#: ../gwibber/client.py:46
+#: ../gwibber/client.py:47
 msgid "_Statusbar"
 msgstr "_Statuslinje"
 
-#: ../gwibber/client.py:47
+#: ../gwibber/client.py:48
 msgid "Tray _Icon"
 msgstr "Systembakke _Ikon"
 
 #. Translators: these are checkbox
-#: ../gwibber/client.py:52 ../ui/preferences.glade.h:56
+#: ../gwibber/client.py:53 ../ui/preferences.glade.h:56
 msgid "_Receive Messages"
 msgstr "_Modtag Beskeder"
 
-#: ../gwibber/client.py:53 ../ui/preferences.glade.h:57
+#: ../gwibber/client.py:54 ../ui/preferences.glade.h:57
 msgid "_Send Messages"
 msgstr "_Send Beskeder"
 
-#: ../gwibber/client.py:54
+#: ../gwibber/client.py:55
 msgid "Search _Messages"
 msgstr "S_øg i Beskeder"
 
-#: ../gwibber/client.py:76
+#: ../gwibber/client.py:77
 msgid "Gwibber"
 msgstr "Gwibber"
 
-#: ../gwibber/client.py:104
-msgid "%Y-%m-%d"
-msgstr "%-d/%m-%Y"
-
-#: ../gwibber/client.py:105 ../gwibber/client.py:920
-msgid "%I:%M:%S %p"
-msgstr "%H:%M:%S"
-
-#: ../gwibber/client.py:134
+#: ../gwibber/client.py:137
 msgid "Messages"
 msgstr "Beskeder"
 
-#: ../gwibber/client.py:135
+#: ../gwibber/client.py:138
 msgid "Replies"
 msgstr "Svar"
 
-#: ../gwibber/client.py:172
+#: ../gwibber/client.py:175
 msgid "Cancel"
 msgstr "Annullér"
 
-#: ../gwibber/client.py:296
+#: ../gwibber/client.py:314
 msgid "Enter a search query:"
 msgstr "Indtast forespørgsel"
 
-#: ../gwibber/client.py:432
+#: ../gwibber/client.py:450
 #, python-format
 msgid ""
 "%s message from %s at %s\n"
@@ -94,92 +86,99 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../gwibber/client.py:518
+#: ../gwibber/client.py:552 ../gwibber/client.py:558
 #, python-format
 msgid "Characters remaining: %s"
 msgstr "Resterende tegn: %s"
 
-#: ../gwibber/client.py:548
+#: ../gwibber/client.py:588
 msgid "_Manage"
 msgstr "_Administrér"
 
-#: ../gwibber/client.py:552
+#: ../gwibber/client.py:592
 msgid "_Create"
 msgstr "_Opret"
 
-#: ../gwibber/client.py:613
+#: ../gwibber/client.py:652
 msgid "Refresh"
 msgstr "Opdatér"
 
-#: ../gwibber/client.py:614 ../gwibber/configui.py:130
+#: ../gwibber/client.py:653 ../gwibber/configui.py:131
 msgid "Search"
 msgstr "Søg"
 
-#: ../gwibber/client.py:615
+#: ../gwibber/client.py:654
 msgid "Clear"
 msgstr "Ryd"
 
-#: ../gwibber/client.py:616
+#: ../gwibber/client.py:655
 msgid "Close Window"
 msgstr "Luk vindue"
 
-#: ../gwibber/client.py:618 ../ui/preferences.glade.h:37
+#: ../gwibber/client.py:657 ../ui/preferences.glade.h:37
 msgid "Preferences"
 msgstr "Indstillinger"
 
-#: ../gwibber/client.py:620
+#: ../gwibber/client.py:659
 msgid "Quit"
 msgstr "Afslut"
 
-#: ../gwibber/client.py:626
+#. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
+#. actThemeTest.connect("activate", self.theme_preview_test)
+#. menuHelp.append(actThemeTest.create_menu_item())
+#: ../gwibber/client.py:665
 msgid "Get Help Online..."
 msgstr "Få hjælp via internettet"
 
-#: ../gwibber/client.py:628
+#: ../gwibber/client.py:667
 msgid "Translate This Application..."
 msgstr "Oversæt dette program"
 
-#: ../gwibber/client.py:630
+#: ../gwibber/client.py:669
 msgid "Report a Problem"
 msgstr "Indrapportér et problem"
 
-#: ../gwibber/client.py:632
+#: ../gwibber/client.py:671
 msgid "_About"
 msgstr "_Om dette program"
 
-#: ../gwibber/client.py:647
+#: ../gwibber/client.py:686
 msgid "S_pellcheck"
 msgstr "Sta_vekontrol"
 
-#: ../gwibber/client.py:651
+#: ../gwibber/client.py:690
 msgid "E_rrors"
 msgstr "Fe_jl"
 
-#: ../gwibber/client.py:656
+#: ../gwibber/client.py:695
 msgid "_Gwibber"
 msgstr "G_wibber"
 
-#: ../gwibber/client.py:659
+#: ../gwibber/client.py:698
 msgid "_View"
 msgstr "_Vis"
 
-#: ../gwibber/client.py:662
+#: ../gwibber/client.py:701
 msgid "_Accounts"
 msgstr "_Konti"
 
-#: ../gwibber/client.py:666
+#: ../gwibber/client.py:705
 msgid "_Help"
 msgstr "_Hjælp"
 
-#: ../gwibber/client.py:718
+#: ../gwibber/client.py:714 ../ui/preferences.glade.h:23
+msgid "Display bubbles"
+msgstr "Vis bobler"
+
+#: ../gwibber/client.py:765
 msgid "Errors"
 msgstr "Fejl"
 
-#: ../gwibber/client.py:724
+#: ../gwibber/client.py:771
 msgid "Debug Output"
 msgstr "Fejlfindingsdata"
 
-#: ../gwibber/client.py:920
+#: ../gwibber/client.py:987
 #, python-format
 msgid "Last update: %s"
 msgstr "Sidste opdatering: %s"
@@ -192,101 +191,102 @@ msgstr "Nøgler hentet med succes"
 msgid "Failed to obtain key."
 msgstr "Fejl ved nøglehentning"
 
-#: ../gwibber/configui.py:77
+#: ../gwibber/configui.py:78
 #, python-format
 msgid "Create %s account"
 msgstr "Opret konto %s"
 
-#: ../gwibber/configui.py:79
+#: ../gwibber/configui.py:80
 #, python-format
 msgid "Edit %s account"
 msgstr "Redigér konto %s"
 
-#: ../gwibber/configui.py:88
+#: ../gwibber/configui.py:89
 msgid "Are you sure you want to cancel the creation of this account?"
 msgstr "Er du sikker du ønsker at annulere oprettelse af dette konto?"
 
-#: ../gwibber/configui.py:90
+#: ../gwibber/configui.py:91
 msgid "Are you sure you want to delete this account?"
 msgstr "Er du sikker på at du vil slette denne konto?"
 
-#: ../gwibber/configui.py:103
+#: ../gwibber/configui.py:104
 msgid "Manage Accounts"
 msgstr "Håndtér konti"
 
-#: ../gwibber/configui.py:121
+#: ../gwibber/configui.py:122
 msgid "Username"
 msgstr "Brugernavn"
 
-#: ../gwibber/configui.py:124
+#: ../gwibber/configui.py:125
 msgid "Receive"
 msgstr "Modtag"
 
-#: ../gwibber/configui.py:127
+#: ../gwibber/configui.py:128
 msgid "Send"
 msgstr "Send"
 
-#: ../gwibber/configui.py:131
+#: ../gwibber/configui.py:132
 msgid "Protocol"
 msgstr "Protokol"
 
 #. Translators: this string appears when somebody reply to a message
 #. like '3 minutes ago in reply to angelina'
-#: ../gwibber/gwui.py:55
+#: ../gwibber/gwui.py:56
 msgid "in reply to"
 msgstr "som svar til"
 
 #. Translators: this string indicates where the message arrived from
 #. like 'from api', 'from Gwibber'
-#: ../gwibber/gwui.py:58
+#: ../gwibber/gwui.py:59
 msgid "from"
 msgstr "fra"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:63 ../gwibber/microblog/__init__.py:70
+#: ../gwibber/microblog/__init__.py:65 ../gwibber/microblog/__init__.py:72
+#: ../gwibber/microblog/__init__.py:79
 msgid "send message"
 msgstr "send besked"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:78
+#: ../gwibber/microblog/__init__.py:87
 msgid "retrieve thread"
 msgstr "hent tråd"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:85
+#: ../gwibber/microblog/__init__.py:94
 msgid "retrieve responses"
 msgstr "hent svar"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:92
+#: ../gwibber/microblog/__init__.py:101
 msgid "retrieve messages"
 msgstr "hent beskeder"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:99
+#: ../gwibber/microblog/__init__.py:108
 msgid "retrieve positions"
 msgstr "hent positioner"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:106 ../gwibber/microblog/__init__.py:113
+#: ../gwibber/microblog/__init__.py:115 ../gwibber/microblog/__init__.py:122
 msgid "perform search query"
 msgstr "udfør søgeforespørgsel"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:120
+#: ../gwibber/microblog/__init__.py:129
 msgid "perform tag query"
 msgstr "udfør tag forespørgsel"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
-#: ../gwibber/microblog/__init__.py:132
+#: ../gwibber/microblog/__init__.py:142
 msgid "perform group query"
 msgstr "udfør gruppeforespørgsel"
 
@@ -444,10 +444,6 @@ msgstr "Copyright (C) 2007-2009 Gwibber Team"
 #: ../ui/preferences.glade.h:22
 msgid "Digg Color:"
 msgstr "Digg farve:"
-
-#: ../ui/preferences.glade.h:23
-msgid "Display bubbles"
-msgstr "Vis bobler"
 
 #: ../ui/preferences.glade.h:24
 msgid "Domain:"

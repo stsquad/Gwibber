@@ -1,5 +1,7 @@
 
-import gtk, config, gtk.glade, microblog, table, gintegration, resources
+import microblog
+from . import config, table, gintegration, resources
+import gtk, gtk.glade
 
 import gettext
 
@@ -22,7 +24,7 @@ class AccountManager(config.Accounts):
         glade.get_widget("entry_auth_token").get_text().strip())
 
       data = fb.auth.getSession()
-      if data and data.has_key("session_key"):
+      if data and "session_key" in data:
         account["secret_key"] = str(data["secret"])
         account["session_key"] = str(data["session_key"])
         
@@ -103,7 +105,7 @@ class AccountManager(config.Accounts):
     manager = gtk.Window()
     manager.set_title(_("Manage Accounts"))
     manager.set_border_width(10)
-    manager.resize(390,240)
+    manager.resize(390, 240)
 
     def toggle_table_checkbox(cr, i, key, table):
       a = table.tree_store.get_obj(i)
@@ -152,7 +154,7 @@ class AccountManager(config.Accounts):
 
       elif stock == gtk.STOCK_ADD:
         mac = gtk.Menu()
-        for p in microblog.PROTOCOLS.keys():
+        for p in list(microblog.PROTOCOLS.keys()):
           mi = gtk.MenuItem(microblog.PROTOCOLS[p].PROTOCOL_INFO["name"])
           mi.connect("activate", self.on_account_create, p)
           mac.append(mi)

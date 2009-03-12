@@ -6,7 +6,8 @@ SegPhault (Ryan Paul) - 12/22/2007
 
 """
 
-import urllib2, urllib, base64, re, support, can, simplejson
+from . import can, support
+import urllib2, urllib, base64, re, simplejson
 import gettext
 _ = gettext.lgettext
 
@@ -59,42 +60,24 @@ class Message:
       user = data["user"]
       self.reply_nick = data["in_reply_to_screen_name"]
       self.reply_url = "https://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
-    else:
+    elif "sender" in data:
       user = data["sender"]
       self.reply_nick = None
       self.reply_url = None
+    elif "name" in data:
+      user = data
 
     self.sender = user["name"]
     self.sender_nick = user["screen_name"]
     self.sender_id = user["id"]
+    self.sender_location = user["location"]
+    self.sender_followers_count = user["followers_count"]
+    self.image = user["profile_image_url"]
+    self.url = "https://twitter.com/%s/statuses/%s" % (user["screen_name"], data["id"])
+    self.profile_url = "gwibber:user/%s/%s" % (self.account.id, user["screen_name"])
+    self.external_profile_url = "https://twitter.com/%s" % user["screen_name"]
 
-    if data.has_key("user"):
-      self.sender = data["user"]["name"]
-      self.sender_nick = data["user"]["screen_name"]
-      self.sender_id = data["user"]["id"]
-      self.sender_location = data["user"]["location"]
-      self.sender_followers_count = data["user"]["followers_count"]
-      self.image = data["user"]["profile_image_url"]
-      self.url = "https://twitter.com/%s/statuses/%s" % (data["user"]["screen_name"], data["id"])
-      self.profile_url = "gwibber:user/%s/%s" % (self.account.id, data["user"]["screen_name"])
-      self.external_profile_url = "https://twitter.com/%s" % data["user"]["screen_name"]
-
-    if data.has_key("name"):
-      self.sender = data["name"]
-      self.sender_nick = data["screen_name"]
-      self.sender_id = data["id"]
-      self.sender_location = data["location"]
-      self.sender_followers_count = data["followers_count"]
-      self.image = data["profile_image_url"]
-      self.url = self.profile_url = self.external_profile_url = "https://twitter.com/%s" % data["screen_name"]
-      self.is_reply = False
-      if data["protected"] == True:
-        self.text = _("This user has protected their updates.") + ' ' + _("You need to send a request before you can view this person's timeline.") + ' ' + _("Send request...")
-        self.html_string = '<p><b>' + _("This user has protected their updates.") + '</b><p>' + _("You need to send a request before you can view this person's timeline.") + '<p><a href="' + self.url + '">' + _("Send request...") + '</a>'
-      else:
-        self.text = self.html_string = ''
-
-    if data.has_key("text"):
+    if "text" in data:
       self.text = data["text"]
       self.html_string = '<span class="text">%s</span>' % \
           HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
@@ -103,13 +86,23 @@ class Message:
       self.is_reply = re.compile("@%s[\W]+|@%s$" % (self.username, self.username)).search(self.text)
       self.reply_nick = ''
       self.reply_url = ''
+    else:
+      # if reached a protected gwibber:user tab then do some things differently
+      if "name" in data:
+        self.url = self.profile_url = self.external_profile_url = "https://twitter.com/%s" % data["screen_name"]
+        self.is_reply = False
+        if data["protected"] == True:
+          self.text = _("This user has protected their updates.") + ' ' + _("You need to send a request before you can view this person's timeline.") + ' ' + _("Send request...")
+          self.html_string = '<p><b>' + _("This user has protected their updates.") + '</b><p>' + _("You need to send a request before you can view this person's timeline.") + '<p><a href="' + self.url + '">' + _("Send request...") + '</a>'
+        else:
+          self.text = self.html_string = ''
 
-    if data.has_key("in_reply_to_screen_name") and data.has_key("in_reply_to_status_id") and data["in_reply_to_status_id"]:
+    if "in_reply_to_screen_name" in data and "in_reply_to_status_id" in data and data["in_reply_to_status_id"]:
       self.reply_nick = data["in_reply_to_screen_name"]
       self.reply_url = "https://twitter.com/%s/statuses/%s" % (self.reply_nick, data["in_reply_to_status_id"])
    except Exception:
     from traceback import format_exc
-    print format_exc()
+    print(format_exc())
 
 class SearchResult:
   def __init__(self, client, data, query = None):

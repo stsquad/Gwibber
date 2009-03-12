@@ -6,7 +6,8 @@ SegPhault (Ryan Paul) - 03/01/2008
 
 """
 
-import urllib2, urllib, base64, support, mx.DateTime, can, simplejson
+from . import can, support
+import urllib2, urllib, base64, mx.DateTime, simplejson
 
 PROTOCOL_INFO = {
   "name": "Pownce",
@@ -42,7 +43,7 @@ class Message:
     self.text = support.xml_escape(data["body"])
     self.image = data["sender"]["profile_photo_urls"]["medium_photo_url"]
     self.bgcolor = "message_color"
-    if data.has_key("permalink"):
+    if "permalink" in data:
       self.url = data["permalink"]
     self.profile_url = data["sender"]["permalink"]
     self.id = data["id"]
@@ -71,7 +72,7 @@ class Client:
   def get_thread(self, msg):
     yield msg
     messages = self.get_reply_data(msg)
-    if messages.has_key("replies"):
+    if "replies" in messages:
       for data in messages["replies"]:
         yield Comment(self, data)
 

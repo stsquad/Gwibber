@@ -5,7 +5,8 @@ SegPhault (Ryan Paul) - 10/19/2008
 
 """
 
-import urllib2, urllib, base64, re, support, can, simplejson
+from . import can, support
+import urllib2, urllib, base64, re, simplejson
 from xml.dom import minidom
 
 PROTOCOL_INFO = {

@@ -7,7 +7,8 @@ SegPhault (Ryan Paul) - 11/15/2008
 
 """
 
-import urllib2, urllib, base64, re, support, can, simplejson, feedparser
+from . import can, support
+import urllib2, urllib, base64, re, simplejson, feedparser
 
 PROTOCOL_INFO = {
   "name": "Laconi.ca",

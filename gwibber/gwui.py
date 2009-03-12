@@ -5,7 +5,8 @@ SegPhault (Ryan Paul) - 05/26/2007
 
 """
 
-import webkit, gintegration, resources
+from . import gintegration, resources
+import webkit 
 import urllib2, hashlib, os, simplejson
 import Image
 
@@ -100,7 +101,7 @@ def image_cache(url, cache_dir = IMG_CACHE_DIR):
   encoded_url = hashlib.sha1(url).hexdigest()
   if len(encoded_url) > 200: encoded_url = encoded_url[::-1][:200]
   fmt = url.split('.')[-1] # jpg/png etc.
-  img_path = os.path.join(cache_dir, encoded_url + '.' + fmt).replace("\n","")
+  img_path = os.path.join(cache_dir, encoded_url + '.' + fmt).replace("\n", "")
 
   if not os.path.exists(img_path):
     output = open(img_path, "w+")
@@ -117,14 +118,14 @@ def image_cache(url, cache_dir = IMG_CACHE_DIR):
           image.save(img_path)
       except Exception, e:
         from traceback import format_exc
-        print format_exc()
+        print(format_exc())
     except IOError, e:
       if hasattr(e, 'reason'): # URLError
-        print 'image_cache URL Error: %s whilst fetching %s' % (e.reason, url)
+        print('image_cache URL Error: %s whilst fetching %s' % (e.reason, url))
       elif hasattr(e, 'code') and hasattr(e, 'msg') and hasattr(e, 'url'): # HTTPError
-        print 'image_cache HTTP Error %s: %s whilst fetching %s' % (e.code, e.msg, e.url)
+        print('image_cache HTTP Error %s: %s whilst fetching %s' % (e.code, e.msg, e.url))
       else:
-        print e
+        print(e)
       # if there were any problems getting the avatar img replace it with default
       output.write(urllib2.urlopen(DEFAULT_AVATAR).read())
     finally:

@@ -6,12 +6,15 @@ SegPhault (Ryan Paul) - 01/05/2008
 """
 
 import time, os, threading, logging, mx.DateTime, hashlib
-import gtk, gtk.glade, gobject, table, functools, traceback
-import microblog, gwui, config, gintegration, configui
-import xdg.BaseDirectory, resources, urllib2, urlparse
+from . import table
+import gtk, gtk.glade, gobject, functools, traceback
+import microblog
+from . import gwui, config, gintegration, configui, resources
+import xdg.BaseDirectory, urllib2, urlparse
+import webbrowser
 
 # Setup Pidgin
-import pidgin
+from . import pidgin
 microblog.PROTOCOLS["pidgin"] = pidgin
 
 # i18n magic
@@ -37,7 +40,7 @@ gtk.gdk.threads_init()
 
 MAX_MESSAGE_LENGTH = 140
 
-VERSION_NUMBER = "0.8.1"
+VERSION_NUMBER = "0.9.1"
 
 def N_(message): return message
 
@@ -64,7 +67,7 @@ DEFAULT_PREFERENCES = {
   "theme": "default",
 }
 
-for _i in CONFIGURABLE_UI_ELEMENTS.keys():
+for _i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
   DEFAULT_PREFERENCES["show_%s" % _i] = True
 
 class GwibberClient(gtk.Window):
@@ -113,7 +116,7 @@ class GwibberClient(gtk.Window):
     self.connect("delete-event", self.on_window_close)
     self.connect("focus-out-event", self.on_focus_out)
 
-    for key, value in DEFAULT_PREFERENCES.items():
+    for key, value in list(DEFAULT_PREFERENCES.items()):
       if self.preferences[key] == None: self.preferences[key] = value
 
     self.preferences["version"] = VERSION_NUMBER
@@ -138,11 +141,11 @@ class GwibberClient(gtk.Window):
 
     saved_position = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_position"), config.gconf.VALUE_INT)
     if saved_position:
-      apply(self.move, saved_position)
+      self.move(*saved_position)
 
     saved_size = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_size"), config.gconf.VALUE_INT)
     if saved_size:
-      apply(self.resize, saved_size)
+      self.resize(*saved_size)
 
     saved_queries = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_searches"),
       config.gconf.VALUE_STRING)
@@ -202,7 +205,7 @@ class GwibberClient(gtk.Window):
 
       # http://galago-project.org/specs/notification/0.9/x408.html#signal-notification-closed
       def on_notify_close(nId, reason = 1):
-        if self.notification_bubbles.has_key(nId):
+        if nId in self.notification_bubbles:
           del self.notification_bubbles[nId]
 
       def on_notify_action(nId, action):
@@ -210,7 +213,7 @@ class GwibberClient(gtk.Window):
           self.reply(self.notification_bubbles[nId])
           self.window.show()
           self.present()
-      
+
       bus = dbus.SessionBus()
       bus.add_signal_receiver(on_notify_close,
         dbus_interface="org.freedesktop.Notifications",
@@ -220,7 +223,7 @@ class GwibberClient(gtk.Window):
         dbus_interface="org.freedesktop.Notifications",
         signal_name="ActionInvoked")
 
-    for i in CONFIGURABLE_UI_ELEMENTS.keys():
+    for i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
         lambda *a: self.apply_ui_element_settings())
     
@@ -429,7 +432,7 @@ class GwibberClient(gtk.Window):
       self.move(*self.last_position)
 
   def apply_ui_element_settings(self):
-    for i in CONFIGURABLE_UI_ELEMENTS.keys():
+    for i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
       if hasattr(self, i):
         getattr(self, i).set_property(
           "visible", self.preferences["show_%s" % i])
@@ -516,12 +519,21 @@ class GwibberClient(gtk.Window):
           query, True, gtk.STOCK_INFO, True)
         self.update([view.get_parent()])
         return True
+      elif uri.startswith("gwibber:read"):
+        msg = view.message_store[int(uri.split("/")[-1])]
+        acct = msg.account
+        if acct.supports(microblog.can.READ):
+          if(msg.client.read_message(msg)):
+            self.update([view.get_parent()])
+        else:
+          webbrowser.open (msg.url)
+        return True
     else: return False
 
   def on_input_context_menu(self, obj, menu):
     menu.append(gtk.SeparatorMenuItem())
     for acct in self.accounts:
-      if acct["protocol"] in microblog.PROTOCOLS.keys():
+      if acct["protocol"] in list(microblog.PROTOCOLS.keys()):
         if acct.supports(microblog.can.SEND):
           mi = gtk.CheckMenuItem("%s (%s)" % (acct["username"],
             acct.get_protocol().PROTOCOL_INFO["name"]))
@@ -583,7 +595,7 @@ class GwibberClient(gtk.Window):
     menu.append(menuAccountsCreate)
     mac = gtk.Menu()
 
-    for p in microblog.PROTOCOLS.keys():
+    for p in list(microblog.PROTOCOLS.keys()):
       mi = gtk.MenuItem("%s" % microblog.PROTOCOLS[p].PROTOCOL_INFO["name"])
       mi.connect("activate", self.accounts.on_account_create, p)
       mac.append(mi)
@@ -592,10 +604,10 @@ class GwibberClient(gtk.Window):
     menu.append(gtk.SeparatorMenuItem())
     
     for acct in self.accounts:
-      if acct["protocol"] in microblog.PROTOCOLS.keys():
+      if acct["protocol"] in list(microblog.PROTOCOLS.keys()):
         sm = gtk.Menu()
 
-        for key in CONFIGURABLE_ACCOUNT_ACTIONS.keys():
+        for key in list(CONFIGURABLE_ACCOUNT_ACTIONS.keys()):
           if acct.supports(getattr(microblog.can, key.upper())):
             mi = gtk.CheckMenuItem(_(CONFIGURABLE_ACCOUNT_ACTIONS[key]))
             acct.bind(mi, "%s_enabled" % key)
@@ -623,7 +635,6 @@ class GwibberClient(gtk.Window):
     menuView = gtk.Menu()
     menuAccounts = gtk.Menu()
     menuHelp = gtk.Menu()
-    menuTray = gtk.Menu()
 
     accelGroup = gtk.AccelGroup()
     self.add_accel_group(accelGroup)
@@ -668,7 +679,7 @@ class GwibberClient(gtk.Window):
     menuHelp.append(gtk.SeparatorMenuItem())
     menuHelp.append(actAbout.create_menu_item())
 
-    for w, n in CONFIGURABLE_UI_ELEMENTS.items():
+    for w, n in list(CONFIGURABLE_UI_ELEMENTS.items()):
       mi = gtk.CheckMenuItem(_(n))
       self.preferences.bind(mi, "show_%s" % w)
       menuView.append(mi)
@@ -702,11 +713,19 @@ class GwibberClient(gtk.Window):
     menuSpinner.set_sensitive(False)
     menuSpinner.set_image(self.throbber)
 
+    actDisplayBubbles = gtk.CheckMenuItem(_("Display bubbles"))
+    self.preferences.bind(actDisplayBubbles, "show_notifications")
+    menuTray = gtk.Menu()
+    menuTray.append(actDisplayBubbles)
     menuTray.append(actRefresh.create_menu_item())
+    menuTray.append(gtk.SeparatorMenuItem())
     menuTray.append(actPreferences.create_menu_item())
+    menuTray.append(actAbout.create_menu_item())
+    menuTray.append(gtk.SeparatorMenuItem())
     menuTray.append(actQuit.create_menu_item())
+    menuTray.show_all()
 
-    self.tray_icon.connect("popup-menu", lambda i,b,a: menuTray.popup(
+    self.tray_icon.connect("popup-menu", lambda i, b, a: menuTray.popup(
       None, None, gtk.status_icon_position_menu, b, a, self.tray_icon))
     
     menubar = gtk.MenuBar()
@@ -837,7 +856,10 @@ class GwibberClient(gtk.Window):
             result = self.client.reply(text, [account["protocol"]])
       # else standard post
       else:
-        result = self.client.send(text, microblog.PROTOCOLS.keys())
+        result = self.client.send(text, list(microblog.PROTOCOLS.keys()))
+
+      # Strip empties out of the result
+      result = [x for x in result if x]
 
       # if we get returned message info for the posts we should be able
       # to display them to the user immediately
@@ -869,7 +891,7 @@ class GwibberClient(gtk.Window):
     message.aId = message.account.id
 
     if self.last_focus_time:
-      message.is_unread = message.time > self.last_focus_time
+      message.is_unread = (message.time > self.last_focus_time) or (hasattr(message, "is_unread") and message.is_unread)
 
     if self.last_update:
       message.is_new = message.time > self.last_update
@@ -881,6 +903,7 @@ class GwibberClient(gtk.Window):
       message.html_string = '<span class="text">%s</span>' % \
         microblog.support.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
 
+    message.can_reply = message.account.supports(microblog.can.REPLY)
     return message
 
   def get_account_config(self):
@@ -891,17 +914,24 @@ class GwibberClient(gtk.Window):
           if "color" in c:
             if acct[c]: color = gtk.gdk.color_parse(acct[c])
             else: color = gtk.gdk.color_parse("#72729f9fcfcf")
-            data[c] = {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
+            data[c] = {"red": color.red//255, "green": color.green//255, "blue": color.blue//255}
         yield data
 
   def color_to_dict(self, c):
     color = gtk.gdk.color_parse(c)
-    return {"red": color.red/255, "green": color.green/255, "blue": color.blue/255}
+    return {"red": color.red//255, "green": color.green//255, "blue": color.blue//255}
 
   def get_gtk_theme_prefs(self):
-    return dict((i, self.color_to_dict(
-      getattr(self.get_style(), i)[gtk.STATE_NORMAL].to_string()))
-        for i in ["base", "text", "fg", "bg"])
+    d = {}
+    
+    for i in ["base", "text", "fg", "bg"]:
+      d[i] = self.color_to_dict(
+        getattr(self.get_style(), i)[gtk.STATE_NORMAL].to_string())
+
+      d["%s_selected" % i] = self.color_to_dict(
+        getattr(self.get_style(), i)[gtk.STATE_SELECTED].to_string())
+
+    return d
 
   def show_notification_bubbles(self, messages):
     new_messages = []
@@ -918,14 +948,14 @@ class GwibberClient(gtk.Window):
             body = microblog.support.xml_escape(message.text)
             image = hasattr(message, "image_path") and message.image_path or ''
             expire_timeout = 5000 + (index*2000) # default to 5 second timeout and increase by 2 second for each notification
-            n = gintegration.notify(message.sender, body, image , ["reply", "Reply"], expire_timeout)
+            n = gintegration.notify(message.sender, body, image, ["reply", "Reply"], expire_timeout)
             self.notification_bubbles[n] = message
     gtk.gdk.threads_leave()
 
   def flag_duplicates(self, data):
     seen = []
     for message in data:
-      if message.gId:
+      if hasattr(message, "gId"):
         message.is_duplicate = message.gId in seen
         message.first_seen = False
         if not message.is_duplicate:
@@ -947,7 +977,7 @@ class GwibberClient(gtk.Window):
           view = tab.get_child()
           if view:
             view.message_store = [m for m in
-              view.data_retrieval_handler() if m.time > self.last_clear
+              view.data_retrieval_handler() if not self.last_clear or m.time > self.last_clear
               and m.time <= mx.DateTime.gmt()]
             self.flag_duplicates(view.message_store)
             gtk.gdk.threads_enter()

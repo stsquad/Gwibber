@@ -3,8 +3,8 @@
 Flickr interface for Gwibber
 SegPhault (Ryan Paul) - 03/01/2008
 """
-
-import urllib2, urllib, support, mx.DateTime, can, simplejson
+from . import can, support
+import urllib2, urllib, mx.DateTime, simplejson
 
 PROTOCOL_INFO = {
   "name": "Flickr",

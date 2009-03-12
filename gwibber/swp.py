@@ -9,7 +9,7 @@ interface IValueHolder.
 
 import gobject
 
-class OutOfSyncError(StandardError):
+class OutOfSyncError(Exception):
     """
     This error is thrown when there's a synchronization problem
     between the L{GConfValue} and the widget.

@@ -6,7 +6,8 @@ SegPhault (Ryan Paul) - 07/18/2008
 
 """
 
-import urllib2, urllib, base64, re, support, can, simplejson, feedparser
+from . import can, support
+import urllib2, urllib, base64, re, simplejson, feedparser
 
 PROTOCOL_INFO = {
   "name": "Identi.ca",

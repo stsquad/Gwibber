@@ -1,75 +1,79 @@
-#, fuzzy
+# Simplified Chinese translation for gwibber
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the gwibber package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: gwibber\n"
+"Report-Msgid-Bugs-To: gwibber-team@lists.launchpad.net\n"
 "POT-Creation-Date: 2009-02-28 15:47+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2009-02-28 11:46+0000\n"
+"Last-Translator: Jonathan Lumb <Unknown>\n"
+"Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Launchpad-Export-Date: 2009-02-28 16:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../gwibber.desktop.in.h:1
 msgid "Gwibber Microblogging Client"
-msgstr ""
+msgstr "Gwibber微博客客户端"
 
 #: ../gwibber.desktop.in.h:2
 msgid "Microblogging Client"
-msgstr ""
+msgstr "微博客客户端"
 
 #: ../gwibber.desktop.in.h:3
 msgid "Microblogging client for GNOME"
-msgstr ""
+msgstr "基于GNOME的微博客客户端"
 
 #: ../gwibber/client.py:46
 msgid "_Editor"
-msgstr ""
+msgstr "编辑框 (_E)"
 
 #: ../gwibber/client.py:47
 msgid "_Statusbar"
-msgstr ""
+msgstr "状态栏 (_S)"
 
 #: ../gwibber/client.py:48
 msgid "Tray _Icon"
-msgstr ""
+msgstr "任务栏图标 (_I)"
 
 #. Translators: these are checkbox
 #: ../gwibber/client.py:53 ../ui/preferences.glade.h:56
 msgid "_Receive Messages"
-msgstr ""
+msgstr "接收信息 (_R)"
 
 #: ../gwibber/client.py:54 ../ui/preferences.glade.h:57
 msgid "_Send Messages"
-msgstr ""
+msgstr "发送信息 (_S)"
 
 #: ../gwibber/client.py:55
 msgid "Search _Messages"
-msgstr ""
+msgstr "搜索信息 (_M)"
 
 #: ../gwibber/client.py:77
 msgid "Gwibber"
-msgstr ""
+msgstr "Gwibber"
 
 #: ../gwibber/client.py:137
 msgid "Messages"
-msgstr ""
+msgstr "信息"
 
 #: ../gwibber/client.py:138
 msgid "Replies"
-msgstr ""
+msgstr "回复"
 
 #: ../gwibber/client.py:175
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: ../gwibber/client.py:314
 msgid "Enter a search query:"
-msgstr ""
+msgstr "输入搜索信息："
 
 #: ../gwibber/client.py:450
 #, python-format
@@ -78,384 +82,384 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"%s 信息来自 %s 于 %s\n"
+"\n"
+"%s"
 
 #: ../gwibber/client.py:552 ../gwibber/client.py:558
 #, python-format
 msgid "Characters remaining: %s"
-msgstr ""
+msgstr "剩余字符数: %s"
 
 #: ../gwibber/client.py:588
 msgid "_Manage"
-msgstr ""
+msgstr "管理 (_M)"
 
 #: ../gwibber/client.py:592
 msgid "_Create"
-msgstr ""
+msgstr "建立 (_C)"
 
 #: ../gwibber/client.py:652
 msgid "Refresh"
-msgstr ""
+msgstr "刷新"
 
 #: ../gwibber/client.py:653 ../gwibber/configui.py:131
 msgid "Search"
-msgstr ""
+msgstr "搜索"
 
 #: ../gwibber/client.py:654
 msgid "Clear"
-msgstr ""
+msgstr "清除信息"
 
 #: ../gwibber/client.py:655
 msgid "Close Window"
-msgstr ""
+msgstr "关闭窗口"
 
 #: ../gwibber/client.py:657 ../ui/preferences.glade.h:37
 msgid "Preferences"
-msgstr ""
+msgstr "首选项"
 
 #: ../gwibber/client.py:659
 msgid "Quit"
-msgstr ""
+msgstr "退出"
 
 #. actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
 #. actThemeTest.connect("activate", self.theme_preview_test)
 #. menuHelp.append(actThemeTest.create_menu_item())
 #: ../gwibber/client.py:665
 msgid "Get Help Online..."
-msgstr ""
+msgstr "获取在线帮助..."
 
 #: ../gwibber/client.py:667
 msgid "Translate This Application..."
-msgstr ""
+msgstr "翻译此应用程序..."
 
 #: ../gwibber/client.py:669
 msgid "Report a Problem"
-msgstr ""
+msgstr "报告错误"
 
 #: ../gwibber/client.py:671
 msgid "_About"
-msgstr ""
+msgstr "关于 (_A)"
 
 #: ../gwibber/client.py:686
 msgid "S_pellcheck"
-msgstr ""
+msgstr "拼写检查 (_P)"
 
 #: ../gwibber/client.py:690
 msgid "E_rrors"
-msgstr ""
+msgstr "错误 (_R)"
 
 #: ../gwibber/client.py:695
 msgid "_Gwibber"
-msgstr ""
+msgstr "_Gwibber"
 
 #: ../gwibber/client.py:698
 msgid "_View"
-msgstr ""
+msgstr "查看 (_V)"
 
 #: ../gwibber/client.py:701
 msgid "_Accounts"
-msgstr ""
+msgstr "帐户 (_A)"
 
 #: ../gwibber/client.py:705
 msgid "_Help"
-msgstr ""
+msgstr "帮助 (_H)"
 
 #: ../gwibber/client.py:714 ../ui/preferences.glade.h:23
 msgid "Display bubbles"
-msgstr ""
+msgstr "显示气泡"
 
 #: ../gwibber/client.py:765
 msgid "Errors"
-msgstr ""
+msgstr "错误"
 
 #: ../gwibber/client.py:771
 msgid "Debug Output"
-msgstr ""
+msgstr "排错输出"
 
 #: ../gwibber/client.py:987
 #, python-format
 msgid "Last update: %s"
-msgstr ""
+msgstr "上次更新于：%s"
 
 #: ../gwibber/configui.py:30
 msgid "Keys obtained successfully."
-msgstr ""
+msgstr "已获取密钥"
 
 #: ../gwibber/configui.py:33
 msgid "Failed to obtain key."
-msgstr ""
+msgstr "获取密钥失败"
 
 #: ../gwibber/configui.py:78
 #, python-format
 msgid "Create %s account"
-msgstr ""
+msgstr "建立%s帐户"
 
 #: ../gwibber/configui.py:80
 #, python-format
 msgid "Edit %s account"
-msgstr ""
+msgstr "编辑%s帐户"
 
 #: ../gwibber/configui.py:89
 msgid "Are you sure you want to cancel the creation of this account?"
-msgstr ""
+msgstr "您是否确定要取消建立此帐户？"
 
 #: ../gwibber/configui.py:91
 msgid "Are you sure you want to delete this account?"
-msgstr ""
+msgstr "您是否确定要删除此帐户？"
 
 #: ../gwibber/configui.py:104
 msgid "Manage Accounts"
-msgstr ""
+msgstr "管理帐户"
 
 #: ../gwibber/configui.py:122
 msgid "Username"
-msgstr ""
+msgstr "用户名"
 
 #: ../gwibber/configui.py:125
 msgid "Receive"
-msgstr ""
+msgstr "接收"
 
 #: ../gwibber/configui.py:128
 msgid "Send"
-msgstr ""
+msgstr "发送"
 
 #: ../gwibber/configui.py:132
 msgid "Protocol"
-msgstr ""
+msgstr "协议"
 
 #. Translators: this string appears when somebody reply to a message
 #. like '3 minutes ago in reply to angelina'
 #: ../gwibber/gwui.py:56
 msgid "in reply to"
-msgstr ""
+msgstr "回复"
 
 #. Translators: this string indicates where the message arrived from
 #. like 'from api', 'from Gwibber'
 #: ../gwibber/gwui.py:59
 msgid "from"
-msgstr ""
+msgstr "来自"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:65 ../gwibber/microblog/__init__.py:72
 #: ../gwibber/microblog/__init__.py:79
 msgid "send message"
-msgstr ""
+msgstr "发送信息"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:87
 msgid "retrieve thread"
-msgstr ""
+msgstr "获取帖子"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:94
 msgid "retrieve responses"
-msgstr ""
+msgstr "获取回复"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:101
 msgid "retrieve messages"
-msgstr ""
+msgstr "获取信息"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:108
 msgid "retrieve positions"
-msgstr ""
+msgstr "获取位置"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:115 ../gwibber/microblog/__init__.py:122
 msgid "perform search query"
-msgstr ""
+msgstr "进行搜索"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:129
 msgid "perform tag query"
-msgstr ""
+msgstr "进行标签搜索"
 
 #. Translators: this message appears in the Errors dialog
 #. Indicates with wich action the error happened
 #: ../gwibber/microblog/__init__.py:142
 msgid "perform group query"
-msgstr ""
+msgstr "进行小组搜索"
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid "This user has protected their updates."
-msgstr ""
+msgstr "该用户已启用更新保护功能"
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid ""
 "You need to send a request before you can view this person's timeline."
-msgstr ""
+msgstr "您在向该用户提出申请后才能查看他的时间线"
 
 #: ../gwibber/microblog/twitter.py:92 ../gwibber/microblog/twitter.py:93
 msgid "Send request..."
-msgstr ""
+msgstr "发送请求..."
 
 #: ../gwibber/microblog/support/__init__.py:59
 #, python-format
 msgid "%(year)d year ago"
 msgid_plural "%(year)d years ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(year)d 年前"
 
 #: ../gwibber/microblog/support/__init__.py:62
 #, python-format
 msgid "%(day)d day ago"
 msgid_plural "%(day)d days ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(day)d 天前"
 
 #: ../gwibber/microblog/support/__init__.py:65
 #, python-format
 msgid "%(hour)d hour ago"
 msgid_plural "%(hour)d hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(hour)d 小时前"
 
 #: ../gwibber/microblog/support/__init__.py:68
 #, python-format
 msgid "%(minute)d minute ago"
 msgid_plural "%(minute)d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(minute)d 分钟前"
 
 #: ../gwibber/microblog/support/__init__.py:71
 #, python-format
 msgid "%(sec)d second ago"
 msgid_plural "%(sec)d seconds ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(sec)d 秒钟前"
 
 #: ../gwibber/microblog/support/__init__.py:73
 #, python-format
 msgid "BUG: %s"
-msgstr ""
+msgstr "错误：%s"
 
 #: ../ui/preferences.glade.h:1
 msgid ""
 "<b>1.</b> Click the button below to request\n"
 "a Gwibber login code from Facebook."
 msgstr ""
+"<b>1.</b> 点击以下按钮\n"
+"向Facebook申请一个Gwibber登录密码。"
 
 #: ../ui/preferences.glade.h:3
 msgid ""
 "<b>2.</b> Copy and paste the one-time code into the entry field below and "
 "then click the Apply button."
-msgstr ""
+msgstr "<b>2.</b> 将一次性密码复制至以下输入域，再点击“应用“按钮"
 
 #: ../ui/preferences.glade.h:4
 msgid ""
 "<b>3.</b> Click the button below to give Gwibber permission to set your "
 "Facebook status."
-msgstr ""
+msgstr "<b>3.</b> 点击以下按钮获准Gwibber更改Facebook状态。"
 
 #: ../ui/preferences.glade.h:5
 msgid "<b>Account Information</b>"
-msgstr ""
+msgstr "<b>帐户信息</b>"
 
 #: ../ui/preferences.glade.h:6
 msgid "<b>Account Status</b>"
-msgstr ""
+msgstr "<b>帐户状态</b>"
 
 #: ../ui/preferences.glade.h:7
 msgid "<b>Appearance</b>"
-msgstr ""
+msgstr "<b>外观</b>"
 
 #: ../ui/preferences.glade.h:8
 msgid "<b>Experimental</b>"
-msgstr ""
+msgstr "<b>实验性</b>"
 
 #: ../ui/preferences.glade.h:9
 msgid "<b>Notification</b>"
-msgstr ""
+msgstr "<b>通知</b>"
 
 #: ../ui/preferences.glade.h:10
 msgid "<b>Theme</b>"
-msgstr ""
+msgstr "<b>主题</b>"
 
 #: ../ui/preferences.glade.h:11
 msgid "<b>Update</b>"
-msgstr ""
+msgstr "<b>更新</b>"
 
 #: ../ui/preferences.glade.h:12
 msgid "<b>Window Behavior</b>"
-msgstr ""
+msgstr "<b>窗口行为</b>"
 
 #: ../ui/preferences.glade.h:13
 msgid "API key:"
-msgstr ""
+msgstr "API 密钥"
 
 #: ../ui/preferences.glade.h:14
 msgid "About Gwibber"
-msgstr ""
+msgstr "关于Gwibber"
 
 #: ../ui/preferences.glade.h:15
 msgid "App Key:"
-msgstr ""
+msgstr "Ping.fm App 密钥:"
 
 #: ../ui/preferences.glade.h:16
 msgid "Append colon to username when replying"
-msgstr ""
+msgstr "回复时在用户名后面添加分号"
 
 #: ../ui/preferences.glade.h:17
 msgid "Authorize Status Changes"
-msgstr ""
+msgstr "批准更改状态功能"
 
 #: ../ui/preferences.glade.h:18
 msgid "Automatically shorten pasted URLs"
-msgstr ""
+msgstr "自动缩短粘贴的网页链接"
 
 #: ../ui/preferences.glade.h:19
 msgid ""
 "Click the link below to navigate to the Facebook friends page and then copy "
 "the \"Friend's Status Feed\" link from the left-hand side of the page and "
 "paste it into the Feed URL textbox."
-msgstr ""
+msgstr "点击以下链接打开Facebook的朋友列表。在此网页的左侧栏里将“朋友狀態摘要“链接复制到以上摘要链接的输入域里。"
 
 #: ../ui/preferences.glade.h:20
 msgid "Comment Color:"
-msgstr ""
+msgstr "评论字体颜色："
 
 #: ../ui/preferences.glade.h:21
 msgid "Copyright (C) 2007-2009 Gwibber Team"
-msgstr ""
+msgstr "(C) 2007-2009 Gwibber 小组。保留所有权。"
 
 #: ../ui/preferences.glade.h:22
 msgid "Digg Color:"
-msgstr ""
+msgstr "Digg通知颜色"
 
 #: ../ui/preferences.glade.h:24
 msgid "Domain:"
-msgstr ""
+msgstr "网域："
 
 #: ../ui/preferences.glade.h:25
 msgid "Facebook Authorization"
-msgstr ""
+msgstr "Facebook批准"
 
 #: ../ui/preferences.glade.h:26
 msgid "Feed URL:"
-msgstr ""
+msgstr "摘要链接："
 
 #: ../ui/preferences.glade.h:27
 msgid "Get Feed"
-msgstr ""
+msgstr "获取摘要"
 
 #: ../ui/preferences.glade.h:28
 msgid "Get Jaiku API key"
-msgstr ""
+msgstr "获取Jaiku API密钥"
 
 #: ../ui/preferences.glade.h:29
 msgid "Get Ping.fm key"
-msgstr ""
+msgstr "获取Ping.fm密钥"
 
 #: ../ui/preferences.glade.h:30
 msgid "Gwibber Web Site"
-msgstr ""
+msgstr "Gwibber网站"
 
 #: ../ui/preferences.glade.h:31
 msgid ""
@@ -463,34 +467,36 @@ msgid ""
 "Twitter, Jaiku, Facebook, Pownce, Identi.ca and other popular social web "
 "services."
 msgstr ""
+"Gwibber是一个基于GNOME的微博客客户端。它支持Twitter, Jaiku, Facebook, Pownce, "
+"Identi.ca以及其他社群网络服务。"
 
 #: ../ui/preferences.glade.h:32
 msgid "Hide taskbar entry"
-msgstr ""
+msgstr "隐藏任务栏图标"
 
 #: ../ui/preferences.glade.h:33
 msgid "Message Color:"
-msgstr ""
+msgstr "信息颜色："
 
 #: ../ui/preferences.glade.h:34
 msgid "Minimize to tray on close"
-msgstr ""
+msgstr "关闭后最小化到任务栏"
 
 #: ../ui/preferences.glade.h:35
 msgid "Minutes between refresh:  "
-msgstr ""
+msgstr "刷新间隔时间（分钟）:  "
 
 #: ../ui/preferences.glade.h:36
 msgid "Password:"
-msgstr ""
+msgstr "密码："
 
 #: ../ui/preferences.glade.h:38
 msgid "Request Login Code"
-msgstr ""
+msgstr "申请登录密码"
 
 #: ../ui/preferences.glade.h:39
 msgid "Show tray icon"
-msgstr ""
+msgstr "显示任务栏图标"
 
 #: ../ui/preferences.glade.h:40
 msgid ""
@@ -509,16 +515,32 @@ msgid ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, "
 "USA.\n"
 msgstr ""
+"This program is free software; you can redistribute it and/or\n"
+"modify it under the terms of the GNU General Public License\n"
+"as published by the Free Software Foundation; either version 2\n"
+"of the License, or (at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License\n"
+"along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, "
+"USA.\n"
 
 #: ../ui/preferences.glade.h:54
 msgid "Username:"
-msgstr ""
+msgstr "用户名："
 
 #: ../ui/preferences.glade.h:55
 msgid "_Authorize Gwibber"
-msgstr ""
+msgstr "批准Gwibber (_A)"
 
 #. Translators: insert your name here as Name Surname <email>, year
 #: ../ui/preferences.glade.h:59
 msgid "translator-credits"
 msgstr ""
+"Launchpad Contributions:\n"
+"  Jonathan Lumb https://launchpad.net/~jonolumb"

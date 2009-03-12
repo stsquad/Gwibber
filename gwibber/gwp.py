@@ -192,7 +192,7 @@ class GConfValue(object):
     # Other methods
     def set_callback(self, on_changed):
     
-        assert on_changed is None or callable(on_changed)
+        assert on_changed is None or hasattr(on_changed, '__call__')
         
         if self._notify_id is not None:
             self.client_notify_remove(self._notify_id)
@@ -249,7 +249,7 @@ class RadioButtonPersistencyLink:
         self.gconf_value.set_callback(self._on_gconf_changed)
         
         notify_widget = False
-        for key, widget in widgets.iteritems():
+        for key, widget in widgets.items():
             if not notify_widget:
                 widget.connect("toggled", self._on_widget_changed)
                 notify_widget = True
