@@ -193,8 +193,8 @@
             '<div class="toggledupe"><img src="add.png" /></div> ' +
             '<div class="replybutton">' +
              (data.can_thread ? '<a href="gwibber:thread/' + data.message_index + '"><img src="thread.png" /></a>' : '') +
-             '<a href="gwibber:reply/'+ data.message_index +'"><img src="reply.png" /></a> \
-             </div> ' +
+             (data.can_reply ? '<a href="gwibber:reply/'+ data.message_index +'"><img src="reply.png" /></a>' : '') +
+             '</div> ' +
             '<div class="dupes"></div> \
         </div>'
 

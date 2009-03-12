@@ -903,6 +903,7 @@ class GwibberClient(gtk.Window):
       message.html_string = '<span class="text">%s</span>' % \
         microblog.support.LINK_PARSE.sub('<a href="\\1">\\1</a>', message.text)
 
+    message.can_reply = message.account.supports(microblog.can.REPLY)
     return message
 
   def get_account_config(self):
