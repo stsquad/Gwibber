@@ -70,6 +70,11 @@ DEFAULT_PREFERENCES = {
 for _i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
   DEFAULT_PREFERENCES["show_%s" % _i] = True
 
+try:
+  import indicate
+except:
+  indicate = None
+
 class GwibberClient(gtk.Window):
   def __init__(self):
 
@@ -84,6 +89,7 @@ class GwibberClient(gtk.Window):
     self.last_focus_time = None
     self.last_clear = None
     self._reply_acct = None
+    self.indicator_items = []
     layout = gtk.VBox()
 
     gtk.rc_parse_string("""
@@ -137,7 +143,7 @@ class GwibberClient(gtk.Window):
     self.tabs.set_property("homogeneous", False)
     self.tabs.set_scrollable(True)
     self.messages_view = self.add_msg_tab(self.client.receive, _("Messages"), show_icon = "go-home")
-    self.add_msg_tab(self.client.responses, _("Replies"), show_icon = "mail-reply-all")
+    self.add_msg_tab(self.client.responses, _("Replies"), show_icon = "mail-reply-all", add_indicator=True)
 
     saved_position = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_position"), config.gconf.VALUE_INT)
     if saved_position:
@@ -222,6 +228,12 @@ class GwibberClient(gtk.Window):
       bus.add_signal_receiver(on_notify_action,
         dbus_interface="org.freedesktop.Notifications",
         signal_name="ActionInvoked")
+
+    if indicate:
+      self.indicate = indicate.indicate_server_ref_default()
+      self.indicate.set_type("message.gwibber")
+      self.indicate.set_desktop_file("/home/segphault/Desktop/gwibber.desktop")
+      self.indicate.connect("server-display", self.on_toggle_window_visibility)
 
     for i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
@@ -362,11 +374,12 @@ class GwibberClient(gtk.Window):
 
     btn.connect("clicked", self.on_tab_close, scroll)
     
-  def add_msg_tab(self, data_handler, text, show_close=False, show_icon=None, make_active=False, save=None):
+  def add_msg_tab(self, data_handler, text, show_close=False, show_icon=None, make_active=False, save=None, add_indicator=False):
     view = gwui.MessageView(self.preferences["theme"])
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
+    view.add_indicator = add_indicator
 
     self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
     return view
@@ -961,6 +974,24 @@ class GwibberClient(gtk.Window):
         if not message.is_duplicate:
           message.first_seen = True
           seen.append(message.gId)
+
+  def manage_indicator_items(self, data):
+    for item in self.indicator_items:
+      item.hide()
+      del item
+
+    for msg in data[:5]:
+      if msg.first_seen:
+        indicator = indicate.IndicatorMessage()
+        indicator.set_property("subtype", "im")
+        indicator.set_property("sender", msg.sender_nick)
+        indicator.set_property("body", msg.text)
+        indicator.set_property_time("time", msg.time.gmticks())
+        if hasattr(msg, "image_path"):
+          pb = gtk.gdk.pixbuf_new_from_file(msg.image_path)
+          indicator.set_property_icon("icon", pb)
+        self.indicator_items.append(indicator)
+        indicator.show()
   
   def update(self, tabs = None):
     self.throbber.set_from_animation(
@@ -983,6 +1014,8 @@ class GwibberClient(gtk.Window):
             gtk.gdk.threads_enter()
             view.load_messages()
             view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
+            if indicate and view.add_indicator:
+              self.manage_indicator_items(view.message_store)
             gtk.gdk.threads_leave()
             self.show_notification_bubbles(view.message_store)
 
