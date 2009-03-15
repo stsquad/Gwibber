@@ -234,6 +234,7 @@ class GwibberClient(gtk.Window):
       self.indicate.set_type("message.gwibber")
       self.indicate.set_desktop_file("/home/segphault/Desktop/gwibber.desktop")
       self.indicate.connect("server-display", self.on_toggle_window_visibility)
+      self.indicate.show()
 
     for i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
@@ -976,12 +977,8 @@ class GwibberClient(gtk.Window):
           seen.append(message.gId)
 
   def manage_indicator_items(self, data):
-    for item in self.indicator_items:
-      item.hide()
-      del item
-
-    for msg in data[:5]:
-      if msg.first_seen:
+    for msg in data:
+      if msg.first_seen and hasattr(msg, "is_unread") and msg.is_unread:
         indicator = indicate.IndicatorMessage()
         indicator.set_property("subtype", "im")
         indicator.set_property("sender", msg.sender_nick)
@@ -990,7 +987,6 @@ class GwibberClient(gtk.Window):
         if hasattr(msg, "image_path"):
           pb = gtk.gdk.pixbuf_new_from_file(msg.image_path)
           indicator.set_property_icon("icon", pb)
-        self.indicator_items.append(indicator)
         indicator.show()
   
   def update(self, tabs = None):
