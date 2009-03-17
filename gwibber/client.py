@@ -89,7 +89,7 @@ class GwibberClient(gtk.Window):
     self.last_focus_time = None
     self.last_clear = None
     self._reply_acct = None
-    self.indicator_items = []
+    self.indicator_items = {}
     layout = gtk.VBox()
 
     gtk.rc_parse_string("""
@@ -121,6 +121,7 @@ class GwibberClient(gtk.Window):
 
     self.connect("delete-event", self.on_window_close)
     self.connect("focus-out-event", self.on_focus_out)
+    self.connect("focus-in-event", self.on_focus)
 
     for key, value in list(DEFAULT_PREFERENCES.items()):
       if self.preferences[key] == None: self.preferences[key] = value
@@ -232,7 +233,7 @@ class GwibberClient(gtk.Window):
     if indicate:
       self.indicate = indicate.indicate_server_ref_default()
       self.indicate.set_type("message.gwibber")
-      self.indicate.set_desktop_file("/home/segphault/Desktop/gwibber.desktop")
+      self.indicate.set_desktop_file("/usr/share/applications/gwibber.desktop")
       self.indicate.connect("server-display", self.on_toggle_window_visibility)
       self.indicate.show()
 
@@ -310,6 +311,11 @@ class GwibberClient(gtk.Window):
        self.input.set_max_length(c_text_len)
     entry.insert_text(text, entry.get_position())
     gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(text)))
+
+  def on_focus(self, w, change):
+    for key, item in self.indicator_items.items():
+      self.indicate.remove_indicator(item)
+    self.indicator_items = {}
 
   def on_focus_out(self, widget, event):
     if self.last_update:
@@ -978,7 +984,9 @@ class GwibberClient(gtk.Window):
 
   def manage_indicator_items(self, data):
     for msg in data:
-      if msg.first_seen and hasattr(msg, "is_unread") and msg.is_unread:
+      if msg.first_seen and \
+          hasattr(msg, "is_unread") and msg.is_unread and \
+          hasattr(msg, "gId") and msg.gId not in self.indicator_items:
         indicator = indicate.IndicatorMessage()
         indicator.set_property("subtype", "im")
         indicator.set_property("sender", msg.sender_nick)
@@ -987,6 +995,7 @@ class GwibberClient(gtk.Window):
         if hasattr(msg, "image_path"):
           pb = gtk.gdk.pixbuf_new_from_file(msg.image_path)
           indicator.set_property_icon("icon", pb)
+        self.indicator_items[msg.gId] = indicator
         indicator.show()
   
   def update(self, tabs = None):
