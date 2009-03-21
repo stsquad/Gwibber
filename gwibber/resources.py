@@ -24,6 +24,13 @@ except:
 
 DATA_DIRS += [os.path.join(d, PROGRAM_NAME) for d in DATA_BASE_DIRS]
 
+def get_desktop_file():
+  p = os.path.join(LAUNCH_DIR, "gwibber.desktop")
+  if os.path.exists(p): return p
+  
+  for base in DATA_DIRS:
+    p = os.path.join(base, "applications", "gwibber.desktop")
+    if os.path.exists(p): return p
 
 def get_theme_paths():
   for base in DATA_DIRS:

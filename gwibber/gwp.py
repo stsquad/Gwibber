@@ -49,8 +49,10 @@ import gconf
 import gobject
 import gtk
 try:
+  #gnomekeyring = None
   import gnomekeyring
-except: pass
+except:
+  gnomekeyring = None
 
 from swp import *
 
@@ -136,7 +138,7 @@ class GConfValue(object):
     # data
     def get_data(self):
 
-        if self.private:
+        if self.private and gnomekeyring:
             try:
                 return gnomekeyring.find_items_sync(
                   gnomekeyring.ITEM_GENERIC_SECRET, {"id": self.key})[0].secret
@@ -153,13 +155,13 @@ class GConfValue(object):
     
     def set_data(self, value):
 
-        if self.private:
+        if self.private and gnomekeyring:
             try:
                 token = gnomekeyring.item_create_sync(
                   gnomekeyring.get_default_keyring_sync(),
                   gnomekeyring.ITEM_GENERIC_SECRET, "Gwibber preference %s" % self.key,
                   {"id": self.key}, value, True)
-                self._setter(self.key, ":KEYRING:%s" % token)
+                return self._setter(self.key, ":KEYRING:%s" % token)
             except gnomekeyring.NoMatchError:
                 pass
 
