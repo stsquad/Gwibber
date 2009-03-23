@@ -1,3 +1,4 @@
+
 <%def name="timestring(data)">
   <a href="gwibber:read/${data.message_index}">${data.time_string}</a>
   % if hasattr(data, "reply_nick") and hasattr(data, "reply"):
@@ -9,8 +10,33 @@
 background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, ${b}, 0.6)), to(black));
 </%def>
 
+<%def name="msgclass(data)">
+  <% return " ".join(i for i in ["unread", "reply", "private"] \
+    if hasattr(data, "is_" + i) and getattr(data, "is_" + i)) %>
+</%def>
+
+<%def name="dupes(data)">
+  % if len(data.dupes) > 0:
+    <div class="toggledupe"><img src="add.png" /></div>
+    <div class="dupes">
+      % for d in data.dupes:
+        ${self.message(d)}
+      % endfor
+    </div>
+  % endif
+</%def>
+
+<%def name="buttons(data)">
+  <div class="replybutton">
+    % if hasattr(data, "can_thread"):
+      <a href="gwibber:thread/${data.message_index}"><img src="thread.png" /></a>
+    % endif   
+    <a href="gwibber:reply/${data.message_index}"><img src="reply.png" /></a>
+  </div>
+</%def>
+
 <%def name="message(data)">
-<div id="${data.gId}" class="message ${(hasattr(data, "username") and data.username or "") + data.protocol}"
+<div id="${data.gId}" class="message ${self.msgclass(data)}"
   style="${self.bgstyle(data.bgcolor_rgb["red"], data.bgcolor_rgb["green"], data.bgcolor_rgb["blue"])}">
   <table>
     <tr>
@@ -32,32 +58,36 @@ background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, 
       </td>
     </tr>
   </table>
-  <div class="toggledupe"><img src="add.png" /></div>
-  <div class="dupes"></div>
-  <div class="replybutton">
-    % if hasattr(data, "can_thread"):
-      <a href="gwibber:/thread/${data.message_index}"><img src="thread.png" /></a>
-      <a href="gwibber:/reply/${data.message_index}"><img src="reply.png" /></a>
-    % endif   
-  </div>  
+  ${self.dupes(data)}
+  ${self.buttons(data)}
 </div>
-</%def>
-
-<%def name="messages(msgs)">
-  % for m in msgs:
-    ${self.message(m)}
-  % endfor
 </%def>
 
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="theme.css" />
+    <script src="jquery.js"></script>
+    <script>
+      $(document).ready(function() {
+        $(".message").hover(
+          function() {$(this).find(".replybutton").fadeIn(100)},
+          function() {$(this).find(".replybutton").hide(0)});
+
+        $(".toggledupe").show(0).unbind().toggle(
+          function() {$(this).parent().find(".dupes").show(100)},
+          function() {$(this).parent().find(".dupes").hide(100)});
+      });
+    </script>
   </head>
   <body>
     <div class="header">
     </div>
     <div class="messages">
-      ${self.messages(message_store)}
+      % for m in message_store:
+        % if not m.is_duplicate:
+          ${self.message(m)}
+        % endif
+      % endfor
     </div>
   </body>
 </html>

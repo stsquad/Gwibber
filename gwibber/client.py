@@ -418,7 +418,7 @@ class GwibberClient(gtk.Window):
     if "color" in entry.get_key():
       for tab in self.tabs.get_children():
         view = tab.get_child()
-        view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
+        view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
 
   def on_window_close(self, w, e):
     if self.preferences["minimize_to_tray"]:
@@ -583,8 +583,7 @@ class GwibberClient(gtk.Window):
   def on_theme_change(self, *args):
     def on_load_finished(view, frame):
       if len(view.message_store) > 0:
-        view.load_messages()
-        view.load_preferences(self.get_account_config())
+        view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
 
     for tab in self.tabs:
       view = tab.get_child()
@@ -890,8 +889,7 @@ class GwibberClient(gtk.Window):
             msg.is_new = msg.is_unread = False
         self.flag_duplicates(result)
         self.messages_view.message_store = result + self.messages_view.message_store
-        self.messages_view.load_messages()
-        self.messages_view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
+        self.messages_view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
     
       self.on_cancel_reply(None)
 
@@ -909,6 +907,7 @@ class GwibberClient(gtk.Window):
     else: message.gId = hashlib.sha1(remove_url(message.text)[:128]).hexdigest()
     
     message.aId = message.account.id
+    message.dupes = []
 
     if self.last_focus_time:
       message.is_unread = (message.time > self.last_focus_time) or (hasattr(message, "is_unread") and message.is_unread)
@@ -973,14 +972,17 @@ class GwibberClient(gtk.Window):
     gtk.gdk.threads_leave()
 
   def flag_duplicates(self, data):
-    seen = []
-    for message in data:
+    seen = {} 
+    for n, message in enumerate(data):
       if hasattr(message, "gId"):
         message.is_duplicate = message.gId in seen
         message.first_seen = False
+        if message.is_duplicate:
+          data[seen[message.gId]].dupes.append(message)
+
         if not message.is_duplicate:
           message.first_seen = True
-          seen.append(message.gId)
+          seen[message.gId] = n
 
   def manage_indicator_items(self, data):
     for msg in data:

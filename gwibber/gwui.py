@@ -8,6 +8,7 @@ SegPhault (Ryan Paul) - 05/26/2007
 from . import gintegration, resources
 import webkit, gtk
 import urllib2, hashlib, os, simplejson
+from mako.template import Template
 import Image
 
 # i18n magic
@@ -49,7 +50,6 @@ class MessageView(webkit.WebView):
 
   def load_theme(self, theme):
     self.theme = theme
-    self.open(os.path.join("file:/", resources.get_theme_path(theme), "theme.html"))
 
   def load_messages(self, account_prefs=None, theme_prefs=None, message_store = None):
     # Translators: this string appears when somebody reply to a message
@@ -62,12 +62,6 @@ class MessageView(webkit.WebView):
     # and there's no need to handle them in the html too
     ui_dict = {"reply": reply_string, "from": from_string}
     
-    #strings = simplejson.dumps(ui_dict)
-    #msgs = simplejson.dumps([dict(m.__dict__, message_index=n)
-    #  for n, m in enumerate(message_store or self.message_store)],
-    #    indent=4, default=str)
-    #self.execute_script("addMessages(%(msg)s, %(rep)s)" % {"msg": msgs, "rep": strings})
-
     for n, m in enumerate(self.message_store):
       m.message_index = n
 
@@ -75,7 +69,6 @@ class MessageView(webkit.WebView):
         c = gtk.gdk.color_parse(m.account[m.bgcolor])
         m.bgcolor_rgb = {"red": c.red//255, "green": c.green//255, "blue": c.blue//255}
 
-    from mako.template import Template
     template_path = os.path.join(resources.get_theme_path(self.theme), "template.mako")
     content = Template(open(template_path).read()).render(
       message_store=self.message_store,
@@ -83,15 +76,6 @@ class MessageView(webkit.WebView):
       theme_prefs=theme_prefs)
 
     self.load_html_string(content, "file://%s/" % resources.get_theme_path(self.theme))
-
-  def load_preferences(self, acct_prefs, theme_prefs=None):
-    return
-    if theme_prefs:
-      theme = simplejson.dumps(theme_prefs, indent=4, default=str)
-      self.execute_script("setGtkConfig(%s)" % theme)
-    
-    acct = simplejson.dumps(list(acct_prefs), indent=4, default=str)
-    self.execute_script("setAccountConfig(%s)" % acct)
 
   def on_click_link(self, view, frame, req):
     uri = req.get_uri()
