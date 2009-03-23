@@ -1017,8 +1017,7 @@ class GwibberClient(gtk.Window):
               and m.time <= mx.DateTime.gmt()]
             self.flag_duplicates(view.message_store)
             gtk.gdk.threads_enter()
-            view.load_messages()
-            view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
+            view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
             if indicate and hasattr(view, "add_indicator") and view.add_indicator:
               self.manage_indicator_items(view.message_store)
             gtk.gdk.threads_leave()

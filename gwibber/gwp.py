@@ -49,8 +49,8 @@ import gconf
 import gobject
 import gtk
 try:
-  #gnomekeyring = None
-  import gnomekeyring
+  gnomekeyring = None
+  #import gnomekeyring
 except:
   gnomekeyring = None
 

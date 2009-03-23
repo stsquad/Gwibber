@@ -1,0 +1,112 @@
+body {
+  background: url(blue_stripe.png);
+  word-break: break-word;
+  color: white;
+  font-size: 12px;
+}
+
+a { color: white; }
+
+a:hover, .time a:hover {
+  text-decoration: underline;
+}
+
+p { line-height: 125% }
+
+td { vertical-align: top; }
+
+.message {
+  padding: 10px;
+  padding-bottom: 20px;
+  margin-bottom: 5px;
+  text-shadow: 1px 1px black;
+  font-family: Lucida Grande;
+  -webkit-border-radius: 7px;
+}
+
+.searchresult {
+  padding: 1px;
+  -webkit-border-radius: 7px;
+  background: -webkit-gradient(linear, left top, left 220%, from(rgba(143, 6, 32, 0.8)), to(black))
+}
+
+.title {
+  font-size: large;
+  font-weight: bold;
+}
+
+.time {
+  font-size: small;
+}
+
+.time a {
+  text-decoration: none;
+}
+
+.imgbox {
+  width: 48px;
+  height: 48px;
+  margin-right: 5px;
+  background-image: url('');
+  background-repeat: no-repeat;
+  -webkit-border-radius: 7px;
+  -webkit-box-reflect:below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.6, transparent), to(rgba(0,0,0, 0.6)));
+}
+
+.inlinenick {
+  text-decoration: none;
+  font-weight: bold;       
+}
+
+.messages h1 {
+  text-align: center;
+}
+
+.replybutton {
+  float: right;
+  display: none;
+}
+
+.replybutton img
+{
+  padding-left: 5px;
+}
+
+.diggbox {
+  -webkit-border-radius: 7px; 
+  margin-right: 5px;
+  padding: 1px;
+  text-align: center;
+  color: black;
+  text-shadow: none;
+  background:  -webkit-gradient(linear, left top, left 220%, from(rgba(254, 240, 152, 0.9)), to(black));
+  display: none;
+}
+
+.diggcount {
+  font-size: large;
+}
+
+.unread {
+  border: 3px solid rgba(110, 240, 255, 0.8);
+  border-style: ridge;
+}
+
+.reply {
+  border: 3px solid rgba(143, 6, 32, 0.8);
+  border-style: ridge;
+}
+
+.private {
+  border: 3px solid rgba(255, 44, 188, 0.8);
+  border-style: ridge;
+}
+
+.dupes {
+  display: none;
+}
+
+.toggledupe {
+  float: left;
+  display: none;
+}
