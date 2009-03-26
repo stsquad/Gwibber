@@ -159,6 +159,7 @@ class GwibberClient(gtk.Window):
 
     if saved_queries:
       for query in saved_queries:
+        # XXX: suggest refactor of below code to avoid duplication of on_search code
         if query.startswith("#"):
           self.add_msg_tab(functools.partial(self.client.tag, query),
             query.replace("#", ""), True, gtk.STOCK_INFO, False, query)
@@ -166,9 +167,10 @@ class GwibberClient(gtk.Window):
           self.add_msg_tab(functools.partial(self.client.search_url, query),
             urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
         elif len(query) > 0:
+          title = _("Search") + " '" + query[:12] + "...'"
           self.add_msg_tab(functools.partial(self.client.search, query),
-            query, True, gtk.STOCK_FIND, False, query)
-        
+            title, True, gtk.STOCK_FIND, False, query)
+
     #self.add_map_tab(self.client.friend_positions, "Location")
 
     if gintegration.SPELLCHECK_ENABLED:
@@ -348,8 +350,9 @@ class GwibberClient(gtk.Window):
         view = self.add_msg_tab(functools.partial(self.client.search_url, query),
           urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
       elif len(query) > 0:
+        title = _("Search") + " '" + query[:12] + "...'"
         view = self.add_msg_tab(functools.partial(self.client.search, query),
-          query, True, gtk.STOCK_FIND, True, query)
+          title, True, gtk.STOCK_FIND, True, query)
       
       if view:
         self.update([view.get_parent()])
