@@ -5,8 +5,10 @@ except: from gnome import gconf
 from . import gwp
 import microblog
 try:
+  #gnomekeyring = None
   import gnomekeyring
-except: pass
+except:
+  gnomekeyring = None
 
 GCONF_DIR = "/apps/gwibber"
 GCONF_PREFERENCES_DIR = GCONF_DIR + "/preferences"
@@ -50,27 +52,34 @@ class Account(Wrapper):
     self.id = id
 
   def __getitem__(self, key):
-    if key.startswith("private:"):
+    if gnomekeyring and key.startswith("private:"):
       try:
         key = key.replace("private:", "")
         return gnomekeyring.find_items_sync(
           gnomekeyring.ITEM_GENERIC_SECRET,
           {"id": "%s/%s/%s" % (self.path, self.id, key)})[0].secret
       except gnomekeyring.NoMatchError:
+        print "Couldn't retrieve GConf value for key: %s" % key
         return Wrapper.__getitem__(self, "%s/%s" % (self.id, key))
     else:
+      if key.startswith("private:"):
+        key = key.replace("private:", "")
       return Wrapper.__getitem__(self, "%s/%s" % (self.id, key))
 
   def __setitem__(self, key, value):
-    if key.startswith("private:"):
+    if gnomekeyring and key.startswith("private:"):
       key = key.replace("private:", "")
 
-      token = gnomekeyring.item_create_sync(
-        gnomekeyring.get_default_keyring_sync(),
-        gnomekeyring.ITEM_GENERIC_SECRET, "Gwibber preference: %s/%s" % (self.id, self.key),
-        {"id": "%s/%s/%s" % (self.path, self.id, key)}, value, True)
-      Wrapper.__setitem__(self, "%s/%s" % (self.id, key), ":KEYRING:%s" % token)
+      try:
+        token = gnomekeyring.item_create_sync(
+          gnomekeyring.get_default_keyring_sync(),
+          gnomekeyring.ITEM_GENERIC_SECRET, "Gwibber preference: %s/%s" % (self.id, self.key),
+          {"id": "%s/%s/%s" % (self.path, self.id, key)}, value, True)
+        Wrapper.__setitem__(self, "%s/%s" % (self.id, key), ":KEYRING:%s" % token)
+      except:
+        Wrapper.__setitem__(self, "%s/%s" % (self.id, key), value)
     else:
+      key = key.replace("private:", "")
       Wrapper.__setitem__(self, "%s/%s" % (self.id, key), value)
 
   def clear_values(self):

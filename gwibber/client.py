@@ -70,6 +70,11 @@ DEFAULT_PREFERENCES = {
 for _i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
   DEFAULT_PREFERENCES["show_%s" % _i] = True
 
+try:
+  import indicate
+except:
+  indicate = None
+
 class GwibberClient(gtk.Window):
   def __init__(self):
 
@@ -84,6 +89,7 @@ class GwibberClient(gtk.Window):
     self.last_focus_time = None
     self.last_clear = None
     self._reply_acct = None
+    self.indicator_items = {}
     layout = gtk.VBox()
 
     gtk.rc_parse_string("""
@@ -115,6 +121,7 @@ class GwibberClient(gtk.Window):
 
     self.connect("delete-event", self.on_window_close)
     self.connect("focus-out-event", self.on_focus_out)
+    self.connect("focus-in-event", self.on_focus)
 
     for key, value in list(DEFAULT_PREFERENCES.items()):
       if self.preferences[key] == None: self.preferences[key] = value
@@ -137,7 +144,7 @@ class GwibberClient(gtk.Window):
     self.tabs.set_property("homogeneous", False)
     self.tabs.set_scrollable(True)
     self.messages_view = self.add_msg_tab(self.client.receive, _("Messages"), show_icon = "go-home")
-    self.add_msg_tab(self.client.responses, _("Replies"), show_icon = "mail-reply-all")
+    self.add_msg_tab(self.client.responses, _("Replies"), show_icon = "mail-reply-all", add_indicator=True)
 
     saved_position = config.GCONF.get_list("%s/%s" % (config.GCONF_PREFERENCES_DIR, "saved_position"), config.gconf.VALUE_INT)
     if saved_position:
@@ -152,6 +159,7 @@ class GwibberClient(gtk.Window):
 
     if saved_queries:
       for query in saved_queries:
+        # XXX: suggest refactor of below code to avoid duplication of on_search code
         if query.startswith("#"):
           self.add_msg_tab(functools.partial(self.client.tag, query),
             query.replace("#", ""), True, gtk.STOCK_INFO, False, query)
@@ -159,9 +167,10 @@ class GwibberClient(gtk.Window):
           self.add_msg_tab(functools.partial(self.client.search_url, query),
             urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
         elif len(query) > 0:
+          title = _("Search") + " '" + query[:12] + "...'"
           self.add_msg_tab(functools.partial(self.client.search, query),
-            query, True, gtk.STOCK_FIND, False, query)
-        
+            title, True, gtk.STOCK_FIND, False, query)
+
     #self.add_map_tab(self.client.friend_positions, "Location")
 
     if gintegration.SPELLCHECK_ENABLED:
@@ -222,6 +231,13 @@ class GwibberClient(gtk.Window):
       bus.add_signal_receiver(on_notify_action,
         dbus_interface="org.freedesktop.Notifications",
         signal_name="ActionInvoked")
+
+    if indicate:
+      self.indicate = indicate.indicate_server_ref_default()
+      self.indicate.set_type("message.gwibber")
+      self.indicate.set_desktop_file(resources.get_desktop_file())
+      self.indicate.connect("server-display", self.on_toggle_window_visibility)
+      self.indicate.show()
 
     for i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
       config.GCONF.notify_add(config.GCONF_PREFERENCES_DIR + "/show_%s" % i,
@@ -298,6 +314,11 @@ class GwibberClient(gtk.Window):
     entry.insert_text(text, entry.get_position())
     gobject.idle_add(lambda: entry.set_position(entry.get_position() + len(text)))
 
+  def on_focus(self, w, change):
+    for key, item in self.indicator_items.items():
+      self.indicate.remove_indicator(item)
+    self.indicator_items = {}
+
   def on_focus_out(self, widget, event):
     if self.last_update:
       self.last_focus_time = self.last_update
@@ -329,8 +350,9 @@ class GwibberClient(gtk.Window):
         view = self.add_msg_tab(functools.partial(self.client.search_url, query),
           urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
       elif len(query) > 0:
+        title = _("Search") + " '" + query[:12] + "...'"
         view = self.add_msg_tab(functools.partial(self.client.search, query),
-          query, True, gtk.STOCK_FIND, True, query)
+          title, True, gtk.STOCK_FIND, True, query)
       
       if view:
         self.update([view.get_parent()])
@@ -362,11 +384,12 @@ class GwibberClient(gtk.Window):
 
     btn.connect("clicked", self.on_tab_close, scroll)
     
-  def add_msg_tab(self, data_handler, text, show_close=False, show_icon=None, make_active=False, save=None):
+  def add_msg_tab(self, data_handler, text, show_close=False, show_icon=None, make_active=False, save=None, add_indicator=False):
     view = gwui.MessageView(self.preferences["theme"])
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
+    view.add_indicator = add_indicator
 
     self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
     return view
@@ -961,6 +984,22 @@ class GwibberClient(gtk.Window):
         if not message.is_duplicate:
           message.first_seen = True
           seen.append(message.gId)
+
+  def manage_indicator_items(self, data):
+    for msg in data:
+      if msg.first_seen and \
+          hasattr(msg, "is_unread") and msg.is_unread and \
+          hasattr(msg, "gId") and msg.gId not in self.indicator_items:
+        indicator = indicate.IndicatorMessage()
+        indicator.set_property("subtype", "im")
+        indicator.set_property("sender", msg.sender_nick)
+        indicator.set_property("body", msg.text)
+        indicator.set_property_time("time", msg.time.gmticks())
+        if hasattr(msg, "image_path"):
+          pb = gtk.gdk.pixbuf_new_from_file(msg.image_path)
+          indicator.set_property_icon("icon", pb)
+        self.indicator_items[msg.gId] = indicator
+        indicator.show()
   
   def update(self, tabs = None):
     self.throbber.set_from_animation(
@@ -983,6 +1022,8 @@ class GwibberClient(gtk.Window):
             gtk.gdk.threads_enter()
             view.load_messages()
             view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
+            if indicate and hasattr(view, "add_indicator") and view.add_indicator:
+              self.manage_indicator_items(view.message_store)
             gtk.gdk.threads_leave()
             self.show_notification_bubbles(view.message_store)
 
