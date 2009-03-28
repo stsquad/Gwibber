@@ -35,6 +35,27 @@ background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, 
   </div>
 </%def>
 
+<%def name="diggbox(data)">
+  <div class="diggbox">
+    <p><span class="diggcount">${data.diggs}</span><br /><small>diggs</small></p>
+  </div>
+</%def>
+
+<%def name="user_header_message(data)">
+<div id="${data.gId}" class="message ${self.msgclass(data)}"
+  style="${self.bgstyle(data.bgcolor_rgb["red"], data.bgcolor_rgb["green"], data.bgcolor_rgb["blue"])}">
+  <center>
+	  <p class="content">
+			<span class="title">${data.sender}</span><br />
+			<span class="text">${data.sender_followers_count} followers</span><br />
+			<span class="text">${data.sender_location}</span><br />
+			<span class="text"><a href="${data.external_profile_url}">${data.external_profile_url}</a></span>
+		</p>
+  </center>
+</div>
+</%def>
+
+
 <%def name="message(data)">
 <div id="${data.gId}" class="message ${self.msgclass(data)}"
   style="${self.bgstyle(data.bgcolor_rgb["red"], data.bgcolor_rgb["green"], data.bgcolor_rgb["blue"])}">
@@ -46,7 +67,9 @@ background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, 
             <div class="imgbox" title="${data.sender_nick}" style="background-image: url(${data.image});"></div>
           </a>
           <br />
-          <div class="diggbox"></div>
+          % if data.protocol == "digg":
+            ${self.diggbox(data)}
+          % endif
         </td>
       % endif
       <td>
@@ -84,8 +107,12 @@ background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, 
     </div>
     <div class="messages">
       % for m in message_store:
-        % if not m.is_duplicate:
-          ${self.message(m)}
+        % if hasattr(m, "is_user_header"):
+          ${self.user_header_message(m)}
+        % else:
+          % if not m.is_duplicate:
+            ${self.message(m)}
+          % endif
         % endif
       % endfor
     </div>

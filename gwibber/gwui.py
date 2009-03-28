@@ -6,7 +6,7 @@ SegPhault (Ryan Paul) - 05/26/2007
 """
 
 from . import gintegration, resources
-import webkit, gtk
+import webkit, gtk, copy
 import urllib2, hashlib, os, simplejson
 from mako.template import Template
 import Image
@@ -89,13 +89,17 @@ class MessageView(webkit.WebView):
     pass
 
 class UserView(MessageView):
-  def load_messages(self, message_store = None): # override
+  def load_messages(self, account_prefs=None, theme_prefs=None, message_store = None): # override
     if (self.message_store and len(self.message_store) > 0):
       # use info from first message to create user header
-      msg = simplejson.dumps(dict(self.message_store[0].__dict__, message_index=0), sort_keys=True, indent=4, default=str)
-      self.execute_script("addUserHeader(%s)" % msg)
+      #msg = simplejson.dumps(dict(self.message_store[0].__dict__, message_index=0), sort_keys=True, indent=4, default=str)
+      #self.execute_script("addUserHeader(%s)" % msg)
       # display other messages as normal
-      MessageView.load_messages(self, message_store)
+      
+      header = copy.copy(self.message_store[0])
+      header.is_user_header = True
+      self.message_store.insert(0, header)
+      MessageView.load_messages(self, message_store, account_prefs, theme_prefs)
 
 def image_cache(url, cache_dir = IMG_CACHE_DIR):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)
