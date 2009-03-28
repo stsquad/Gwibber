@@ -58,21 +58,22 @@ else:
 ######################################################################
 # Go...
 
-import dbus, dbus.exceptions
+import gconf, dbus, dbus.exceptions
 from gwibber.gintegration import DBUS_NAME, DBUS_PATH
 
-try:
-    bus = dbus.SessionBus()
-    proxy = bus.get_object(DBUS_NAME, DBUS_PATH)
-    iface = dbus.Interface(proxy, DBUS_NAME)
+if gconf.Client().get_bool("/apps/gwibber/preferences/allow_multiple_instances"):
+  GwibberClient()
+  gtk.main()
+else:
+  try:
+      bus = dbus.SessionBus()
+      proxy = bus.get_object(DBUS_NAME, DBUS_PATH)
+      iface = dbus.Interface(proxy, DBUS_NAME)
 
-    logging.info("Found existing Gwibber interface: invoking...")
-    iface.external_invoke()
+      logging.info("Found existing Gwibber interface: invoking...")
+      iface.external_invoke()
 
-except dbus.exceptions.DBusException:
-    logging.info("No existing Gwibber session: starting...")
-    GwibberClient()
-    gtk.main()
-
-
-
+  except dbus.exceptions.DBusException:
+      logging.info("No existing Gwibber session: starting...")
+      GwibberClient()
+      gtk.main()
