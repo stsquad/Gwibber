@@ -1,3 +1,6 @@
+<%!
+import time
+%>
 
 <%def name="timestring(data)">
   <a href="gwibber:read/${data.message_index}">${data.time_string}</a>
@@ -17,7 +20,6 @@ background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, 
 
 <%def name="dupes(data)">
   % if len(data.dupes) > 0:
-    <div class="toggledupe"><img src="add.png" /></div>
     <div class="dupes">
       % for d in data.dupes:
         ${self.message(d)}
@@ -35,12 +37,6 @@ background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, 
   </div>
 </%def>
 
-<%def name="diggbox(data)">
-  <div class="diggbox">
-    <p><span class="diggcount">${data.diggs}</span><br /><small>diggs</small></p>
-  </div>
-</%def>
-
 <%def name="user_header_message(data)">
 <div id="${data.gId}" class="message ${self.msgclass(data)}"
   style="${self.bgstyle(data.bgcolor_rgb["red"], data.bgcolor_rgb["green"], data.bgcolor_rgb["blue"])}">
@@ -55,23 +51,38 @@ background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, 
 </div>
 </%def>
 
+<%def name="diggbox(data)">
+  <div class="diggbox">
+    <p><span class="diggcount">${data.diggs}</span><br /><small>diggs</small></p>
+  </div>
+</%def>
+
+<%def name="image(data)">
+  <a href="${data.profile_url}">
+    <div class="imgbox" title="${data.sender_nick}" style="background-image: url(${data.image});"></div>
+  </a>
+</%def>
 
 <%def name="message(data)">
 <div id="${data.gId}" class="message ${self.msgclass(data)}"
   style="${self.bgstyle(data.bgcolor_rgb["red"], data.bgcolor_rgb["green"], data.bgcolor_rgb["blue"])}">
+  
+  % if len(data.dupes) > 0:
+    <div class="toggledupe"><img src="add.png" /></div>
+  % endif
+
   <table>
     <tr>
+      <td>
       % if data.image:
-        <td class="imagecolumn">
-          <a href="${data.profile_url}">
-            <div class="imgbox" title="${data.sender_nick}" style="background-image: url(${data.image});"></div>
-          </a>
-          <br />
-          % if data.protocol == "digg":
-            ${self.diggbox(data)}
-          % endif
-        </td>
+        ${self.image(data)}
+        <br />
       % endif
+
+      % if data.protocol == "digg":
+        ${self.diggbox(data)}
+      % endif
+      </td>
       <td>
         <p class="content">
           <span class="title">${data.title if hasattr(data, "title") else data.sender}</span>
@@ -81,14 +92,14 @@ background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, 
       </td>
     </tr>
   </table>
-  ${self.dupes(data)}
   ${self.buttons(data)}
+  ${self.dupes(data)}
 </div>
 </%def>
 
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="theme.css" />
+    <link rel="stylesheet" type="text/css" href="theme.css?${time.time()}" />
     <script src="jquery.js"></script>
     <script>
       $(document).ready(function() {

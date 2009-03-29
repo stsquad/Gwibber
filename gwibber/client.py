@@ -581,14 +581,11 @@ class GwibberClient(gtk.Window):
         self.input.get_max_length() - i_textlen))
 
   def on_theme_change(self, *args):
-    def on_load_finished(view, frame):
-      if len(view.message_store) > 0:
-        view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
-
     for tab in self.tabs:
       view = tab.get_child()
-      view.connect("load-finished", on_load_finished)
       view.load_theme(self.preferences["theme"])
+      if len(view.message_store) > 0:
+        view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
 
   def get_themes(self):
     for base in xdg.BaseDirectory.xdg_data_dirs:

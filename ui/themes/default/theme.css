@@ -7,27 +7,24 @@ body {
 
 a { color: white; }
 
-a:hover, .time a:hover {
-  text-decoration: underline;
-}
-
-p { line-height: 125% }
+a:hover, .time a:hover { text-decoration: underline; }
 
 td { vertical-align: top; }
 
+p { line-height: 125% }
+
 .message {
-  padding: 10px;
-  padding-bottom: 20px;
+  padding: 5px;
+  padding-bottom: 10px;
   margin-bottom: 5px;
   text-shadow: 1px 1px black;
   font-family: Lucida Grande;
   -webkit-border-radius: 7px;
+  display: block;
 }
 
-.searchresult {
-  padding: 1px;
-  -webkit-border-radius: 7px;
-  background: -webkit-gradient(linear, left top, left 220%, from(rgba(143, 6, 32, 0.8)), to(black))
+.content {
+  margin-top: 0px;
 }
 
 .title {
@@ -44,8 +41,8 @@ td { vertical-align: top; }
 }
 
 .imgbox {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   margin-right: 5px;
   background-image: url('');
   background-repeat: no-repeat;
@@ -65,11 +62,9 @@ td { vertical-align: top; }
 .replybutton {
   float: right;
   display: none;
-}
-
-.replybutton img
-{
-  padding-left: 5px;
+  margin: 0px;
+  padding: 0px;
+  margin-top: -10px;
 }
 
 .diggbox {
@@ -106,5 +101,5 @@ td { vertical-align: top; }
 }
 
 .toggledupe {
-  float: left;
+  float: right;
 }
