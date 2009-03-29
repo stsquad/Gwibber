@@ -47,6 +47,8 @@ class MessageView(webkit.WebView):
     self.load_theme(theme)
     self.message_store = []
     self.data_retrieval_handler = None
+    #self.set_full_content_zoom(True)
+    #self.set_zoom_level(1)
 
   def load_theme(self, theme):
     self.theme = theme

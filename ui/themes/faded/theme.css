@@ -1,13 +1,24 @@
 body {
   background: url(blue_stripe.png);
   word-break: break-word;
-  color: white;
-  font-size: 12px;
+  color: #222;
+  font-size: 9px;
+  font-family: "Lucida Grande", Sans-serif;
 }
 
+/*
 a { color: white; }
-
 a:hover, .time a:hover { text-decoration: underline; }
+*/
+
+a {
+  color: #204a87;
+  outline: none;
+}
+
+.time a { color: #666 }
+a:hover { text-decoration: underline; }
+
 
 td { vertical-align: top; }
 
@@ -17,36 +28,36 @@ p { line-height: 125% }
   padding: 5px;
   padding-bottom: 10px;
   margin-bottom: 5px;
-  text-shadow: 1px 1px black;
-  font-family: Lucida Grande;
   -webkit-border-radius: 7px;
   display: block;
+
+  background: rgba(0,0,0,0.1);
+  border: 1px solid #aaa;
 }
 
 .content {
   margin-top: 0px;
+  font-size: 95%;
 }
 
 .title {
-  font-size: large;
+  font-size: 105%;
   font-weight: bold;
-}
-
-.time {
-  font-size: small;
 }
 
 .time a {
   text-decoration: none;
+  font-size: 80%;
 }
 
 .imgbox {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   margin-right: 5px;
+  -webkit-background-size: 100% 100%;
   background-image: url('');
   background-repeat: no-repeat;
-  -webkit-border-radius: 7px;
+  -webkit-border-radius: 3px;
   -webkit-box-reflect:below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.6, transparent), to(rgba(0,0,0, 0.6)));
 }
 
@@ -74,7 +85,7 @@ p { line-height: 125% }
   text-align: center;
   color: black;
   text-shadow: none;
-  background:  -webkit-gradient(linear, left top, left 220%, from(rgba(254, 240, 152, 0.9)), to(black));
+  background: -webkit-gradient(linear, left top, left 220%, from(rgba(254, 240, 152, 0.9)), to(black));
 }
 
 .diggcount {
@@ -82,18 +93,15 @@ p { line-height: 125% }
 }
 
 .unread {
-  border: 3px solid rgba(110, 240, 255, 0.8);
-  border-style: ridge;
+  border: 2px solid #888;
 }
 
 .reply {
-  border: 3px solid rgba(143, 6, 32, 0.8);
-  border-style: ridge;
+  border: 2px solid #777;
 }
 
 .private {
-  border: 3px solid rgba(255, 44, 188, 0.8);
-  border-style: ridge;
+  border: 2px solid #777;
 }
 
 .dupes {

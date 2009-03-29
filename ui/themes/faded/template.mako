@@ -9,8 +9,14 @@ import time
   % endif
 </%def>
 
-<%def name="bgstyle(r,g,b)">
-background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, ${b}, 0.6)), to(black));
+<%def name="bgstyle(r,g,b, data)">
+% if hasattr(data, "is_reply") and data.is_reply:
+  background: -webkit-gradient(linear, left top, left 150%, from(rgba(${r}, ${g}, ${b}, 0.6)), to(white));
+% elif hasattr(data, "is_private") and data.is_private:
+  background: -webkit-gradient(linear, left top, left 350%, from(rgba(${r}, ${g}, ${b}, 1)), to(black));
+% else:
+  background: -webkit-gradient(linear, left top, left 350%, from(rgba(${r}, ${g}, ${b}, 0.1)), to(black));
+% endif
 </%def>
 
 <%def name="msgclass(data)">
@@ -39,7 +45,7 @@ background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, 
 
 <%def name="user_header_message(data)">
 <div id="${data.gId}" class="message ${self.msgclass(data)}"
-  style="${self.bgstyle(data.bgcolor_rgb["red"], data.bgcolor_rgb["green"], data.bgcolor_rgb["blue"])}">
+  style="${self.bgstyle(data.bgcolor_rgb["red"], data.bgcolor_rgb["green"], data.bgcolor_rgb["blue"], data)}">
   <center>
 	  <p class="content">
 			<span class="title">${data.sender}</span><br />
@@ -65,10 +71,10 @@ background: -webkit-gradient(linear, left top, left 220%, from(rgba(${r}, ${g}, 
 
 <%def name="message(data)">
 <div id="${data.gId}" class="message ${self.msgclass(data)}"
-  style="${self.bgstyle(data.bgcolor_rgb["red"], data.bgcolor_rgb["green"], data.bgcolor_rgb["blue"])}">
+  style="${self.bgstyle(data.bgcolor_rgb["red"], data.bgcolor_rgb["green"], data.bgcolor_rgb["blue"], data)}">
   
   % if len(data.dupes) > 0:
-    <div class="toggledupe"><img src="add.png" /></div>
+    <div class="toggledupe"><img src="more.png" /></div>
   % endif
 
   <table>
