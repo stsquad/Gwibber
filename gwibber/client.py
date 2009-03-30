@@ -848,6 +848,12 @@ class GwibberClient(gtk.Window):
     theme_selector = gtk.combo_box_new_text()
     for theme_name in resources.get_themes(): theme_selector.append_text(theme_name)
     glade.get_widget("containerThemeSelector").pack_start(theme_selector, True, True)
+
+    # reset theme to default if no longer available
+    if self.preferences['theme'] not in resources.get_themes():
+        config.GCONF.set_string("%s/%s" % (config.GCONF_PREFERENCES_DIR, "theme"),
+                config.gconf.VALUE_STRING, 'default')
+
     self.preferences.bind(theme_selector, "theme")
     theme_selector.show_all()
 
