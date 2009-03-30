@@ -48,8 +48,11 @@ class MessageView(webkit.WebView):
     self.data_retrieval_handler = None
 
   def load_theme(self, theme):
+    if not resources.get_theme_path(theme):
+        theme = 'default'
     self.theme = theme
-    self.open(os.path.join("file:/", resources.get_theme_path(theme), "theme.html"))
+    html = os.path.join("file:/", resources.get_theme_path(theme), "theme.html")
+    self.open(html)
 
   def load_messages(self, message_store = None):
     # Translators: this string appears when somebody reply to a message
