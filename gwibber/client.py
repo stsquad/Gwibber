@@ -666,7 +666,7 @@ class GwibberClient(gtk.Window):
     accelGroup.connect_group(key, mod, gtk.ACCEL_VISIBLE, self.on_cancel_reply)
 
     def create_action(name, accel, stock, fn, parent = menuGwibber):
-      mi = gtk.Action("gwibber%s" % name, "_%s" % name, None, stock)
+      mi = gtk.Action("gwibber%s" % name, "%s" % name, None, stock)
       gtk.accel_map_add_entry("<Gwibber>/%s" % name, *gtk.accelerator_parse(accel))
       mi.set_accel_group(accelGroup)
       mi.set_accel_path("<Gwibber>/%s" % name)
@@ -674,14 +674,14 @@ class GwibberClient(gtk.Window):
       parent.append(mi.create_menu_item())
       return mi
 
-    actRefresh = create_action(_("Refresh"), "<ctrl>R", gtk.STOCK_REFRESH, self.on_refresh) 
-    actSearch = create_action(_("Search"), "<ctrl>F", gtk.STOCK_FIND, self.on_search) 
-    actClear = create_action(_("Clear"), "<ctrl>L", gtk.STOCK_CLEAR, self.on_clear) 
-    actClose = create_action(_("Close Window"), "<ctrl>W", gtk.STOCK_CLOSE, self.on_close)
+    actRefresh = create_action(_("_Refresh"), "<ctrl>R", gtk.STOCK_REFRESH, self.on_refresh) 
+    actSearch = create_action(_("_Search"), "<ctrl>F", gtk.STOCK_FIND, self.on_search) 
+    actClear = create_action(_("C_lear"), "<ctrl>L", gtk.STOCK_CLEAR, self.on_clear) 
     menuGwibber.append(gtk.SeparatorMenuItem())
-    actPreferences = create_action(_("Preferences"), "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
+    actPreferences = create_action(_("_Preferences"), "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
     menuGwibber.append(gtk.SeparatorMenuItem())
-    actQuit = create_action(_("Quit"), "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
+    actClose = create_action(_("_Close Window"), "<ctrl>W", gtk.STOCK_CLOSE, self.on_close)
+    actQuit = create_action(_("_Quit"), "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
     
     #actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
     #actThemeTest.connect("activate", self.theme_preview_test)
