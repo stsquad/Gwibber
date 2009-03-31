@@ -417,6 +417,11 @@ class GwibberClient(gtk.Window):
     self.tabs.remove_page(pagenum)
     e.destroy()
 
+  def on_tab_close_btn(self, w, *args):
+    n = self.tabs.get_current_page()
+    if (n > 1):
+      self.on_tab_close(w, self.tabs.get_nth_page(n))
+
   def on_account_change(self, client, junk, entry, *args):
     if "color" in entry.get_key():
       for tab in self.tabs.get_children():
@@ -430,7 +435,7 @@ class GwibberClient(gtk.Window):
       return True
     else: self.on_quit()
   
-  def on_close(self, w, *args):
+  def on_window_close_btn(self, w, *args):
     self.on_window_close(w, None)
 
   def on_cancel_reply(self, w, *args):
@@ -676,11 +681,14 @@ class GwibberClient(gtk.Window):
 
     actRefresh = create_action(_("_Refresh"), "<ctrl>R", gtk.STOCK_REFRESH, self.on_refresh) 
     actSearch = create_action(_("_Search"), "<ctrl>F", gtk.STOCK_FIND, self.on_search) 
+    # XXX: actCloseWindow should be disabled (greyed out) when false self.preferences['minimize_to_tray'] as it is the same as quitting
+    actCloseWindow = create_action(_("_Close Window"), "<ctrl><shift>W", None, self.on_window_close_btn)
+    actCloseTab = create_action(_("_Close Tab"), "<ctrl>W", gtk.STOCK_CLOSE, self.on_tab_close_btn)
+    menuGwibber.append(gtk.SeparatorMenuItem())
     actClear = create_action(_("C_lear"), "<ctrl>L", gtk.STOCK_CLEAR, self.on_clear) 
     menuGwibber.append(gtk.SeparatorMenuItem())
     actPreferences = create_action(_("_Preferences"), "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
     menuGwibber.append(gtk.SeparatorMenuItem())
-    actClose = create_action(_("_Close Window"), "<ctrl>W", gtk.STOCK_CLOSE, self.on_close)
     actQuit = create_action(_("_Quit"), "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
     
     #actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
