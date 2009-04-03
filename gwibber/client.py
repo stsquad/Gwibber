@@ -396,6 +396,7 @@ class GwibberClient(gtk.Window):
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
+    view.add_indicator = False
 
     self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
     return view
@@ -405,6 +406,7 @@ class GwibberClient(gtk.Window):
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
+    view.add_indicator = False
 
     self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
     return view
