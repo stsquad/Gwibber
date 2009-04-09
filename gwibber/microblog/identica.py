@@ -101,7 +101,8 @@ class SearchResult:
     self.image = data.laconica_posticon.replace("-96-", "-48-")
     self.bgcolor = "message_color"
     self.url = data.link
-    self.profile_url = data.sioc_has_creator
+    self.profile_url = "gwibber:user/%s/%s" % (self.account.id, self.sender_nick)
+    self.external_profile_url = data.sioc_has_creator
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="http://identi.ca/\\1">\\1</a>',
