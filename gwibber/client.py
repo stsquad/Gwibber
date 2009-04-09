@@ -887,10 +887,15 @@ class GwibberClient(gtk.Window):
       if self.message_target:
         account = self.message_target.account
         if account:
+          # temporarily send_enable the account to allow reply to be posted
+          is_send_enabled = account["send_enabled"]
+          account["send_enabled"] = True
           if account.supports(microblog.can.THREAD_REPLY) and hasattr(self.message_target, "id"):
             result = self.client.send_thread(text, self.message_target, [account["protocol"]])
           else:
             result = self.client.reply(text, [account["protocol"]])
+          # restore send_enabled choice after replying
+          account["send_enabled"] = is_send_enabled
       # else standard post
       else:
         result = self.client.send(text, list(microblog.PROTOCOLS.keys()))
