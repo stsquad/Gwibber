@@ -151,7 +151,7 @@ class Client:
 
   def connect(self, url, data = None):
     return urllib2.urlopen(urllib2.Request(
-      url, data, {"Authorization": self.get_auth()})).read()
+      url +'?'+ data, headers = {"Authorization": self.get_auth()})).read()
 
   def get_messages(self):
     return simplejson.loads(self.connect(
