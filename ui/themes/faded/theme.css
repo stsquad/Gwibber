@@ -4,12 +4,9 @@ body {
   color: #222;
   font-size: 9px;
   font-family: "Lucida Grande", Sans-serif;
+  margin: 4px;
+  margin-right: 1px;
 }
-
-/*
-a { color: white; }
-a:hover, .time a:hover { text-decoration: underline; }
-*/
 
 a {
   color: #204a87;
@@ -75,7 +72,7 @@ p { line-height: 125% }
   display: none;
   margin: 0px;
   padding: 0px;
-  margin-top: -10px;
+  margin-top: -15px;
 }
 
 .diggbox {
