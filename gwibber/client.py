@@ -40,7 +40,7 @@ gtk.gdk.threads_init()
 
 MAX_MESSAGE_LENGTH = 140
 
-VERSION_NUMBER = "0.9.1"
+VERSION_NUMBER = "1.0.2"
 
 def N_(message): return message
 
