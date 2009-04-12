@@ -28,7 +28,7 @@ def get_desktop_file():
   p = os.path.join(LAUNCH_DIR, "gwibber.desktop")
   if os.path.exists(p): return p
   
-  for base in DATA_DIRS:
+  for base in DATA__BASE_DIRS:
     p = os.path.join(base, "applications", "gwibber.desktop")
     if os.path.exists(p): return p
 
