@@ -5,8 +5,8 @@ except: from gnome import gconf
 from . import gwp
 import microblog
 try:
-  #gnomekeyring = None
-  import gnomekeyring
+  gnomekeyring = None
+  #import gnomekeyring
 except:
   gnomekeyring = None
 
