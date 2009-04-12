@@ -93,16 +93,17 @@ class SearchResult:
     self.account = client.account
     self.protocol = client.account["protocol"]
     self.username = client.account["username"]
-    self.sender = data.author
-    self.sender_nick = data.title.split(":")[0]
-    self.sender_id = self.sender_nick
-    self.time = support.parse_time(data.updated)
-    self.text = data.title.split(":", 1)[1].strip()
-    self.image = data.laconica_posticon.replace("-96-", "-48-")
+    self.sender = data["from_user"]
+    self.sender_nick = data["from_user"]
+    self.sender_id = data["from_user_id"]
+    self.time = support.parse_time(data["created_at"])
+    self.text = data["text"]
+    self.image = data["profile_image_url"]
     self.bgcolor = "message_color"
-    self.url = data.link
-    self.profile_url = "gwibber:user/%s/%s" % (self.account.id, self.sender_nick)
-    self.external_profile_url = data.sioc_has_creator
+    self.url = "http://identi.ca/notice/%s" % data["id"]
+    self.profile_url = "gwibber:user/%s/%s" % (self.account.id, data["from_user"])
+    self.external_profile_url = "http://identi.ca/%s" % data["from_user"]
+
     self.html_string = '<span class="text">%s</span>' % \
         HASH_PARSE.sub('#<a class="inlinehash" href="gwibber:tag/\\1">\\1</a>',
         NICK_PARSE.sub('@<a class="inlinenick" href="gwibber:user/'+self.account.id+'/\\1">\\1</a>',
@@ -146,9 +147,9 @@ class Client:
       "https://identi.ca/api/direct_messages.json"))
 
   def get_search(self, query):
-    return feedparser.parse(urllib2.urlopen(
-      urllib2.Request("https://identi.ca/search/notice/rss",
-        urllib.urlencode({"q": query}))))["entries"]
+    return simplejson.load(urllib2.urlopen(
+      urllib2.Request("https://identi.ca/api/search.json",
+        urllib.urlencode({"q": query}))))["results"]
 
   def get_tag(self, query):
     return feedparser.parse(urllib2.urlopen(
