@@ -17,7 +17,7 @@ import webbrowser
 PROTOCOL_INFO = {
   "name": "Google Reader",
   "version": 0.1,
-  
+
   "config": [
     "private:password",
     "username",
@@ -38,46 +38,46 @@ class Message:
     self.client = client
     self.account = client.account
     self.protocol = client.account["protocol"]
-    
+
     self.source = ""
     self.sender = data.get("author", "")
+
     if hasattr(data, "source"):
         self.source = data.source.get("title", "")
         self.sender = data.source.get("title", "")
-        
+        self.profile_url = data.source.link
+
     self.gr_id = data.get("id", "")
-    
+
+    self.image = "http://www.google.com/reader/ui/2296270177-logo-graphic.gif";
     self.sender_nick = data.get("author", "")
     self.sender_id = self.sender
-            
+
     self.time = support.parse_time(data.updated)
     self.bgcolor = "message_color"
     self.url = data.get("link", "")
-    self.profile_url = ""
-    
+
     if(self.source == ""):
         self.title = self.sender
     else:
         self.title = "%s <small>By %s</small>" % (self.source, self.sender)
-    
-    self.read = True
+
+    self.is_unread = True
     self.categories = []
+
     for category in data.tags:
       if( (category.term.find("user/")>=0) and (category.term.find("/state/")>=0) and (category.label=='read') ):
-        self.read = False
+        self.is_unread = False
       elif((category.term.find("user/")>=0) and (category.term.find("/label/")>=0)):
         self.categories.append(category.label)
-    
+
     self.summary = data.get("summary", "")
-
-    self.is_unread = False        
-    if(self.read):
-        self.title = "<b><u>(NEW)</u></b> %s" % self.title
-        self.is_unread = True
-
-
     self.html_string = data.title
-    self.text = ""
+
+    if(len(self.summary) > 0):
+      self.text = self.summary
+    else:
+      self.text = data.source.get("title", "")
 
 class Client:
     def __init__(self, acct):
@@ -86,18 +86,18 @@ class Client:
             self.sid = self.account["session"]
         else:
             self.get_auth()
-            
-        
+
+
     def get_auth(self):
         header = {'User-agent' : 'Gwibber'}
-        post_data = urllib.urlencode({ 'Email': self.account["username"], 
+        post_data = urllib.urlencode({ 'Email': self.account["username"],
                                        'Passwd': self.account["private:password"],
                                        'service': 'reader',
                                        'source': 'Gwibber',
                                        'continue': 'http://www.google.com', })
-                                
-        request = urllib2.Request('https://www.google.com/accounts/ClientLogin', 
-                                  post_data, 
+
+        request = urllib2.Request('https://www.google.com/accounts/ClientLogin',
+                                  post_data,
                                   header)
         try :
             f = urllib2.urlopen( request )
@@ -106,8 +106,8 @@ class Client:
             raise
         self.sid = re.search('SID=(\S*)', res).group(1)
         self.account["session"] = self.sid
-    
-    def get_results(self,url, data = None,  count = 0):  
+
+    def get_results(self,url, data = None,  count = 0):
         header ={'User-agent' : 'Gwibber',
                  'Cookie': 'Name=SID;SID=%s;Domain=.google.com;Path=/;Expires=160000000000' % self.sid}
         request = urllib2.Request(url, data, header)
@@ -124,18 +124,18 @@ class Client:
         except:
             res = None
         return res
-    
+
     def read_message(self, message):
         webbrowser.open (message.url)
         if message.is_unread:
             token = self.get_results('http://www.google.com/reader/api/0/token')
-            post_data = urllib.urlencode ({ 'i' : message.gr_id, 
-                                            'T' : token, 
-                                            'ac' : 'edit-tags' , 
+            post_data = urllib.urlencode ({ 'i' : message.gr_id,
+                                            'T' : token,
+                                            'ac' : 'edit-tags' ,
                                             'a' : 'user/-/state/com.google/read' })
-                                        
+
             url = 'http://www.google.com/reader/api/0/edit-tag'
-            res = self.get_results(url, post_data)
+            self.get_results(url, post_data)
             message.is_unread = False
             return True
         return False

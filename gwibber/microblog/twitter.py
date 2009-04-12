@@ -151,17 +151,17 @@ class Client:
 
   def connect(self, url, data = None):
     return urllib2.urlopen(urllib2.Request(
-      url, data, {"Authorization": self.get_auth()})).read()
+      url, data, headers = {"Authorization": self.get_auth()})).read()
 
   def get_messages(self):
     return simplejson.loads(self.connect(
-      "https://twitter.com/statuses/friends_timeline.json",
-        urllib.urlencode({"count": self.account["receive_count"] or "20"})))
+      "https://twitter.com/statuses/friends_timeline.json" +'?'+
+      urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
   def get_user_messages(self, screen_name):
     try:
       return simplejson.loads(self.connect(
-        "https://twitter.com/statuses/user_timeline/"+ screen_name + ".json",
+        "https://twitter.com/statuses/user_timeline/"+ screen_name + ".json" +'?'+
           urllib.urlencode({"count": self.account["receive_count"] or "20"})))
     except Exception:
       profile = [simplejson.loads(self.connect(
@@ -170,7 +170,7 @@ class Client:
 
   def get_replies(self):
     return simplejson.loads(self.connect(
-      "https://twitter.com/statuses/replies.json",
+      "https://twitter.com/statuses/replies.json" +'?'+
         urllib.urlencode({"count": self.account["receive_count"] or "20"})))
 
   def get_direct_messages(self):

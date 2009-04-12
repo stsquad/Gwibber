@@ -51,6 +51,8 @@ class MessageView(webkit.WebView):
     #self.set_zoom_level(1)
 
   def load_theme(self, theme):
+    if not resources.get_theme_path(theme):
+        theme = 'default'
     self.theme = theme
 
   def load_messages(self, account_prefs=None, theme_prefs=None, message_store = None):

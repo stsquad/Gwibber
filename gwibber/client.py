@@ -40,7 +40,7 @@ gtk.gdk.threads_init()
 
 MAX_MESSAGE_LENGTH = 140
 
-VERSION_NUMBER = "1.0.1"
+VERSION_NUMBER = "0.9.1"
 
 def N_(message): return message
 
@@ -159,6 +159,7 @@ class GwibberClient(gtk.Window):
 
     if saved_queries:
       for query in saved_queries:
+        # XXX: suggest refactor of below code to avoid duplication of on_search code
         if query.startswith("#"):
           self.add_msg_tab(functools.partial(self.client.tag, query),
             query.replace("#", ""), True, gtk.STOCK_INFO, False, query)
@@ -166,9 +167,10 @@ class GwibberClient(gtk.Window):
           self.add_msg_tab(functools.partial(self.client.search_url, query),
             urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
         elif len(query) > 0:
+          title = _("Search") + " '" + query[:12] + "...'"
           self.add_msg_tab(functools.partial(self.client.search, query),
-            query, True, gtk.STOCK_FIND, False, query)
-        
+            title, True, gtk.STOCK_FIND, False, query)
+
     #self.add_map_tab(self.client.friend_positions, "Location")
 
     if gintegration.SPELLCHECK_ENABLED:
@@ -314,7 +316,8 @@ class GwibberClient(gtk.Window):
 
   def on_focus(self, w, change):
     for key, item in self.indicator_items.items():
-      self.indicate.remove_indicator(item)
+      #self.indicate.remove_indicator(item)
+      self.indicate.hide(item)
     self.indicator_items = {}
 
   def on_focus_out(self, widget, event):
@@ -348,8 +351,9 @@ class GwibberClient(gtk.Window):
         view = self.add_msg_tab(functools.partial(self.client.search_url, query),
           urlparse.urlparse(query)[1], True, gtk.STOCK_FIND, True, query)
       elif len(query) > 0:
+        title = _("Search") + " '" + query[:12] + "...'"
         view = self.add_msg_tab(functools.partial(self.client.search, query),
-          query, True, gtk.STOCK_FIND, True, query)
+          title, True, gtk.STOCK_FIND, True, query)
       
       if view:
         self.update([view.get_parent()])
@@ -396,6 +400,7 @@ class GwibberClient(gtk.Window):
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
+    view.add_indicator = False
 
     self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
     return view
@@ -405,6 +410,7 @@ class GwibberClient(gtk.Window):
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
+    view.add_indicator = False
 
     self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
     return view
@@ -413,6 +419,11 @@ class GwibberClient(gtk.Window):
     pagenum = self.tabs.page_num(e)
     self.tabs.remove_page(pagenum)
     e.destroy()
+
+  def on_tab_close_btn(self, w, *args):
+    n = self.tabs.get_current_page()
+    if (n > 1):
+      self.on_tab_close(w, self.tabs.get_nth_page(n))
 
   def on_account_change(self, client, junk, entry, *args):
     if "color" in entry.get_key():
@@ -427,7 +438,7 @@ class GwibberClient(gtk.Window):
       return True
     else: self.on_quit()
   
-  def on_close(self, w, *args):
+  def on_window_close_btn(self, w, *args):
     self.on_window_close(w, None)
 
   def on_cancel_reply(self, w, *args):
@@ -442,6 +453,15 @@ class GwibberClient(gtk.Window):
       self.hide()
     else:
       self.present()
+      self.move(*self.last_position)
+
+  def on_indicator_activate(self, w):
+    tab_num = w.get_property("gwibber_tab")
+    if tab_num is not None:
+      self.tabs.set_current_page(int(tab_num))
+    visible = self.get_property("visible")
+    self.present()
+    if not visible:
       self.move(*self.last_position)
 
   def external_invoke(self):
@@ -659,7 +679,7 @@ class GwibberClient(gtk.Window):
     accelGroup.connect_group(key, mod, gtk.ACCEL_VISIBLE, self.on_cancel_reply)
 
     def create_action(name, accel, stock, fn, parent = menuGwibber):
-      mi = gtk.Action("gwibber%s" % name, "_%s" % name, None, stock)
+      mi = gtk.Action("gwibber%s" % name, "%s" % name, None, stock)
       gtk.accel_map_add_entry("<Gwibber>/%s" % name, *gtk.accelerator_parse(accel))
       mi.set_accel_group(accelGroup)
       mi.set_accel_path("<Gwibber>/%s" % name)
@@ -667,14 +687,17 @@ class GwibberClient(gtk.Window):
       parent.append(mi.create_menu_item())
       return mi
 
-    actRefresh = create_action(_("Refresh"), "<ctrl>R", gtk.STOCK_REFRESH, self.on_refresh) 
-    actSearch = create_action(_("Search"), "<ctrl>F", gtk.STOCK_FIND, self.on_search) 
-    actClear = create_action(_("Clear"), "<ctrl>L", gtk.STOCK_CLEAR, self.on_clear) 
-    actClose = create_action(_("Close Window"), "<ctrl>W", gtk.STOCK_CLOSE, self.on_close)
+    actRefresh = create_action(_("_Refresh"), "<ctrl>R", gtk.STOCK_REFRESH, self.on_refresh) 
+    actSearch = create_action(_("_Search"), "<ctrl>F", gtk.STOCK_FIND, self.on_search) 
+    # XXX: actCloseWindow should be disabled (greyed out) when false self.preferences['minimize_to_tray'] as it is the same as quitting
+    actCloseWindow = create_action(_("_Close Window"), "<ctrl><shift>W", None, self.on_window_close_btn)
+    actCloseTab = create_action(_("_Close Tab"), "<ctrl>W", gtk.STOCK_CLOSE, self.on_tab_close_btn)
     menuGwibber.append(gtk.SeparatorMenuItem())
-    actPreferences = create_action(_("Preferences"), "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
+    actClear = create_action(_("C_lear"), "<ctrl>L", gtk.STOCK_CLEAR, self.on_clear) 
     menuGwibber.append(gtk.SeparatorMenuItem())
-    actQuit = create_action(_("Quit"), "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
+    actPreferences = create_action(_("_Preferences"), "<ctrl>P", gtk.STOCK_PREFERENCES, self.on_preferences) 
+    menuGwibber.append(gtk.SeparatorMenuItem())
+    actQuit = create_action(_("_Quit"), "<ctrl>Q", gtk.STOCK_QUIT, self.on_quit) 
     
     #actThemeTest = gtk.Action("gwibberThemeTest", "_Theme Test", None, gtk.STOCK_PREFERENCES)
     #actThemeTest.connect("activate", self.theme_preview_test)
@@ -841,6 +864,12 @@ class GwibberClient(gtk.Window):
     theme_selector = gtk.combo_box_new_text()
     for theme_name in resources.get_themes(): theme_selector.append_text(theme_name)
     glade.get_widget("containerThemeSelector").pack_start(theme_selector, True, True)
+
+    # reset theme to default if no longer available
+    if self.preferences['theme'] not in resources.get_themes():
+        config.GCONF.set_string("%s/%s" % (config.GCONF_PREFERENCES_DIR, "theme"),
+                config.gconf.VALUE_STRING, 'default')
+
     self.preferences.bind(theme_selector, "theme")
     theme_selector.show_all()
 
@@ -866,10 +895,15 @@ class GwibberClient(gtk.Window):
       if self.message_target:
         account = self.message_target.account
         if account:
+          # temporarily send_enable the account to allow reply to be posted
+          is_send_enabled = account["send_enabled"]
+          account["send_enabled"] = True
           if account.supports(microblog.can.THREAD_REPLY) and hasattr(self.message_target, "id"):
             result = self.client.send_thread(text, self.message_target, [account["protocol"]])
           else:
             result = self.client.reply(text, [account["protocol"]])
+          # restore send_enabled choice after replying
+          account["send_enabled"] = is_send_enabled
       # else standard post
       else:
         result = self.client.send(text, list(microblog.PROTOCOLS.keys()))
@@ -981,21 +1015,27 @@ class GwibberClient(gtk.Window):
           message.first_seen = True
           seen[message.gId] = n
 
-  def manage_indicator_items(self, data):
-    for msg in data:
-      if msg.first_seen and \
-          hasattr(msg, "is_unread") and msg.is_unread and \
-          hasattr(msg, "gId") and msg.gId not in self.indicator_items:
-        indicator = indicate.IndicatorMessage()
-        indicator.set_property("subtype", "im")
-        indicator.set_property("sender", msg.sender_nick)
-        indicator.set_property("body", msg.text)
-        indicator.set_property_time("time", msg.time.gmticks())
-        if hasattr(msg, "image_path"):
-          pb = gtk.gdk.pixbuf_new_from_file(msg.image_path)
-          indicator.set_property_icon("icon", pb)
-        self.indicator_items[msg.gId] = indicator
-        indicator.show()
+  def manage_indicator_items(self, data, tab_num=None):
+    if not self.is_active():
+      for msg in data:
+        if msg.first_seen and \
+            hasattr(msg, "is_unread") and msg.is_unread and \
+            hasattr(msg, "gId") and msg.gId not in self.indicator_items:
+          indicator = indicate.IndicatorMessage()
+          indicator.set_property("subtype", "im")
+          indicator.set_property("sender", msg.sender_nick)
+          indicator.set_property("body", msg.text)
+          indicator.set_property_time("time", msg.time.gmticks())
+          if hasattr(msg, "image_path"):
+            pb = gtk.gdk.pixbuf_new_from_file(msg.image_path)
+            indicator.set_property_icon("icon", pb)
+
+          if tab_num is not None:
+            indicator.set_property("gwibber_tab", str(tab_num))
+          indicator.connect("user-display", self.on_indicator_activate)
+
+          self.indicator_items[msg.gId] = indicator
+          indicator.show()
   
   def update(self, tabs = None):
     self.throbber.set_from_animation(
@@ -1017,8 +1057,10 @@ class GwibberClient(gtk.Window):
             self.flag_duplicates(view.message_store)
             gtk.gdk.threads_enter()
             view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
+            
             if indicate and hasattr(view, "add_indicator") and view.add_indicator:
-              self.manage_indicator_items(view.message_store)
+              self.manage_indicator_items(view.message_store, tab_num=self.tabs.page_num(tab))
+            
             gtk.gdk.threads_leave()
             self.show_notification_bubbles(view.message_store)
 
