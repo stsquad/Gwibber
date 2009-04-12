@@ -39,7 +39,8 @@ def get_theme_paths():
       for f in sorted(os.listdir(theme_root)):
         if not f.startswith('.'):
           theme_dir = os.path.join(theme_root, f)
-          if os.path.isdir(theme_dir):
+          if os.path.isdir(theme_dir) and \
+             os.path.exists(os.path.join(theme_dir, "template.mako")):
             yield theme_dir
 
 def get_theme_path(name):
