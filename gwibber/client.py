@@ -316,7 +316,8 @@ class GwibberClient(gtk.Window):
 
   def on_focus(self, w, change):
     for key, item in self.indicator_items.items():
-      self.indicate.remove_indicator(item)
+      #self.indicate.remove_indicator(item)
+      self.indicate.hide(item)
     self.indicator_items = {}
 
   def on_focus_out(self, widget, event):
@@ -1005,20 +1006,21 @@ class GwibberClient(gtk.Window):
           seen.append(message.gId)
 
   def manage_indicator_items(self, data):
-    for msg in data:
-      if msg.first_seen and \
-          hasattr(msg, "is_unread") and msg.is_unread and \
-          hasattr(msg, "gId") and msg.gId not in self.indicator_items:
-        indicator = indicate.IndicatorMessage()
-        indicator.set_property("subtype", "im")
-        indicator.set_property("sender", msg.sender_nick)
-        indicator.set_property("body", msg.text)
-        indicator.set_property_time("time", msg.time.gmticks())
-        if hasattr(msg, "image_path"):
-          pb = gtk.gdk.pixbuf_new_from_file(msg.image_path)
-          indicator.set_property_icon("icon", pb)
-        self.indicator_items[msg.gId] = indicator
-        indicator.show()
+    if not self.is_active():
+      for msg in data:
+        if msg.first_seen and \
+            hasattr(msg, "is_unread") and msg.is_unread and \
+            hasattr(msg, "gId") and msg.gId not in self.indicator_items:
+          indicator = indicate.IndicatorMessage()
+          indicator.set_property("subtype", "im")
+          indicator.set_property("sender", msg.sender_nick)
+          indicator.set_property("body", msg.text)
+          indicator.set_property_time("time", msg.time.gmticks())
+          if hasattr(msg, "image_path"):
+            pb = gtk.gdk.pixbuf_new_from_file(msg.image_path)
+            indicator.set_property_icon("icon", pb)
+          self.indicator_items[msg.gId] = indicator
+          indicator.show()
   
   def update(self, tabs = None):
     self.throbber.set_from_animation(
