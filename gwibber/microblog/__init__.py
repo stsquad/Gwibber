@@ -11,7 +11,7 @@ import gettext
 _ = gettext.lgettext
 
 PROTOCOLS = {
-  "jaiku": jaiku,
+  #"jaiku": jaiku,
   "digg": digg,
   "twitter": twitter,
   "facebook": facebook,
