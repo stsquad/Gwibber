@@ -400,6 +400,7 @@ class GwibberClient(gtk.Window):
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
+    view.add_indicator = False
 
     self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
     return view
@@ -409,6 +410,7 @@ class GwibberClient(gtk.Window):
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
     view.config_retrieval_handler = self.get_account_config
+    view.add_indicator = False
 
     self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
     return view
@@ -451,6 +453,15 @@ class GwibberClient(gtk.Window):
       self.hide()
     else:
       self.present()
+      self.move(*self.last_position)
+
+  def on_indicator_activate(self, w):
+    tab_num = w.get_property("gwibber_tab")
+    if tab_num is not None:
+      self.tabs.set_current_page(int(tab_num))
+    visible = self.get_property("visible")
+    self.present()
+    if not visible:
       self.move(*self.last_position)
 
   def external_invoke(self):
@@ -1005,7 +1016,7 @@ class GwibberClient(gtk.Window):
           message.first_seen = True
           seen.append(message.gId)
 
-  def manage_indicator_items(self, data):
+  def manage_indicator_items(self, data, tab_num=None):
     if not self.is_active():
       for msg in data:
         if msg.first_seen and \
@@ -1019,6 +1030,11 @@ class GwibberClient(gtk.Window):
           if hasattr(msg, "image_path"):
             pb = gtk.gdk.pixbuf_new_from_file(msg.image_path)
             indicator.set_property_icon("icon", pb)
+
+          if tab_num is not None:
+            indicator.set_property("gwibber_tab", str(tab_num))
+          indicator.connect("user-display", self.on_indicator_activate)
+
           self.indicator_items[msg.gId] = indicator
           indicator.show()
   
@@ -1043,8 +1059,10 @@ class GwibberClient(gtk.Window):
             gtk.gdk.threads_enter()
             view.load_messages()
             view.load_preferences(self.get_account_config(), self.get_gtk_theme_prefs())
+            
             if indicate and hasattr(view, "add_indicator") and view.add_indicator:
-              self.manage_indicator_items(view.message_store)
+              self.manage_indicator_items(view.message_store, tab_num=self.tabs.page_num(tab))
+            
             gtk.gdk.threads_leave()
             self.show_notification_bubbles(view.message_store)
 
