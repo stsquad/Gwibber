@@ -38,6 +38,7 @@ class Message:
     self.client = client
     self.account = client.account
     self.protocol = client.account["protocol"]
+    self.username = client.account["username"]
 
     self.source = ""
     self.sender = data.get("author", "")
