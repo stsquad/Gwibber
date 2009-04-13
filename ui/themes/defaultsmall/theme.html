@@ -7,15 +7,15 @@
         color: white;
         font-size: 12px;
       }
-      
+
       a { color: white; }
-      
+
       a:hover, .time a:hover {
         text-decoration: underline;
       }
 
       p { line-height: 125% }
-      
+
       td { vertical-align: top; }
 
       .message {
@@ -41,6 +41,7 @@
 
       .time {
         font-size: small;
+        unicode-bidi: embed;
       }
 
       .time a {
@@ -58,7 +59,7 @@
 
       .inlinenick {
         text-decoration: none;
-        font-weight: bold;       
+        font-weight: bold;
       }
 
       .messages h1 {
@@ -78,7 +79,7 @@
       }
 
       .diggbox {
-        -webkit-border-radius: 7px; 
+        -webkit-border-radius: 7px;
         margin-right: 5px;
         padding: 1px;
         text-align: center;
@@ -132,16 +133,16 @@
       // XXX: this is a twitter-specific hack currently...needs updating for other protocols
       function addUserHeader(data) {
         html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol + ' ' + data.aId + data.bgcolor +'" title="'+ data.sender_nick +'">' +
-			'<center> \
-			<p class="content"> \
-			<span class="title">'+ data.sender +'</span><br /> \
-			<span class="text">'+ data.sender_followers_count +' followers</span><br /> \
-			<span class="text">'+ data.sender_location +'</span><br /> \
-			<span class="text"><a href="'+ data.external_profile_url  +'">'+ data.external_profile_url +'</a></span> \
-			</p> \
-			</center> \
-		</div>'
-		$(".header").html(html);
+            '<center> \
+            <p class="content"> \
+            <span class="title">'+ data.sender +'</span><br /> \
+            <span class="text">'+ data.sender_followers_count +' followers</span><br /> \
+            <span class="text">'+ data.sender_location +'</span><br /> \
+            <span class="text"><a href="'+ data.external_profile_url  +'">'+ data.external_profile_url +'</a></span> \
+            </p> \
+            </center> \
+        </div>'
+        $(".header").html(html);
       }
 
       function addMessages(messages, msg) {
@@ -209,7 +210,7 @@
           addDiggCount($(".diggbox:last"), data);
 
         if (data.is_unread)
-          $(".message:last").addClass("unread");          
+          $(".message:last").addClass("unread");
 
         if (data.is_reply)
           $(".message:last").addClass("reply");

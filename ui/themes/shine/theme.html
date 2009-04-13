@@ -8,7 +8,7 @@
         background: #F7F7F7;
         font-family: Lucida Grande;
       }
-      
+
       a { color: black; }
 
       a:hover, .time a:hover {
@@ -18,16 +18,16 @@
       .message {
         padding-bottom: 5px;
       }
-        
+
       .searchresult {
         padding: 1px;
         -webkit-border-radius: 7px;
         background: -webkit-gradient(linear, left top, left 220%, from(rgba(143, 6, 32, 0.8)), to(black))
       }
-      
+
       .inlinenick {
         text-decoration: none;
-        font-weight: bold;       
+        font-weight: bold;
       }
 
       .content {
@@ -35,7 +35,7 @@
       }
 
       .title {
-        padding-top: 3px; 
+        padding-top: 3px;
         padding-left: 5px;
         padding-bottom: 2px;
         margin: 0px;
@@ -44,13 +44,14 @@
         font-weight: bold;
         text-overflow: ellipsis;
         white-space: nowrap;
-        overflow: hidden; 
+        overflow: hidden;
       }
 
       .time a {
         padding-left: 5px;
         color: white;
         text-decoration: none;
+        unicode-bidi: embed;
       }
 
       .imgbox {
@@ -90,24 +91,24 @@
       function addUserHeader(data) {
         html = '<div id="'+ data.gId +'" class="message '+ data.username + data.protocol + ' ' + data.aId + data.bgcolor +'" title="'+ data.sender_nick +'">' +
             '<div class="heading '+ data.aId + data.bgcolor +'"> \
-			<center> \
-			<p class="content"> \
-			<span class="title">'+ data.sender +'</span><br /> \
-			<span class="text">'+ data.sender_followers_count +' followers</span><br /> \
-			<span class="text">'+ data.sender_location +'</span><br /> \
-			<span class="time"><a href="'+ data.external_profile_url +'">'+ data.external_profile_url +'</a></span> \
-			</p> \
-			</center> \
-		    </div> \
-		</div>'
-		$(".header").html(html);
+            <center> \
+            <p class="content"> \
+            <span class="title">'+ data.sender +'</span><br /> \
+            <span class="text">'+ data.sender_followers_count +' followers</span><br /> \
+            <span class="text">'+ data.sender_location +'</span><br /> \
+            <span class="time"><a href="'+ data.external_profile_url +'">'+ data.external_profile_url +'</a></span> \
+            </p> \
+            </center> \
+            </div> \
+        </div>'
+        $(".header").html(html);
       }
 
       function addMessages(messages, msg) {
         clearMessages()
         $.each(messages, function() {addMessage(this, msg)});
       }
-      
+
       function clearMessages() {
         $(".messages").html("");
       }
@@ -153,7 +154,7 @@
         } else $(".messages").append(html);
 
         if (data.is_unread)
-          $(".message:last").addClass("unread");          
+          $(".message:last").addClass("unread");
 
         if (data.is_reply)
           $(".message:last").addClass("reply");
