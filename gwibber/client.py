@@ -40,7 +40,7 @@ gtk.gdk.threads_init()
 
 MAX_MESSAGE_LENGTH = 140
 
-VERSION_NUMBER = "0.9.1"
+VERSION_NUMBER = "1.0.2"
 
 def N_(message): return message
 
@@ -72,6 +72,7 @@ for _i in list(CONFIGURABLE_UI_ELEMENTS.keys()):
 
 try:
   import indicate
+  import wnck
 except:
   indicate = None
 
@@ -109,7 +110,7 @@ class GwibberClient(gtk.Window):
 
     self.notification_bubbles = {}
     self.message_target = None
-    
+
     self.errors = table.generate([
       ["date", lambda t: t.time.strftime("%x")],
       ["time", lambda t: t.time.strftime("%X")],
@@ -317,7 +318,7 @@ class GwibberClient(gtk.Window):
   def on_focus(self, w, change):
     for key, item in self.indicator_items.items():
       #self.indicate.remove_indicator(item)
-      self.indicate.hide(item)
+      item.hide()
     self.indicator_items = {}
 
   def on_focus_out(self, widget, event):
@@ -1017,8 +1018,13 @@ class GwibberClient(gtk.Window):
           message.first_seen = True
           seen.append(message.gId)
 
+  def is_gwibber_active(self):
+    screen = wnck.screen_get_default()
+    screen.force_update()
+    return self.window.xid == screen.get_active_window().get_xid()
+    
   def manage_indicator_items(self, data, tab_num=None):
-    if not self.is_active():
+    if not self.is_gwibber_active():
       for msg in data:
         if msg.first_seen and \
             hasattr(msg, "is_unread") and msg.is_unread and \

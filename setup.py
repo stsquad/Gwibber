@@ -7,7 +7,7 @@ from DistUtilsExtra.command import *
 from glob import glob
 
 setup(name="gwibber",
-      version="0.7",
+      version="1.0.2",
       author="Ryan Paul",
       author_email="segphault@arstechnica.com",
       url="http://cixar.com/~segphault",
