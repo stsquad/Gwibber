@@ -500,17 +500,18 @@ class GwibberClient(gtk.Window):
         self._reply_acct = acct
     if acct.supports(microblog.can.REPLY) and acct==self._reply_acct:
       self.input.grab_focus()
-      # Allow replying to more than one person by clicking on the reply
-      # button. 
-      current_text = self.input.get_text()
-      # If the current text ends with ": ", strip the ":", it's only
-      # taking up space
-      text = current_text[:-2] + " " if current_text.endswith(": ") else current_text
-      # do not add the nick if it's already in the list
-      if not text.count("@%s" % message.sender_nick):
-        self.input.set_text("%s@%s%s" % (text, message.sender_nick, self.preferences['reply_append_colon'] and ': ' or ' '))
-      self.input.set_position(-1)
+      if hasattr(message, 'is_private') and message.is_private:
+        self.input.set_text("d %s " % (message.sender_nick))
+      else:
+        # Allow replying to more than one person by clicking on the reply button. 
+        current_text = self.input.get_text()
+        # If the current text ends with ": ", strip the ":", it's only taking up space
+        text = current_text[:-2] + " " if current_text.endswith(": ") else current_text
+        # do not add the nick if it's already in the list
+        if not text.count("@%s" % message.sender_nick):
+          self.input.set_text("%s@%s%s" % (text, message.sender_nick, self.preferences['reply_append_colon'] and ': ' or ' '))
 
+      self.input.set_position(-1)
       self.message_target = message
       self.cancel_button.show()
 
