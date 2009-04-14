@@ -1026,7 +1026,7 @@ class GwibberClient(gtk.Window):
   def manage_indicator_items(self, data, tab_num=None):
     if not self.is_gwibber_active():
       for msg in data:
-        if msg.first_seen and \
+        if hasattr(msg, "first_seen") and msg.first_seen and \
             hasattr(msg, "is_unread") and msg.is_unread and \
             hasattr(msg, "gId") and msg.gId not in self.indicator_items:
           indicator = indicate.IndicatorMessage()
