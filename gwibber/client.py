@@ -942,7 +942,7 @@ class GwibberClient(gtk.Window):
         if not x.startswith('http://') and not x.startswith("https://") ])
 
     if message.text.strip() == "": message.gId = None
-    else: message.gId = hashlib.sha1(remove_url(message.text)[:128]).hexdigest()
+    else: message.gId = hashlib.sha1(remove_url(message.text)[:140]).hexdigest()
     
     message.aId = message.account.id
 
