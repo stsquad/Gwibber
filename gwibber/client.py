@@ -300,6 +300,8 @@ class GwibberClient(gtk.Window):
         for us in urlshorter.PROTOCOLS.keys():
           if text.startswith(urlshorter.PROTOCOLS[us].PROTOCOL_INFO["fqdn"]):
             return
+        if text.startswith('http://twitpic.com'):
+          return
 
         entry.stop_emission("insert-text")
         try:
