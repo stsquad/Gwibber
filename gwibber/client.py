@@ -1041,6 +1041,12 @@ class GwibberClient(gtk.Window):
 
           self.indicator_items[msg.gId] = indicator
           indicator.show()
+
+  def on_finish_update(self):
+    self.throbber.clear()
+
+  def update_view_contents(self, view):
+    view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
   
   def update(self, tabs = None):
     self.throbber.set_from_animation(
@@ -1061,7 +1067,7 @@ class GwibberClient(gtk.Window):
               and m.time <= mx.DateTime.gmt()]
             self.flag_duplicates(view.message_store)
             gtk.gdk.threads_enter()
-            view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
+            gobject.idle_add(self.update_view_contents, view)
             
             if indicate and hasattr(view, "add_indicator") and view.add_indicator:
               self.manage_indicator_items(view.message_store, tab_num=self.tabs.page_num(tab))
@@ -1073,7 +1079,7 @@ class GwibberClient(gtk.Window):
         self.statusbar.push(0, _("Last update: %s") % time.strftime("%X"))
         self.last_update = next_update
         
-      finally: gobject.idle_add(self.throbber.clear)
+      finally: gobject.idle_add(self.on_finish_update)
     
     t = threading.Thread(target=process)
     t.setDaemon(True)
