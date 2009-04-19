@@ -1,5 +1,4 @@
 body {
-  background: url(blue_stripe.png);
   word-break: break-word;
   color: #222;
   font-size: 9px;
@@ -107,4 +106,22 @@ p { line-height: 125% }
 
 .toggledupe {
   float: right;
+}
+
+.fold {
+  font-size: 90%;
+}
+
+.fold a {
+  text-decoration: none;
+}
+
+.likes {
+  background: url(favorite.png) left no-repeat;
+  padding-left: 20px;
+}
+
+.comments p {
+  background: url(comment.png) left top no-repeat;
+  padding-left: 20px;
 }

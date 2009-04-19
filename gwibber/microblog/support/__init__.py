@@ -49,6 +49,10 @@ def truncate(text, count=10):
 def unshorten_url(url):
   return urllib2.urlopen("http://tweetbacks.appspot.com/tb?url=%s" % url).read().split()
 
+def get_map_icon(lat, lon, zoom=12, width=175, height=120, maptype="mobile"):
+  return "http://maps.google.com/staticmap?zoom=%s&size=%sx%s&maptype=%s&markers=%s,%s" % (
+    zoom, width, height, maptype, lat, lon)
+
 def generate_time_string(t):
   if isinstance(t, str): return t
 

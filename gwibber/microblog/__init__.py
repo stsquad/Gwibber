@@ -1,7 +1,7 @@
 
 import operator, traceback 
 from . import can
-from . import twitter, jaiku, identica, laconica, pownce
+from . import twitter, jaiku, identica, laconica, pownce, friendfeed
 from . import digg, flickr, brightkite, rss, pingfm, facebook
 from . import greader
 
@@ -15,6 +15,7 @@ PROTOCOLS = {
   "digg": digg,
   "twitter": twitter,
   "facebook": facebook,
+  "friendfeed": friendfeed,
   "flickr": flickr,
   #"pownce": pownce,
   "identica": identica,

@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Mar 14 12:26:03 2009 -->
+<?xml version="1.0"?>
 <glade-interface>
+  <!-- interface-requires gtk+ 2.16 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="pref_dialog">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
     <property name="border_width">10</property>
@@ -21,7 +21,7 @@
                 <property name="visible">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment9">
                     <property name="visible">True</property>
@@ -37,11 +37,11 @@
                         <property name="homogeneous">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="pref_show_notifications">
+                            <property name="label" translatable="yes">Display bubbles</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="label" translatable="yes">Display bubbles</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -64,13 +64,16 @@
                   </packing>
                 </child>
               </widget>
+              <packing>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frame2">
                 <property name="visible">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment2">
                     <property name="visible">True</property>
@@ -137,7 +140,7 @@
               <widget class="GtkFrame" id="frame1">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment7">
                     <property name="visible">True</property>
@@ -148,19 +151,22 @@
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="pref_minimize_to_tray">
+                            <property name="label" translatable="yes">Minimize to tray on close</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Minimize to tray on close</property>
-                            <property name="response_id">0</property>
+                            <property name="receives_default">False</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="pref_hide_taskbar_entry">
+                            <property name="label" translatable="yes">Hide taskbar entry</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Hide taskbar entry</property>
-                            <property name="response_id">0</property>
+                            <property name="receives_default">False</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -169,10 +175,10 @@
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="show_tray_icon">
+                            <property name="label" translatable="yes">Show tray icon</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Show tray icon</property>
-                            <property name="response_id">0</property>
+                            <property name="receives_default">False</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -203,7 +209,7 @@
                 <property name="visible">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment42">
                     <property name="visible">True</property>
@@ -219,11 +225,11 @@
                         <property name="homogeneous">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="pref_reply_append_colon">
+                            <property name="label" translatable="yes">Append colon to username when replying</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="label" translatable="yes">Append colon to username when replying</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -234,11 +240,11 @@
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="pref_shorten_urls">
+                            <property name="label" translatable="yes">Automatically shorten pasted URLs</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="label" translatable="yes">Automatically shorten pasted URLs</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -269,7 +275,7 @@
               <widget class="GtkFrame" id="frame3">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment41">
                     <property name="visible">True</property>
@@ -301,6 +307,9 @@
               </packing>
             </child>
           </widget>
+          <packing>
+            <property name="position">0</property>
+          </packing>
         </child>
         <child>
           <widget class="GtkHSeparator" id="hseparator1">
@@ -317,17 +326,21 @@
           <widget class="GtkHButtonBox" id="hbuttonbox1">
             <property name="visible">True</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-            <property name="layout_style">GTK_BUTTONBOX_END</property>
+            <property name="layout_style">end</property>
             <child>
               <widget class="GtkButton" id="button_close">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
           </widget>
           <packing>
@@ -342,8 +355,8 @@
     <property name="border_width">5</property>
     <property name="title" translatable="yes">About Gwibber</property>
     <property name="resizable">False</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">normal</property>
     <property name="has_separator">False</property>
     <property name="program_name">Gwibber</property>
     <property name="version">0.7</property>
@@ -381,11 +394,12 @@ Greg Grossmeier</property>
           <widget class="GtkHButtonBox" id="dialog-action_area1">
             <property name="visible">True</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-            <property name="layout_style">GTK_BUTTONBOX_END</property>
+            <property name="layout_style">end</property>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -413,16 +427,16 @@ a Gwibber login code from Facebook.</property>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
           <widget class="GtkButton" id="button_request">
+            <property name="label" translatable="yes">Request Login Code</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-            <property name="label" translatable="yes">Request Login Code</property>
-            <property name="response_id">0</property>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -456,16 +470,18 @@ a Gwibber login code from Facebook.</property>
                 <property name="can_focus">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
               </widget>
+              <packing>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="button_apply_auth">
+                <property name="label">gtk-apply</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="label">gtk-apply</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -496,12 +512,11 @@ a Gwibber login code from Facebook.</property>
         </child>
         <child>
           <widget class="GtkButton" id="button_authorize">
+            <property name="label" translatable="yes">Authorize Status Changes</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-            <property name="label" translatable="yes">Authorize Status Changes</property>
-            <property name="response_id">0</property>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -523,20 +538,20 @@ a Gwibber login code from Facebook.</property>
           <widget class="GtkHButtonBox" id="hbuttonbox2">
             <property name="visible">True</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-            <property name="layout_style">GTK_BUTTONBOX_END</property>
+            <property name="layout_style">end</property>
             <child>
               <widget class="GtkButton" id="button_close_facebook_auth">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
           </widget>
@@ -551,8 +566,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_twitter">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox2">
         <property name="visible">True</property>
@@ -565,7 +580,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment1">
                     <property name="visible">True</property>
@@ -634,13 +649,14 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frameStatus">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment4">
                     <property name="visible">True</property>
@@ -651,21 +667,24 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="twitter_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="twitter_send_enabled">
+                            <property name="label" translatable="yes">_Send Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Send Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -696,7 +715,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment5">
                     <property name="visible">True</property>
@@ -713,6 +732,7 @@ a Gwibber login code from Facebook.</property>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -720,7 +740,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -760,31 +779,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="twitter_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="twitter_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -792,8 +817,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_protocol">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox3">
         <property name="visible">True</property>
@@ -806,7 +831,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount1">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment6">
                     <property name="visible">True</property>
@@ -875,13 +900,14 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frameStatus1">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment10">
                     <property name="visible">True</property>
@@ -892,21 +918,24 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="protocol_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="protocol_send_enabled">
+                            <property name="label" translatable="yes">_Send Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Send Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -937,7 +966,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance1">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment11">
                     <property name="visible">True</property>
@@ -954,6 +983,7 @@ a Gwibber login code from Facebook.</property>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -961,7 +991,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -1001,31 +1030,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="protocol_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="protocol_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -1033,8 +1068,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_brightkite">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox4">
         <property name="visible">True</property>
@@ -1047,7 +1082,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount2">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment8">
                     <property name="visible">True</property>
@@ -1116,13 +1151,14 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frameStatus2">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment12">
                     <property name="visible">True</property>
@@ -1133,21 +1169,24 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="brightkite_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="brightkite_send_enabled">
+                            <property name="label" translatable="yes">_Send Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Send Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -1178,7 +1217,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance2">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment13">
                     <property name="visible">True</property>
@@ -1195,6 +1234,7 @@ a Gwibber login code from Facebook.</property>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -1202,7 +1242,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -1242,40 +1281,46 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="brightkite_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="brightkite_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
     </child>
   </widget>
-  <widget class="GtkDialog" id="dialog_jaiku">
+  <widget class="GtkDialog" id="dialog_friendfeed">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox5">
         <property name="visible">True</property>
@@ -1288,7 +1333,266 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount3">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
+                <child>
+                  <widget class="GtkAlignment" id="alignment14">
+                    <property name="visible">True</property>
+                    <property name="top_padding">10</property>
+                    <property name="left_padding">12</property>
+                    <child>
+                      <widget class="GtkTable" id="table5">
+                        <property name="visible">True</property>
+                        <property name="n_rows">2</property>
+                        <property name="n_columns">2</property>
+                        <property name="column_spacing">5</property>
+                        <property name="row_spacing">5</property>
+                        <child>
+                          <widget class="GtkEntry" id="friendfeed_password">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="visibility">False</property>
+                          </widget>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkEntry" id="friendfeed_username">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                          </widget>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label25">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">API key:</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label26">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Username:</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label28">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Account Information&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </widget>
+                  <packing>
+                    <property name="type">label_item</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLinkButton" id="friendfeed_linkbutton">
+                <property name="label" translatable="yes">Get FriendFeed API key</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="relief">none</property>
+                <property name="uri">http://friendfeed.com/remotekey</property>
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkFrame" id="frameStatus3">
+                <property name="visible">True</property>
+                <property name="label_xalign">0</property>
+                <property name="shadow_type">none</property>
+                <child>
+                  <widget class="GtkAlignment" id="alignment15">
+                    <property name="visible">True</property>
+                    <property name="top_padding">10</property>
+                    <property name="left_padding">12</property>
+                    <child>
+                      <widget class="GtkVBox" id="vbox11">
+                        <property name="visible">True</property>
+                        <child>
+                          <widget class="GtkCheckButton" id="friendfeed_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="use_underline">True</property>
+                            <property name="draw_indicator">True</property>
+                          </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkCheckButton" id="friendfeed_send_enabled">
+                            <property name="label" translatable="yes">_Send Messages</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="use_underline">True</property>
+                            <property name="draw_indicator">True</property>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label29">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Account Status&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </widget>
+                  <packing>
+                    <property name="type">label_item</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkFrame" id="frameAppearance3">
+                <property name="visible">True</property>
+                <property name="label_xalign">0</property>
+                <property name="shadow_type">none</property>
+                <child>
+                  <widget class="GtkAlignment" id="alignment16">
+                    <property name="visible">True</property>
+                    <property name="top_padding">10</property>
+                    <property name="left_padding">12</property>
+                    <child>
+                      <widget class="GtkTable" id="table13">
+                        <property name="visible">True</property>
+                        <property name="n_columns">2</property>
+                        <child>
+                          <widget class="GtkLabel" id="label30">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Message Color:</property>
+                          </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkColorButton" id="friendfeed_message_color">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="color">#000000000000</property>
+                          </widget>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                          </packing>
+                        </child>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label31">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Appearance&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </widget>
+                  <packing>
+                    <property name="type">label_item</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <widget class="GtkHButtonBox" id="dialog-action_area5">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkButton" id="friendfeed_btndelete">
+                <property name="label">gtk-delete</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="friendfeed_btnclose">
+                <property name="label">gtk-close</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkDialog" id="dialog_jaiku">
+    <property name="border_width">5</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
+    <child internal-child="vbox">
+      <widget class="GtkVBox" id="dialog-vbox5">
+        <property name="visible">True</property>
+        <property name="spacing">2</property>
+        <child>
+          <widget class="GtkVBox" id="vbox10">
+            <property name="visible">True</property>
+            <property name="spacing">10</property>
+            <child>
+              <widget class="GtkFrame" id="frameAccount3">
+                <property name="visible">True</property>
+                <property name="label_xalign">0</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment14">
                     <property name="visible">True</property>
@@ -1357,17 +1661,17 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkLinkButton" id="jaiku_linkbutton">
+                <property name="label" translatable="yes">Get Jaiku API key</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="has_tooltip">True</property>
-                <property name="label" translatable="yes">Get Jaiku API key</property>
-                <property name="relief">GTK_RELIEF_NONE</property>
-                <property name="response_id">0</property>
+                <property name="relief">none</property>
                 <property name="uri">http://api.jaiku.com/</property>
               </widget>
               <packing>
@@ -1378,7 +1682,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameStatus3">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment15">
                     <property name="visible">True</property>
@@ -1389,21 +1693,24 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="jaiku_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="jaiku_send_enabled">
+                            <property name="label" translatable="yes">_Send Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Send Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -1434,7 +1741,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance3">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment16">
                     <property name="visible">True</property>
@@ -1466,7 +1773,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -1479,7 +1785,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -1519,31 +1824,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="jaiku_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="jaiku_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -1551,8 +1862,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_pownce">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox6">
         <property name="visible">True</property>
@@ -1565,7 +1876,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount4">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment17">
                     <property name="visible">True</property>
@@ -1634,13 +1945,14 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frameStatus4">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment18">
                     <property name="visible">True</property>
@@ -1651,21 +1963,24 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="pownce_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="pownce_send_enabled">
+                            <property name="label" translatable="yes">_Send Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Send Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -1696,7 +2011,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance4">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment19">
                     <property name="visible">True</property>
@@ -1728,7 +2043,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -1741,7 +2055,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -1781,31 +2094,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="pownce_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="pownce_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -1813,8 +2132,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_identica">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox7">
         <property name="visible">True</property>
@@ -1827,7 +2146,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount5">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment20">
                     <property name="visible">True</property>
@@ -1896,13 +2215,14 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frameStatus5">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment21">
                     <property name="visible">True</property>
@@ -1913,21 +2233,24 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="identica_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="identica_send_enabled">
+                            <property name="label" translatable="yes">_Send Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Send Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -1958,7 +2281,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance5">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment22">
                     <property name="visible">True</property>
@@ -1975,6 +2298,7 @@ a Gwibber login code from Facebook.</property>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -1982,7 +2306,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -2022,31 +2345,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="identica_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="identica_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -2054,8 +2383,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_rss">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox8">
         <property name="visible">True</property>
@@ -2068,7 +2397,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount6">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment23">
                     <property name="visible">True</property>
@@ -2086,6 +2415,9 @@ a Gwibber login code from Facebook.</property>
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Feed URL:</property>
                               </widget>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
                             </child>
                             <child>
                               <widget class="GtkEntry" id="rss_feed_url">
@@ -2097,6 +2429,9 @@ a Gwibber login code from Facebook.</property>
                               </packing>
                             </child>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                       </widget>
                     </child>
@@ -2115,13 +2450,14 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frameStatus6">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment24">
                     <property name="visible">True</property>
@@ -2132,13 +2468,16 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="rss_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                       </widget>
                     </child>
@@ -2164,7 +2503,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance6">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment25">
                     <property name="visible">True</property>
@@ -2181,6 +2520,7 @@ a Gwibber login code from Facebook.</property>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -2188,7 +2528,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -2228,31 +2567,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="rss_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="rss_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -2260,8 +2605,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_facebook">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox9">
         <property name="visible">True</property>
@@ -2274,7 +2619,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount7">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment26">
                     <property name="visible">True</property>
@@ -2286,13 +2631,15 @@ a Gwibber login code from Facebook.</property>
                         <property name="spacing">5</property>
                         <child>
                           <widget class="GtkButton" id="btnAuthorize">
+                            <property name="label" translatable="yes">_Authorize Gwibber</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="label" translatable="yes">_Authorize Gwibber</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                       </widget>
                     </child>
@@ -2311,13 +2658,14 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frameStatus7">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment27">
                     <property name="visible">True</property>
@@ -2328,21 +2676,24 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="facebook_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="facebook_send_enabled">
+                            <property name="label" translatable="yes">_Send Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Send Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -2373,7 +2724,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance7">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment28">
                     <property name="visible">True</property>
@@ -2390,6 +2741,7 @@ a Gwibber login code from Facebook.</property>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -2397,7 +2749,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -2437,31 +2788,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="facebook_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="facebook_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -2469,8 +2826,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_flickr">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox10">
         <property name="visible">True</property>
@@ -2483,7 +2840,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount8">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment29">
                     <property name="visible">True</property>
@@ -2528,13 +2885,14 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frameStatus8">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment30">
                     <property name="visible">True</property>
@@ -2545,13 +2903,16 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="flickr_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                       </widget>
                     </child>
@@ -2577,7 +2938,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance8">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment31">
                     <property name="visible">True</property>
@@ -2594,6 +2955,7 @@ a Gwibber login code from Facebook.</property>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -2601,7 +2963,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -2641,31 +3002,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="flickr_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="flickr_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -2673,8 +3040,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_digg">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox11">
         <property name="visible">True</property>
@@ -2687,7 +3054,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount9">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment32">
                     <property name="visible">True</property>
@@ -2732,13 +3099,14 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frameStatus9">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment33">
                     <property name="visible">True</property>
@@ -2749,13 +3117,16 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="digg_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                       </widget>
                     </child>
@@ -2781,7 +3152,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance9">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment34">
                     <property name="visible">True</property>
@@ -2813,7 +3184,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -2826,7 +3196,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -2866,31 +3235,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="digg_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="digg_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -2898,8 +3273,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_pidgin">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox13">
         <property name="visible">True</property>
@@ -2912,7 +3287,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameStatus10">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment36">
                     <property name="visible">True</property>
@@ -2923,13 +3298,16 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="pidgin_send_enabled">
+                            <property name="label" translatable="yes">_Send Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Send Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                       </widget>
                     </child>
@@ -2948,6 +3326,7 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
           </widget>
@@ -2960,31 +3339,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="pidgin_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="pidgin_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -2992,8 +3377,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_pingfm">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox16">
         <property name="visible">True</property>
@@ -3006,7 +3391,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount10">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment35">
                     <property name="visible">True</property>
@@ -3055,17 +3440,17 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkLinkButton" id="pingfm_linkbutton">
+                <property name="label" translatable="yes">Get Ping.fm key</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="has_tooltip">True</property>
-                <property name="label" translatable="yes">Get Ping.fm key</property>
-                <property name="relief">GTK_RELIEF_NONE</property>
-                <property name="response_id">0</property>
+                <property name="relief">none</property>
                 <property name="uri">http://ping.fm/key/</property>
               </widget>
               <packing>
@@ -3078,7 +3463,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameStatus11">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment37">
                     <property name="visible">True</property>
@@ -3089,13 +3474,16 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="pingfm_send_enabled">
+                            <property name="label" translatable="yes">_Send Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Send Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                       </widget>
                     </child>
@@ -3127,31 +3515,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="pingfm_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="pingfm_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -3159,8 +3553,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_laconica">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox17">
         <property name="visible">True</property>
@@ -3173,7 +3567,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount11">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment38">
                     <property name="visible">True</property>
@@ -3264,13 +3658,14 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frameStatus12">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment39">
                     <property name="visible">True</property>
@@ -3281,21 +3676,24 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="laconica_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="laconica_send_enabled">
+                            <property name="label" translatable="yes">_Send Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Send Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -3326,7 +3724,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance10">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment40">
                     <property name="visible">True</property>
@@ -3343,6 +3741,7 @@ a Gwibber login code from Facebook.</property>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -3350,7 +3749,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -3390,31 +3788,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="laconica_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="laconica_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
@@ -3422,8 +3826,8 @@ a Gwibber login code from Facebook.</property>
   </widget>
   <widget class="GtkDialog" id="dialog_greader">
     <property name="border_width">5</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox18">
         <property name="visible">True</property>
@@ -3436,7 +3840,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAccount12">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment43">
                     <property name="visible">True</property>
@@ -3505,13 +3909,14 @@ a Gwibber login code from Facebook.</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frameStatus13">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment44">
                     <property name="visible">True</property>
@@ -3522,13 +3927,16 @@ a Gwibber login code from Facebook.</property>
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="greader_receive_enabled">
+                            <property name="label" translatable="yes">_Receive Messages</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">_Receive Messages</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                       </widget>
                     </child>
@@ -3554,7 +3962,7 @@ a Gwibber login code from Facebook.</property>
               <widget class="GtkFrame" id="frameAppearance11">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment45">
                     <property name="visible">True</property>
@@ -3571,6 +3979,7 @@ a Gwibber login code from Facebook.</property>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -3578,7 +3987,6 @@ a Gwibber login code from Facebook.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
                             <property name="color">#000000000000</property>
                           </widget>
                           <packing>
@@ -3618,31 +4026,37 @@ a Gwibber login code from Facebook.</property>
             <property name="visible">True</property>
             <child>
               <widget class="GtkButton" id="greader_btndelete">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-delete</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="greader_btnclose">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>

@@ -110,11 +110,16 @@ def image_cache(url, cache_dir = IMG_CACHE_DIR):
   encoded_url = hashlib.sha1(url).hexdigest()
   if len(encoded_url) > 200: encoded_url = encoded_url[::-1][:200]
   fmt = url.split('.')[-1] # jpg/png etc.
+  if "friendfeed" in url: fmt = "jpg" # HATE
   img_path = os.path.join(cache_dir, encoded_url + '.' + fmt).replace("\n", "")
 
   if not os.path.exists(img_path):
     output = open(img_path, "w+")
     try:
+      image_data = urllib2.urlopen(url).read()
+      if image_data.startswith("<?xml"):
+        raise IOError()
+
       output.write(urllib2.urlopen(url).read())
       output.close()
       try:

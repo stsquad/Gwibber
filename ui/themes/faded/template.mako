@@ -2,7 +2,7 @@
 import time
 %>
 
-<%def name="timestring(data)">
+<%def name="timestring(data)" filter="trim">
   <a href="gwibber:read/${data.message_index}">${data.time_string}</a>
   % if hasattr(data, "reply_nick") and hasattr(data, "reply"):
     <a href="${data.reply_url}">${data.reply} ${data.reply_nick}</a>
@@ -17,6 +17,16 @@ import time
 % else:
   background: -webkit-gradient(linear, left top, left 350%, from(rgba(${r}, ${g}, ${b}, 0.1)), to(black));
 % endif
+</%def>
+
+<%def name="map(lat, long, w=175, h=80, maptype='mobile')">
+  <a href="http://maps.google.com/maps?q=${lat},${long}">
+    <img src="http://maps.google.com/staticmap?zoom=12&size=${w}x${h}&maptype=${maptype}&markers=${lat},${long}" />
+  </a>
+</%def>
+
+<%def name="comment(data)">
+  <p><a href="${data.profile_url}">${data.sender}</a>: ${data.text}</p>
 </%def>
 
 <%def name="msgclass(data)">
@@ -49,8 +59,10 @@ import time
   <center>
 	  <p class="content">
 			<span class="title">${data.sender}</span><br />
-			<span class="text">${data.sender_followers_count} followers</span><br />
-			<span class="text">${data.sender_location}</span><br />
+			% if hasattr(data, "sender_followers_count"):
+        <span class="text">${data.sender_followers_count} followers</span><br />
+        <span class="text">${data.sender_location}</span><br />
+      % endif
 			<span class="text"><a href="${data.external_profile_url}">${data.external_profile_url}</a></span>
 		</p>
   </center>
@@ -91,10 +103,34 @@ import time
       </td>
       <td>
         <p class="content">
+          % if hasattr(data, "sigil"):
+            <span class="sigil"><img src="${data.sigil}" /></span>
+          % endif
           <span class="title">${data.title if hasattr(data, "title") else data.sender}</span>
           <span class="time"> (${self.timestring(data)})</span><br />
           <span class="text">${data.html_string}</span>
         </p>
+        <div class="fold">
+          % if hasattr(data, "geo_position"):
+            ${self.map(*data.geo_position)}<br />
+          % endif
+
+          % if hasattr(data, "liked_by"):
+            <p class="likes">
+              % for user in data.liked_by:
+                <a href="${user[1]}">${user[0]}</a>
+              % endfor
+            </p> 
+          % endif
+
+          % if hasattr(data, "comments"):
+            <div class="comments">
+              % for c in data.comments[-3:]:
+                ${comment(c)}
+              % endfor
+            </div>
+          % endif
+        </div>
       </td>
     </tr>
   </table>
