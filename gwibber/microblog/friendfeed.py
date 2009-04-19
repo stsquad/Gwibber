@@ -26,15 +26,14 @@ PROTOCOL_INFO = {
   ],
 
   "features": [
-    #can.SEND,
+    can.SEND,
     can.RECEIVE,
     can.SEARCH,
     #can.TAG,
     #can.REPLY,
-    #can.RESPONSES,
     can.THREAD,
     #can.THREAD_REPLY,
-    #can.SEARCH_URL,
+    can.SEARCH_URL,
     can.USER_MESSAGES,
   ],
 }
@@ -159,19 +158,15 @@ class Client:
     except Exception:
       return []
 
-  def get_replies(self):
-    return simplejson.loads(self.connect(
-      "https://twitter.com/statuses/replies.json" +'?'+
-        urllib.urlencode({"count": self.account["receive_count"] or "20"})))
-
-  def get_direct_messages(self):
-    return simplejson.loads(self.connect(
-      "https://twitter.com/direct_messages.json"))
-
   def get_search_data(self, query):
     return simplejson.loads(urllib2.urlopen(
       urllib2.Request("http://friendfeed.com/api/feed/search?" +
         urllib.urlencode({"q": query}))).read())
+
+  def get_search_url_data(self, query):
+    return simplejson.loads(urllib2.urlopen(
+      urllib2.Request("http://friendfeed.com/api/feed/url?" +
+        urllib.urlencode({"url": query}))).read())
 
   def get_thread_data(self, msg):
     return simplejson.loads(urllib2.urlopen(
@@ -189,23 +184,12 @@ class Client:
       yield SearchResult(self, data)
 
   def search_url(self, query):
-    urls = support.unshorten_url(query)
-    for data in self.get_search_data(" OR ".join(urls))["results"]:
-      if any(item in data["text"] for item in urls):
-        yield SearchResult(self, data, query)
+    for data in self.get_search_url_data(query)["entries"]:
+      yield SearchResult(self, data)
 
   def tag(self, query):
     for data in self.get_search_data("#%s" % query)["results"]:
       yield SearchResult(self, data, "#%s" % query)
-
-  def responses(self):
-    for data in self.get_replies():
-      yield Message(self, data)
-
-    for data in self.get_direct_messages():
-      m = Message(self, data)
-      m.is_private = True
-      yield m
 
   def receive(self):
     for data in self.get_messages():
@@ -218,8 +202,8 @@ class Client:
 
   def send(self, message):
     data = simplejson.loads(self.connect(
-      "https://twitter.com/statuses/update.json",
-        urllib.urlencode({"status":message, "source": "gwibbernet"})))
+      "https://friendfeed.com/api/share",
+        urllib.urlencode({"title": message})))["entries"][0]
     return Message(self, data)
 
   def send_thread(self, message, target):
