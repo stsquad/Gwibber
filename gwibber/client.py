@@ -364,6 +364,7 @@ class GwibberClient(gtk.Window):
     scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
     scroll.add(view)
     scroll.saved_query = save
+    view.scroll = scroll
 
     img = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
 

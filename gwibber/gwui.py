@@ -79,6 +79,10 @@ class MessageView(webkit.WebView):
       account_prefs=account_prefs,
       theme_prefs=theme_prefs)
 
+    def on_finish_load(v, f, vscroll_pos):
+      self.scroll.get_vadjustment().set_value(vscroll_pos)
+
+    self.connect("load-finished", on_finish_load, self.scroll.get_vadjustment().get_value())
     self.load_html_string(content, "file://%s/" % resources.get_theme_path(self.theme))
 
   def on_click_link(self, view, frame, req):
