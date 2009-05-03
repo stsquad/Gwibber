@@ -4,8 +4,8 @@ import time
 
 <%def name="timestring(data)" filter="trim">
   <a href="gwibber:read/${data.message_index}">${data.time_string}</a>
-  % if hasattr(data, "reply_nick") and hasattr(data, "reply"):
-    <a href="${data.reply_url}">${data.reply} ${data.reply_nick}</a>
+  % if hasattr(data, "reply_nick") and data.reply_nick:
+    <a href="${data.reply_url}">in reply to ${data.reply_nick}</a>
   % endif
 </%def>
 

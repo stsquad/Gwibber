@@ -64,6 +64,7 @@ class Message:
       screen_names = NICK_PARSE.match(self.text)
       self.reply_nick = screen_names.group(0)[1:] if screen_names else data['in_reply_to_user_id']
       self.reply_url = "http://identi.ca/notice/%s" % data["in_reply_to_status_id"]
+      self.reply_id = data["in_reply_to_status_id"]
     else:
       user = data["sender"]
       self.reply_nick = None

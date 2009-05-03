@@ -60,6 +60,7 @@ class Message:
       user = data["user"]
       self.reply_nick = data["in_reply_to_screen_name"]
       self.reply_url = "https://twitter.com/%s/statuses/%s" % (data["in_reply_to_screen_name"], data["in_reply_to_status_id"])
+      self.reply_id = data["in_reply_to_status_id"]
     elif "sender" in data:
       user = data["sender"]
       self.reply_nick = None
