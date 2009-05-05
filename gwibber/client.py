@@ -1019,7 +1019,9 @@ class GwibberClient(gtk.Window):
   def is_gwibber_active(self):
     screen = wnck.screen_get_default()
     screen.force_update()
-    return self.window.xid == screen.get_active_window().get_xid()
+    w = screen.get_active_window()
+    if w: return self.window.xid == w.get_xid()
+    return False
     
   def manage_indicator_items(self, data, tab_num=None):
     if not self.is_gwibber_active():
