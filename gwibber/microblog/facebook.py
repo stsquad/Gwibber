@@ -93,5 +93,7 @@ class Client:
       yield Message(self, data)
 
   def send(self, message):
+    # Facebook doesn't really want to see !tag and #tag's in it's output
+    message = re.sub(" [\!#]{1}", " ", message)    
     self.facebook.users.setStatus(message, False)
 

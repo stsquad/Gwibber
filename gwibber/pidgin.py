@@ -7,6 +7,7 @@ SegPhault (Ryan Paul) - 11/09/2008
 """
 from . import gintegration
 import dbus
+import re
 from microblog import can
 
 PROTOCOL_INFO = {
@@ -30,5 +31,7 @@ class Client:
     return self.account["send_enabled"]
 
   def send(self, message):
+    # Strip out leading (!#) !tag and #tag's for pidgin
+    message = re.sub(" [\!#]{1}", " ", message)    
     if gintegration.service_is_running("im.pidgin.purple.PurpleService"):
       gintegration.set_pidgin_status_text(message)
