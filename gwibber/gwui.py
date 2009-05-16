@@ -9,6 +9,7 @@ from . import gintegration, resources
 import webkit, gtk, copy
 import urllib2, hashlib, os, simplejson
 from mako.template import Template
+from mako.lookup import TemplateLookup
 import Image
 
 # i18n magic
@@ -56,16 +57,6 @@ class MessageView(webkit.WebView):
     self.theme = theme
 
   def load_messages(self, account_prefs=None, theme_prefs=None, message_store = None):
-    # Translators: this string appears when somebody reply to a message
-    # like '3 minutes ago in reply to angelina'
-    reply_string = " " + _("in reply to") + " "
-    # Translators: this string indicates where the message arrived from
-    # like 'from api', 'from Gwibber' 
-    from_string = " " + _("from") + " "
-    # Done that way so translators don't have to handle white/empty spaces
-    # and there's no need to handle them in the html too
-    ui_dict = {"reply": reply_string, "from": from_string}
-    
     for n, m in enumerate(self.message_store):
       m.message_index = n
 
@@ -74,11 +65,11 @@ class MessageView(webkit.WebView):
         m.bgcolor_rgb = {"red": c.red//255, "green": c.green//255, "blue": c.blue//255}
 
     template_path = os.path.join(resources.get_theme_path(self.theme), "template.mako")
-    content = Template(open(template_path).read()).render(
-      message_store=self.message_store,
-      account_prefs=account_prefs,
-      theme_prefs=theme_prefs)
-
+    template_lookup_paths = list(resources.get_template_dirs())
+    content = Template(open(template_path).read(),
+      lookup=TemplateLookup(directories=template_lookup_paths)).render(
+      message_store=self.message_store, _=_)
+    
     def on_finish_load(v, f, vscroll_pos):
       self.scroll.get_vadjustment().set_value(vscroll_pos)
 

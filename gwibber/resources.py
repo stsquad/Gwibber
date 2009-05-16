@@ -60,3 +60,10 @@ def get_ui_asset(asset_name):
     asset_path = os.path.join(base, UI_DIR_NAME, asset_name)
     if os.path.exists(asset_path):
       return asset_path
+
+def get_template_dirs():
+  for base in DATA_DIRS:
+    p = os.path.join(base, UI_DIR_NAME, "templates")
+    if os.path.exists(p):
+      yield p
+

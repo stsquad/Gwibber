@@ -1,0 +1,107 @@
+body {
+  padding: 0px;
+  margin: 0px;
+  word-break: break-word;
+  background: #F7F7F7;
+  font-family: Lucida Grande;
+}
+
+a { color: black; }
+
+a:hover, .time a:hover {
+  text-decoration: underline;
+}
+
+.message {
+  padding-bottom: 5px;
+}
+  
+.searchresult {
+  padding: 1px;
+  -webkit-border-radius: 7px;
+  background: -webkit-gradient(linear, left top, left 220%, from(rgba(143, 6, 32, 0.8)), to(black))
+}
+
+.inlinenick {
+  text-decoration: none;
+  font-weight: bold;       
+}
+
+.content {
+  padding: 5px;
+}
+
+.title {
+  padding-top: 3px; 
+  padding-left: 5px;
+  padding-bottom: 2px;
+  margin: 0px;
+  margin-left: 5px;
+  font-size: large;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; 
+}
+
+.time {
+  margin-left: 5px;
+}
+
+.time a {
+  color: white;
+  text-decoration: none;
+}
+
+.imgbox {
+  float: left;
+  height: 32px;
+  width: 32px;
+}
+
+.toggledupe {
+  margin-left: 5px;
+  float: left;
+  display: none;
+}
+
+.dupes {
+  display: none;
+}
+
+.replybutton {
+  float: right;
+  display: none;
+}
+
+.unread h1 {
+  color: cyan;
+}
+
+.heading {
+  color: white;
+  text-shadow: 1px 1px black;
+  -webkit-background-size: 100%;
+  padding: 5px;
+}
+
+.fold {
+  font-size: 90%;
+  margin-left: 10px;
+}
+
+.fold a {
+  text-decoration: none;
+}
+
+.likes {
+  background: url(favorite.png) left no-repeat;
+  padding-left: 20px;
+  min-height: 14px;
+}
+
+.comments p {
+  background: url(comment.png) left top no-repeat;
+  padding-left: 20px;
+  min-height: 14px;
+}
