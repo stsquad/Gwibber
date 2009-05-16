@@ -84,7 +84,7 @@ class Message:
       self.geo_position = (data["geo"]["lat"], data["geo"]["long"])
 
     if data["likes"] != []:
-      self.liked_by = [(i["user"]["name"], i["user"]["profileUrl"]) for i in data["likes"]]
+      self.liked_by = len(data["likes"]) # [(i["user"]["name"], i["user"]["profileUrl"]) for i in data["likes"]]
 
     if data["comments"] != [] and append_comments:
       self.comments = [Comment(client, i) for i in data["comments"]]

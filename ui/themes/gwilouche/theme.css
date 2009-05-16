@@ -74,20 +74,6 @@ p { line-height: 125% }
   margin-top: -15px;
 }
 
-.diggbox {
-  -webkit-border-radius: 7px; 
-  margin-right: 5px;
-  padding: 1px;
-  text-align: center;
-  color: black;
-  text-shadow: none;
-  background: -webkit-gradient(linear, left top, left 220%, from(rgba(254, 240, 152, 0.9)), to(black));
-}
-
-.diggcount {
-  font-size: large;
-}
-
 .unread {
   border: 2px solid #888;
 }

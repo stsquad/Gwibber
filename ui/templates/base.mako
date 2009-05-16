@@ -23,11 +23,7 @@
 </%def>
 
 <%def name="liked_by(data)">
-  <p class="likes">
-    % for user in data.liked_by:
-      <a href="${user[1]}">${user[0]}</a>
-    % endfor
-  </p> 
+  <p class="likes">${data.liked_by} user(s) liked this</p> 
 </%def>
 
 <%def name="comments(data)">
@@ -35,12 +31,6 @@
     % for c in data.comments[-3:]:
       ${self.comment(c)}
     % endfor
-  </div>
-</%def>
-
-<%def name="diggbox(data)">
-  <div class="diggbox">
-    <p><span class="diggcount">${data.diggs}</span><br /><small>diggs</small></p>
   </div>
 </%def>
 
@@ -108,11 +98,6 @@
 <%def name="sidebar(data)">
   % if data.image:
     ${self.image(data)}
-    <br />
-  % endif
-
-  % if data.protocol == "digg":
-    ${self.diggbox(data)}
   % endif
 </%def>
 

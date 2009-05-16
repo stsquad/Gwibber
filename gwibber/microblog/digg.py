@@ -53,7 +53,7 @@ class Message:
     self.bgcolor = "comment_color"
     self.url = data["link"]
     self.profile_url = "http://digg.com/users/%s" % self.sender_nick
-    self.diggs = data["diggs"]
+    self.liked_by = data["diggs"]
 
 class Digg(Message):
   def __init__(self, client, data):
