@@ -54,7 +54,8 @@
   <div class="replybutton">
     % if hasattr(data, "can_thread"):
       <a href="gwibber:thread/${data.message_index}"><img src="thread.png" /></a>
-    % endif   
+    % endif
+    <a href="gwibber:menu/${data.message_index}"><img src="actions.png" /></a>
     <a href="gwibber:reply/${data.message_index}"><img src="reply.png" /></a>
   </div>
 </%def>

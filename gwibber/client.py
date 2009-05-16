@@ -12,6 +12,7 @@ import microblog
 from . import gwui, config, gintegration, configui, resources
 import xdg.BaseDirectory, urllib2, urlparse
 import webbrowser
+import actions
 
 # Setup Pidgin
 from . import pidgin
@@ -490,11 +491,6 @@ class GwibberClient(gtk.Window):
     self.timer = gobject.timeout_add(
       60000 * int(self.preferences["refresh_interval"]), self.update)
 
-  def copy_to_tomboy(self, message):
-    gintegration.create_tomboy_note(_("%s message from %s at %s\n\n%s") % (
-      message.account["protocol"].capitalize(),
-      message.sender, message.time, message.text))
-  
   def reply(self, message):
     acct = message.account
     # store which account we replied to first so we know when not to allow further replies
@@ -523,11 +519,29 @@ class GwibberClient(gtk.Window):
         view.load_messages()
         view.load_preferences(self.get_account_config())
     """
+
+  def on_message_action_menu(self, msg):
+    theme = gtk.icon_theme_get_default()
+    menu = gtk.Menu()
+    
+    for a in actions.MENU_ITEMS:
+      if a.include(self, msg):
+        mi = gtk.Action("gwibberMessage%s" % a.__name__, a.label, None, None).create_menu_item()
+        mi.get_image().set_from_file(a.get_icon_path())
+        mi.connect("activate", a.action, self, msg)
+        menu.append(mi)
+
+    menu.show_all()
+    menu.popup(None, None, None, 3, 0)
     
   def on_link_clicked(self, uri, view):
     if uri.startswith("gwibber:"):
       if uri.startswith("gwibber:reply"):
         self.reply(view.message_store[int(uri.split("/")[-1])])
+        return True
+      elif uri.startswith("gwibber:menu"):
+        msg = view.message_store[int(uri.split("/")[-1])]
+        self.on_message_action_menu(msg)
         return True
       elif uri.startswith("gwibber:search"):
         query = uri.split("/")[-1]
