@@ -53,10 +53,10 @@
 <%def name="buttons(data)">
   <div class="replybutton">
     % if hasattr(data, "can_thread"):
-      <a href="gwibber:thread/${data.message_index}"><img src="thread.png" /></a>
+      <a href="gwibber:thread/${data.message_index}"><img src="${resources.icon('mail-reply-all')}" /></a>
     % endif
-    <a href="gwibber:menu/${data.message_index}"><img src="actions.png" /></a>
-    <a href="gwibber:reply/${data.message_index}"><img src="reply.png" /></a>
+    <a href="gwibber:menu/${data.message_index}"><img src="${resources.icon('system-run')}" /></a>
+    <a href="gwibber:reply/${data.message_index}"><img src="${resources.icon('mail-reply-sender')}" /></a>
   </div>
 </%def>
 
@@ -125,7 +125,7 @@
 
 <%def name="toggledupe(data)">
   % if len(data.dupes) > 0:
-    <div class="toggledupe"><img src="more.png" /></div>
+    <div class="toggledupe"><img src="${resources.icon('list-add')}" /></div>
   % endif
 </%def>
 

@@ -527,7 +527,7 @@ class GwibberClient(gtk.Window):
     for a in actions.MENU_ITEMS:
       if a.include(self, msg):
         mi = gtk.Action("gwibberMessage%s" % a.__name__, a.label, None, None).create_menu_item()
-        mi.get_image().set_from_file(a.get_icon_path())
+        mi.get_image().set_from_file(a.get_icon_path(use_theme=False))
         mi.connect("activate", a.action, self, msg)
         menu.append(mi)
 

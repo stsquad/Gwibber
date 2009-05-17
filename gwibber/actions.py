@@ -1,15 +1,13 @@
-import gtk, microblog, gintegration
+import gtk, microblog, gintegration, resources
 
 class MessageAction:
   icon = None
   label = None
 
   @classmethod
-  def get_icon_path(self, size=16):
-    theme = gtk.icon_theme_get_default()
-    finfo = theme.lookup_icon(self.icon, size, 0)
-    return finfo.get_filename() if finfo else None
-
+  def get_icon_path(self, size=16, use_theme=True):
+    return resources.icon(self.icon, size, use_theme)
+    
   @classmethod
   def include(self, client, msg):
     return True
@@ -19,7 +17,7 @@ class MessageAction:
     pass
 
 class Reply(MessageAction):
-  icon = "mail_reply"
+  icon = "mail-reply-sender"
   label = "_Reply"
 
   @classmethod
@@ -31,7 +29,7 @@ class Reply(MessageAction):
     client.reply(msg)
 
 class Retweet(MessageAction):
-  icon = "mail_forward"
+  icon = "mail-forward"
   label = "R_etweet"
 
 class Like(MessageAction):

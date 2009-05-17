@@ -68,7 +68,7 @@ class MessageView(webkit.WebView):
     template_lookup_paths = list(resources.get_template_dirs())
     content = Template(open(template_path).read(),
       lookup=TemplateLookup(directories=template_lookup_paths)).render(
-      message_store=self.message_store, _=_)
+      message_store=self.message_store, resources=resources, _=_)
     
     def on_finish_load(v, f, vscroll_pos):
       self.scroll.get_vadjustment().set_value(vscroll_pos)

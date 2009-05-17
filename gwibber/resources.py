@@ -4,7 +4,7 @@ Paths to various Gwibber files and resources
 SegPhault (Ryan Paul) - 11/22/2008
 """
 
-import os, sys
+import os, sys, config, gtk
 
 PROGRAM_NAME = "gwibber"
 UI_DIR_NAME = "ui"
@@ -28,7 +28,7 @@ def get_desktop_file():
   p = os.path.join(LAUNCH_DIR, "gwibber.desktop")
   if os.path.exists(p): return p
   
-  for base in DATA__BASE_DIRS:
+  for base in DATA_BASE_DIRS:
     p = os.path.join(base, "applications", "gwibber.desktop")
     if os.path.exists(p): return p
 
@@ -67,3 +67,15 @@ def get_template_dirs():
     if os.path.exists(p):
       yield p
 
+def icon(name, size=16, use_theme=True):
+  if use_theme:
+    theme_path = get_theme_path(config.Preferences()["theme"])
+    if theme_path:
+      fname = os.path.join(theme_path, name)
+      for ext in [".svg", ".png"]:
+        if os.path.exists(fname + ext):
+          return fname + ext
+  
+  theme = gtk.icon_theme_get_default()
+  finfo = theme.lookup_icon(name, size, 0)
+  return finfo.get_filename() if finfo else None
