@@ -67,6 +67,13 @@ def get_template_dirs():
     if os.path.exists(p):
       yield p
 
+def get_theme_asset(asset_name):
+  theme_path = get_theme_path(config.Preferences()["theme"])
+  if theme_path:
+    fname = os.path.join(theme_path, asset_name)
+    if os.path.exists(fname):
+      return fname
+
 def icon(name, size=16, use_theme=True):
   if use_theme:
     theme_path = get_theme_path(config.Preferences()["theme"])

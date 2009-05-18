@@ -392,7 +392,6 @@ class GwibberClient(gtk.Window):
     view = gwui.MessageView(self.preferences["theme"])
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
-    view.config_retrieval_handler = self.get_account_config
     view.add_indicator = add_indicator
 
     self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
@@ -402,7 +401,6 @@ class GwibberClient(gtk.Window):
     view = gwui.UserView(self.preferences["theme"])
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
-    view.config_retrieval_handler = self.get_account_config
     view.add_indicator = False
 
     self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
@@ -412,7 +410,6 @@ class GwibberClient(gtk.Window):
     view = gwui.MapView()
     view.link_handler = self.on_link_clicked
     view.data_retrieval_handler = data_handler
-    view.config_retrieval_handler = self.get_account_config
     view.add_indicator = False
 
     self.add_scrolled_parent(view, text, show_close, show_icon, make_active, save)
@@ -432,7 +429,7 @@ class GwibberClient(gtk.Window):
     if "color" in entry.get_key():
       for tab in self.tabs.get_children():
         view = tab.get_child()
-        view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
+        view.load_messages()
 
   def on_window_close(self, w, e):
     if self.preferences["minimize_to_tray"]:
@@ -621,7 +618,7 @@ class GwibberClient(gtk.Window):
       view = tab.get_child()
       view.load_theme(self.preferences["theme"])
       if len(view.message_store) > 0:
-        view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
+        view.load_messages()
 
   def get_themes(self):
     for base in xdg.BaseDirectory.xdg_data_dirs:
@@ -935,7 +932,7 @@ class GwibberClient(gtk.Window):
             msg.is_new = msg.is_unread = False
         self.flag_duplicates(result)
         self.messages_view.message_store = result + self.messages_view.message_store
-        self.messages_view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
+        self.messages_view.load_messages()
     
       self.on_cancel_reply(None)
 
@@ -970,33 +967,6 @@ class GwibberClient(gtk.Window):
 
     message.can_reply = message.account.supports(microblog.can.REPLY)
     return message
-
-  def get_account_config(self):
-    for acct in self.accounts:
-      if acct["protocol"] in microblog.PROTOCOLS:
-        data = {"id": acct.id, "username": acct["username"], "protocol": acct["protocol"]}
-        for c in acct.get_protocol().PROTOCOL_INFO["config"]:
-          if "color" in c:
-            if acct[c]: color = gtk.gdk.color_parse(acct[c])
-            else: color = gtk.gdk.color_parse("#72729f9fcfcf")
-            data[c] = {"red": color.red//255, "green": color.green//255, "blue": color.blue//255}
-        yield data
-
-  def color_to_dict(self, c):
-    color = gtk.gdk.color_parse(c)
-    return {"red": color.red//255, "green": color.green//255, "blue": color.blue//255}
-
-  def get_gtk_theme_prefs(self):
-    d = {}
-    
-    for i in ["base", "text", "fg", "bg"]:
-      d[i] = self.color_to_dict(
-        getattr(self.get_style(), i)[gtk.STATE_NORMAL].to_string())
-
-      d["%s_selected" % i] = self.color_to_dict(
-        getattr(self.get_style(), i)[gtk.STATE_SELECTED].to_string())
-
-    return d
 
   def show_notification_bubbles(self, messages):
     new_messages = []
@@ -1063,7 +1033,7 @@ class GwibberClient(gtk.Window):
     self.throbber.clear()
 
   def update_view_contents(self, view):
-    view.load_messages(self.get_account_config(), self.get_gtk_theme_prefs())
+    view.load_messages()
   
   def update(self, tabs = None):
     self.throbber.set_from_animation(

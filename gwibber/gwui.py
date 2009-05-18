@@ -21,6 +21,32 @@ DEFAULT_UPDATE_INTERVAL = 1000 * 60 * 5
 IMG_CACHE_DIR = os.path.join(resources.CACHE_BASE_DIR, "gwibber", "images")
 DEFAULT_AVATAR = 'http://digg.com/img/udl.png'
 
+class Color:
+  def __init__(self, hex):
+    self.hex = hex
+    self.dec = int(hex.replace("#", ""), 16)
+    self.r = (self.dec >> 16) & 0xff
+    self.g = (self.dec >> 8) & 0xff
+    self.b = self.dec & 0xff
+    self.rgb = "%s, %s, %s" % (self.r, self.g, self.b)
+
+  @classmethod
+  def from_gtk_color(self, c):
+    if isinstance(c, gtk.gdk.Color): c = str(c)
+    return self("#" + "".join([c[1:3], c[5:7], c[9:11]]))
+
+def get_theme_colors(w):
+  d = {}
+  
+  for i in ["base", "text", "fg", "bg"]:
+    d[i] = Color.from_gtk_color(
+      getattr(w.get_style(), i)[gtk.STATE_NORMAL].to_string())
+
+    d["%s_selected" % i] = Color.from_gtk_color(
+      getattr(w.get_style(), i)[gtk.STATE_SELECTED].to_string())
+
+  return d
+
 class MapView(webkit.WebView):
   def __init__(self):
     webkit.WebView.__init__(self)
@@ -56,19 +82,25 @@ class MessageView(webkit.WebView):
         theme = 'default'
     self.theme = theme
 
-  def load_messages(self, account_prefs=None, theme_prefs=None, message_store = None):
+  def load_messages(self, message_store = None):
     for n, m in enumerate(self.message_store):
       m.message_index = n
 
       if m.account[m.bgcolor]:
-        c = gtk.gdk.color_parse(m.account[m.bgcolor])
-        m.bgcolor_rgb = {"red": c.red//255, "green": c.green//255, "blue": c.blue//255}
+        m.color = Color.from_gtk_color(m.account[m.bgcolor])
 
     template_path = os.path.join(resources.get_theme_path(self.theme), "template.mako")
-    template_lookup_paths = list(resources.get_template_dirs())
-    content = Template(open(template_path).read(),
-      lookup=TemplateLookup(directories=template_lookup_paths)).render(
-      message_store=self.message_store, resources=resources, _=_)
+    template_lookup_paths = list(resources.get_template_dirs()) + [resources.get_theme_path(self.theme)]
+
+    template = Template(
+      open(template_path).read(),
+      lookup=TemplateLookup(directories=template_lookup_paths))
+    
+    content = template.render(
+        message_store=self.message_store,
+        theme=get_theme_colors(self),
+        resources=resources,
+        _=_)
     
     def on_finish_load(v, f, vscroll_pos):
       self.scroll.get_vadjustment().set_value(vscroll_pos)
@@ -88,7 +120,7 @@ class MessageView(webkit.WebView):
     pass
 
 class UserView(MessageView):
-  def load_messages(self, account_prefs=None, theme_prefs=None, message_store = None): # override
+  def load_messages(self, message_store = None): # override
     if (self.message_store and len(self.message_store) > 0):
       # use info from first message to create user header
       #msg = simplejson.dumps(dict(self.message_store[0].__dict__, message_index=0), sort_keys=True, indent=4, default=str)
@@ -98,7 +130,7 @@ class UserView(MessageView):
       header = copy.copy(self.message_store[0])
       header.is_user_header = True
       self.message_store.insert(0, header)
-      MessageView.load_messages(self, message_store, account_prefs, theme_prefs)
+      MessageView.load_messages(self, message_store)
 
 def image_cache(url, cache_dir = IMG_CACHE_DIR):
   if not os.path.exists(cache_dir): os.makedirs(cache_dir)
